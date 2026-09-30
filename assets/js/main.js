@@ -6,6 +6,22 @@
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* ----- Set GitHub-derived image sources from single source of truth ----- */
+  function setImgSrc(id, src) {
+    const el = document.getElementById(id);
+    if (el) el.src = src;
+  }
+  setImgSrc("avatarImg", `https://github.com/${GH_USER}.png`);
+  setImgSrc("contribImg", `https://ghchart.rshah.org/00ff9d/${GH_USER}`);
+  setImgSrc(
+    "readmeStatsImg",
+    `https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&hide_border=true&theme=dark&bg_color=0a0a0f&title_color=00ff9d&icon_color=00ff9d&text_color=c9c9d9`
+  );
+  setImgSrc(
+    "streakStatsImg",
+    `https://streak-stats.demolab.com/?user=${GH_USER}&hide_border=true&theme=dark&background=0a0a0f&ring=00ff9d&fire=00ff9d&currStreakLabel=00ff9d`
+  );
+
   /* ----- Nav scrolled state + back to top ----- */
   const nav = document.querySelector(".nav");
   const toTop = document.getElementById("toTop");
@@ -61,7 +77,7 @@
   /* ----- GitHub live data (auto-updates on every page load) ----- */
   const numberFmt = (n) => new Intl.NumberFormat(document.documentElement.lang === "es" ? "es-ES" : "en-US").format(n);
 
-  const GH_CACHE_KEY = "gh-cache-v1";
+  const GH_CACHE_KEY = `gh-cache-v1-${GH_USER}`;
   const GH_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   function readGithubCache() {
@@ -136,7 +152,7 @@
       .map((repo) => {
         const desc = repo.description ? escapeHtml(repo.description) : "—";
         return `
-        <a class="project-card reveal in-view" href="${repo.html_url}" target="_blank" rel="noopener">
+        <a class="project-card reveal in-view" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener">
           <div class="project-card__top">
             <span class="project-card__name">${escapeHtml(repo.name)}</span>
             ${repo.language ? `<span class="project-card__lang">${escapeHtml(repo.language)}</span>` : ""}
