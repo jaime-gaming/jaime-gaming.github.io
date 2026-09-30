@@ -119,7 +119,7 @@ async function loadPosts() {
       html: marked.parse(content),
     });
   }
-  posts.sort((a, b) => (a.date < b.date ? 1 : -1));
+  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
   return posts;
 }
 
