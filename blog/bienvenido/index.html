@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bienvenido a mi blog — Jaime Gaming</title>
+<meta name="description" content="El primer post de mi nuevo blog, dentro de mi portfolio rediseñado." />
+<meta name="theme-color" content="#0b0b0c" />
+<link rel="canonical" href="https://jaime-gaming.github.io/blog/bienvenido/" />
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="/" class="nav__logo">JG<span class="dot">.</span></a>
+  <nav class="nav__links" aria-label="Main navigation">
+    <a href="/" data-i18n="nav.home" class="">Home</a>
+    <a href="/projects/" data-i18n="nav.projects" class="">Projects</a>
+    <a href="/blog/" data-i18n="nav.blog" class="active">Blog</a>
+    <a href="/#contact" data-i18n="nav.contact" class="">Contact</a>
+  </nav>
+  <div class="nav__actions">
+    <button class="lang-switch" id="langSwitch" type="button" aria-label="Switch language" data-i18n-aria="aria.langSwitch">
+      <span data-lang="es">ES</span>/<span data-lang="en">EN</span>
+    </button>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" data-i18n="nav.home">Home</a>
+  <a href="/projects/" data-i18n="nav.projects">Projects</a>
+  <a href="/blog/" data-i18n="nav.blog">Blog</a>
+  <a href="/#contact" data-i18n="nav.contact">Contact</a>
+</div>
+
+<main id="top">
+  <section class="section">
+    <a href="/blog/" class="back-link reveal">← <span data-i18n="blog.back">Volver al blog</span></a>
+    <div class="post-detail__head reveal">
+      <p class="post-detail__date">30 de septiembre de 2026</p>
+      <h1 class="post-detail__title">Bienvenido a mi blog</h1>
+    </div>
+    <div class="post-detail__body reveal">
+<p>Este es el primer post de mi blog. Aquí voy a ir compartiendo lo que aprendo,
+los proyectos en los que estoy trabajando y cualquier cosa que me parezca
+interesante contar.</p>
+<h2>¿Cómo añado un post nuevo?</h2>
+<p>Solo tengo que crear un archivo <code>.md</code> dentro de <code>content/blog/</code>, con este
+formato al principio (front matter):</p>
+<pre><code>---
+title: &quot;Título del post&quot;
+date: &quot;YYYY-MM-DD&quot;
+excerpt: &quot;Resumen corto para la lista de posts&quot;
+lang: &quot;es&quot;
+---
+</code></pre>
+<p>Y debajo, el contenido en Markdown normal. Al hacer push a <code>main</code>, la página
+se reconstruye sola y el post aparece en <code>/blog/</code>.</p>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© <span id="year"></span> Jaime Gaming. <span data-i18n="footer.made">Hecho con curiosidad y código.</span></p>
+  <button class="to-top" id="toTop" aria-label="Back to top" data-i18n-aria="aria.backToTop">↑</button>
+</footer>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+  <section class="hero">
+    <p class="hero__eyebrow reveal" data-i18n="hero.eyebrow">Hola, soy</p>
+    <h1 class="hero__title reveal">
+      Jaime <span class="hero__title-accent">Gaming</span>
+    </h1>
+    <p class="hero__subtitle reveal" data-i18n="hero.subtitle">
+      Vibe-coder construyendo juegos y proyectos con HTML, y aprendiendo Python día a día.
+    </p>
+    <div class="hero__badges reveal">
+      <span class="badge" data-i18n="badge.vibecoder">Vibe-coder</span>
+      <span class="badge" data-i18n="badge.gamedev">Game Dev</span>
+      <span class="badge" data-i18n="badge.ceo">CEO @ Pineapple</span>
+      <span class="badge" data-i18n="badge.learning">Aprendiendo Python</span>
+    </div>
+    <div class="hero__cta reveal">
+      <a href="/projects/" class="btn btn--primary" data-i18n="hero.ctaPrimary">Ver proyectos</a>
+      <a href="#contact" class="btn btn--ghost" data-i18n="hero.ctaSecondary">Hablemos</a>
+    </div>
+    <div class="hero__socials reveal" id="heroSocials" aria-label="Redes sociales" data-i18n-aria="aria.socials"></div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="section__head reveal">
+      <span class="section__num">01</span>
+      <h2 class="section__title" data-i18n="about.title">Sobre mí</h2>
+    </div>
+    <div class="about__grid">
+      <div>
+        <p class="about__text reveal" data-i18n="about.text">
+          Soy un <strong>vibe-coder</strong> que busca programar cosas reales o simplemente seguir aprendiendo a programar.
+          Actualmente soy CEO de <a href="https://github.com/PineappleVA" target="_blank" rel="noopener">Pineapple</a>,
+          y me encanta crear pequeños juegos que comparto con mis compañeros de escuela.
+        </p>
+
+        <div class="timeline">
+          <div class="timeline__item reveal">
+            <p class="timeline__year">01</p>
+            <h3 class="timeline__title" data-i18n="timeline.html.title">HTML, mi punto de partida</h3>
+            <p class="timeline__desc" data-i18n="timeline.html.desc">Mi primer lenguaje, y el que sigo usando constantemente para crear juegos y pequeños proyectos.</p>
+          </div>
+          <div class="timeline__item reveal">
+            <p class="timeline__year">02</p>
+            <h3 class="timeline__title" data-i18n="timeline.share.title">Compartir con la comunidad</h3>
+            <p class="timeline__desc" data-i18n="timeline.share.desc">Creo juegos sencillos que comparto con mis compañeros de escuela para que los prueben y me den feedback.</p>
+          </div>
+          <div class="timeline__item reveal">
+            <p class="timeline__year">03</p>
+            <h3 class="timeline__title" data-i18n="timeline.python.title">Ahora, Python</h3>
+            <p class="timeline__desc" data-i18n="timeline.python.desc">Actualmente estoy aprendiendo este lenguaje para llevar mis proyectos un paso más allá.</p>
+          </div>
+        </div>
+
+        <a class="venture reveal" href="https://github.com/PineappleVA" target="_blank" rel="noopener">
+          <span class="venture__icon">🍍</span>
+          <div class="venture__body">
+            <p class="venture__title" data-i18n="venture.title">CEO de <span>Pineapple</span></p>
+            <p class="venture__desc" data-i18n="venture.desc">Mi propio proyecto/organización en GitHub. Échale un vistazo ↗</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="about__card reveal">
+        <img id="avatarImg" class="about__avatar" alt="Jaime Gaming avatar" loading="lazy" />
+        <div class="about__status" id="lanyardStatus">
+          <span class="status-dot"></span>
+          <span data-i18n="about.statusLoading">estado en vivo…</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="section">
+    <div class="section__head reveal">
+      <span class="section__num">02</span>
+      <h2 class="section__title" data-i18n="skills.title">Habilidades</h2>
+    </div>
+    <div class="skills__grid">
+      <article class="skill-card reveal">
+        <div class="skill-card__icon">&lt;/&gt;</div>
+        <h3>HTML</h3>
+        <p data-i18n="skills.html">Mi primer lenguaje y el que sigo usando constantemente para juegos y proyectos.</p>
+        <div class="skill-bar"><span style="--level:90%"></span></div>
+      </article>
+      <article class="skill-card reveal">
+        <div class="skill-card__icon">🐍</div>
+        <h3>Python</h3>
+        <p data-i18n="skills.python">Actualmente estoy aprendiendo este lenguaje para ampliar mis proyectos.</p>
+        <div class="skill-bar"><span style="--level:45%"></span></div>
+      </article>
+      <article class="skill-card reveal">
+        <div class="skill-card__icon">🎮</div>
+        <h3 data-i18n="skills.gamesTitle">Game Dev</h3>
+        <p data-i18n="skills.games">Creo juegos sencillos que comparto con mis compañeros de escuela.</p>
+        <div class="skill-bar"><span style="--level:70%"></span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="projects-teaser" class="section">
+    <div class="section__head reveal">
+      <span class="section__num">03</span>
+      <h2 class="section__title" data-i18n="projectsTeaser.title">Proyectos recientes</h2>
+      <p class="section__sub" data-i18n="projectsTeaser.sub">Actualizados automáticamente desde GitHub. Cada uno tiene su propia página.</p>
+    </div>
+    <div class="projects__grid" id="projectsGrid" data-limit="4">
+      <div class="skeleton-card reveal"></div>
+      <div class="skeleton-card reveal"></div>
+    </div>
+    <div class="projects__viewall reveal">
+      <a href="/projects/" class="btn btn--ghost" data-i18n="projectsTeaser.viewAll">Ver todos los proyectos →</a>
+    </div>
+  </section>
+
+  <section id="github" class="section">
+    <div class="section__head reveal">
+      <span class="section__num">04</span>
+      <h2 class="section__title" data-i18n="github.title">Actividad en GitHub</h2>
+      <p class="section__sub" data-i18n="github.sub">Se sincroniza en vivo con mi perfil.</p>
+    </div>
+
+    <div class="github__stats reveal" id="githubStats">
+      <div class="stat">
+        <span class="stat__value" id="statRepos">—</span>
+        <span class="stat__label" data-i18n="github.repos">Repositorios</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value" id="statStars">—</span>
+        <span class="stat__label" data-i18n="github.stars">Estrellas</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value" id="statFollowers">—</span>
+        <span class="stat__label" data-i18n="github.followers">Seguidores</span>
+      </div>
+    </div>
+
+    <div class="github__calendar reveal">
+      <img id="contribImg" class="contrib-img" alt="Gráfico de contribuciones de GitHub" loading="lazy" />
+    </div>
+
+    <div class="github__readme-stats reveal">
+      <img id="readmeStatsImg" alt="GitHub stats" loading="lazy" />
+      <img id="streakStatsImg" alt="GitHub streak" loading="lazy" />
+    </div>
+  </section>
+
+  <section id="contact" class="section section--contact">
+    <div class="section__head reveal">
+      <span class="section__num">05</span>
+      <h2 class="section__title" data-i18n="contact.title">Hablemos</h2>
+    </div>
+    <p class="contact__text reveal" data-i18n="contact.text">
+      ¿Tienes alguna pregunta o quieres colaborar? Escríbeme, siempre estoy abierto a nuevas ideas.
+    </p>
+    <a class="contact__email reveal" href="mailto:jaimegamingpro@gmail.com">jaimegamingpro@gmail.com</a>
+    <div class="socials__grid reveal" id="socialsGrid"></div>
+  </section>
