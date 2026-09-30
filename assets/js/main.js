@@ -12,6 +12,10 @@
   }
   const ACCENT_HEX = cssVarHex("--accent", "c6e83f");
   const BG_HEX = cssVarHex("--bg", "0a0b07");
+  /* Note: the `<meta name="theme-color">` tag in index.html and the colors baked
+     into assets/img/favicon.svg are static assets read by the browser/OS before
+     any script runs, so they can't pull from this computed value and must be kept
+     in sync with --accent/--bg manually if the palette changes. */
 
   /* ----- Year ----- */
   const yearEl = document.getElementById("year");
@@ -46,21 +50,26 @@
   /* ----- Mobile menu ----- */
   const burger = document.getElementById("burger");
   const mobileMenu = document.getElementById("mobileMenu");
+
+  function updateBurgerLabel(open) {
+    if (!burger) return;
+    const lang = window.currentLang || "es";
+    const key = open ? "nav.closeMenu" : "nav.openMenu";
+    const label = (window.i18n && window.i18n.dict[lang][key]) || (open ? "Close menu" : "Open menu");
+    burger.setAttribute("aria-label", label);
+  }
+
   if (burger && mobileMenu) {
     burger.addEventListener("click", () => {
       const open = mobileMenu.classList.toggle("open");
       burger.setAttribute("aria-expanded", String(open));
-      const lang = window.currentLang || "es";
-      const key = open ? "nav.closeMenu" : "nav.openMenu";
-      const label = (window.i18n && window.i18n.dict[lang][key]) || (open ? "Close menu" : "Open menu");
-      burger.setAttribute("aria-label", label);
+      updateBurgerLabel(open);
     });
     mobileMenu.querySelectorAll("a").forEach((a) =>
       a.addEventListener("click", () => {
         mobileMenu.classList.remove("open");
         burger.setAttribute("aria-expanded", "false");
-        const lang = window.currentLang || "es";
-        burger.setAttribute("aria-label", (window.i18n && window.i18n.dict[lang]["nav.openMenu"]) || "Open menu");
+        updateBurgerLabel(false);
       })
     );
   }
@@ -341,12 +350,6 @@
 
   document.addEventListener("langchange", () => {
     renderProjects(lastRepos, { error: lastProjectsHadError });
-    if (burger && mobileMenu) {
-      const lang = window.currentLang || "es";
-      const open = mobileMenu.classList.contains("open");
-      const key = open ? "nav.closeMenu" : "nav.openMenu";
-      const label = (window.i18n && window.i18n.dict[lang][key]) || (open ? "Close menu" : "Open menu");
-      burger.setAttribute("aria-label", label);
-    }
+    if (burger && mobileMenu) updateBurgerLabel(mobileMenu.classList.contains("open"));
   });
 })();

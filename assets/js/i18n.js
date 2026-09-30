@@ -9,6 +9,8 @@
       "nav.contact": "Contacto",
       "nav.openMenu": "Abrir menú",
       "nav.closeMenu": "Cerrar menú",
+      "aria.langSwitch": "Cambiar idioma",
+      "aria.backToTop": "Volver arriba",
       "hero.eyebrow": "Hola, soy",
       "hero.subtitle": "Vibe-coder construyendo juegos y proyectos con HTML, y aprendiendo Python día a día.",
       "hero.ctaPrimary": "Ver proyectos",
@@ -56,6 +58,8 @@
       "nav.contact": "Contact",
       "nav.openMenu": "Open menu",
       "nav.closeMenu": "Close menu",
+      "aria.langSwitch": "Switch language",
+      "aria.backToTop": "Back to top",
       "hero.eyebrow": "Hi, I'm",
       "hero.subtitle": "Vibe-coder building games and projects with HTML, learning Python along the way.",
       "hero.ctaPrimary": "View projects",
@@ -110,6 +114,11 @@
       const key = el.getAttribute("data-i18n");
       const value = dict[lang][key];
       if (value !== undefined) el.innerHTML = value;
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-aria");
+      const value = dict[lang][key];
+      if (value !== undefined) el.setAttribute("aria-label", value);
     });
     const switchBtn = document.getElementById("langSwitch");
     if (switchBtn) switchBtn.setAttribute("data-active", lang);
