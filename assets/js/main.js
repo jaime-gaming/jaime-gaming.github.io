@@ -1,6 +1,7 @@
 /* Main interactions: nav, reveal animations, cursor glow, GitHub data */
 (function () {
   const GH_USER = "jaime-gaming";
+  const DISCORD_USER_ID = "984083829767675965";
 
   /* ----- Year ----- */
   const yearEl = document.getElementById("year");
@@ -134,17 +135,21 @@
     } catch (err) {
       console.warn("GitHub data unavailable:", err);
       lastRepos = [];
-      renderProjects([]);
+      renderProjects([], { error: true });
     }
   }
 
-  function renderProjects(repos) {
+  let lastProjectsHadError = false;
+
+  function renderProjects(repos, { error = false } = {}) {
     const grid = document.getElementById("projectsGrid");
     if (!grid) return;
     const lang = window.currentLang || "es";
+    lastProjectsHadError = error;
 
     if (!repos.length) {
-      grid.innerHTML = `<p class="section__sub">${window.i18n.dict[lang]["projects.empty"]}</p>`;
+      const key = error ? "projects.error" : "projects.empty";
+      grid.innerHTML = `<p class="section__sub">${window.i18n.dict[lang][key]}</p>`;
       return;
     }
 
@@ -178,7 +183,7 @@
     const statusEl = document.getElementById("lanyardStatus");
     if (!statusEl) return;
     try {
-      const res = await fetch("https://api.lanyard.rest/v1/users/984083829767675965");
+      const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
       if (!res.ok) throw new Error("Lanyard unavailable");
       const { data } = await res.json();
       const map = { online: "🟢 Online", idle: "🌙 Idle", dnd: "⛔ Do Not Disturb", offline: "⚫ Offline" };
@@ -192,6 +197,6 @@
   loadLanyard();
 
   document.addEventListener("langchange", () => {
-    renderProjects(lastRepos);
+    renderProjects(lastRepos, { error: lastProjectsHadError });
   });
 })();
