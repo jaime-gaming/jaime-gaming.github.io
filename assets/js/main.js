@@ -44,11 +44,17 @@
     burger.addEventListener("click", () => {
       const open = mobileMenu.classList.toggle("open");
       burger.setAttribute("aria-expanded", String(open));
+      const lang = window.currentLang || "es";
+      const key = open ? "nav.closeMenu" : "nav.openMenu";
+      const label = (window.i18n && window.i18n.dict[lang][key]) || (open ? "Close menu" : "Open menu");
+      burger.setAttribute("aria-label", label);
     });
     mobileMenu.querySelectorAll("a").forEach((a) =>
       a.addEventListener("click", () => {
         mobileMenu.classList.remove("open");
         burger.setAttribute("aria-expanded", "false");
+        const lang = window.currentLang || "es";
+        burger.setAttribute("aria-label", (window.i18n && window.i18n.dict[lang]["nav.openMenu"]) || "Open menu");
       })
     );
   }
@@ -162,9 +168,10 @@
   }
 
   /* ----- Stagger reveal delays within grouped containers ----- */
+  const STAGGER_DELAY_MS = 90; // gap between each sibling's reveal so grids/lists animate in sequence
   document.querySelectorAll(".skills__grid, .timeline").forEach((container) => {
     Array.from(container.children).forEach((child, i) => {
-      if (child.classList.contains("reveal")) child.style.setProperty("--delay", `${i * 90}ms`);
+      if (child.classList.contains("reveal")) child.style.setProperty("--delay", `${i * STAGGER_DELAY_MS}ms`);
     });
   });
 
@@ -213,8 +220,11 @@
       const raw = localStorage.getItem(GH_CACHE_KEY);
       if (!raw) return null;
       const cached = JSON.parse(raw);
+      if (!cached || typeof cached.timestamp !== "number") return null;
       if (Date.now() - cached.timestamp > GH_CACHE_TTL) return null;
-      return cached.data;
+      const { data } = cached;
+      if (!data || typeof data.user !== "object" || !Array.isArray(data.repos)) return null;
+      return data;
     } catch {
       return null;
     }
@@ -325,5 +335,12 @@
 
   document.addEventListener("langchange", () => {
     renderProjects(lastRepos, { error: lastProjectsHadError });
+    if (burger && mobileMenu) {
+      const lang = window.currentLang || "es";
+      const open = mobileMenu.classList.contains("open");
+      const key = open ? "nav.closeMenu" : "nav.openMenu";
+      const label = (window.i18n && window.i18n.dict[lang][key]) || (open ? "Close menu" : "Open menu");
+      burger.setAttribute("aria-label", label);
+    }
   });
 })();
