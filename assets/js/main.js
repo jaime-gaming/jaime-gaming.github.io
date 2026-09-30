@@ -61,33 +61,63 @@
   /* ----- GitHub live data (auto-updates on every page load) ----- */
   const numberFmt = (n) => new Intl.NumberFormat(document.documentElement.lang === "es" ? "es-ES" : "en-US").format(n);
 
+  const GH_CACHE_KEY = "gh-cache-v1";
+  const GH_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+  function readGithubCache() {
+    try {
+      const raw = localStorage.getItem(GH_CACHE_KEY);
+      if (!raw) return null;
+      const cached = JSON.parse(raw);
+      if (Date.now() - cached.timestamp > GH_CACHE_TTL) return null;
+      return cached.data;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeGithubCache(data) {
+    try {
+      localStorage.setItem(GH_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data }));
+    } catch {
+      /* ignore quota/storage errors */
+    }
+  }
+
+  let lastRepos = [];
+
   async function loadGithub() {
     try {
-      const [userRes, reposRes] = await Promise.all([
-        fetch(`https://api.github.com/users/${GH_USER}`),
-        fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`),
-      ]);
-      if (!userRes.ok || !reposRes.ok) throw new Error("GitHub API error");
-      const user = await userRes.json();
-      const repos = await reposRes.json();
+      let data = readGithubCache();
+      if (!data) {
+        const [userRes, reposRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${GH_USER}`),
+          fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`),
+        ]);
+        if (!userRes.ok || !reposRes.ok) throw new Error("GitHub API error");
+        const user = await userRes.json();
+        const repos = await reposRes.json();
+        data = { user, repos };
+        writeGithubCache(data);
+      }
 
-      const publicRepos = Array.isArray(repos) ? repos.filter((r) => !r.fork) : [];
+      const publicRepos = Array.isArray(data.repos) ? data.repos.filter((r) => !r.fork) : [];
       const totalStars = publicRepos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
 
       const statRepos = document.getElementById("statRepos");
       const statStars = document.getElementById("statStars");
       const statFollowers = document.getElementById("statFollowers");
-      if (statRepos) statRepos.textContent = numberFmt(user.public_repos ?? publicRepos.length);
+      if (statRepos) statRepos.textContent = numberFmt(data.user.public_repos ?? publicRepos.length);
       if (statStars) statStars.textContent = numberFmt(totalStars);
-      if (statFollowers) statFollowers.textContent = numberFmt(user.followers ?? 0);
+      if (statFollowers) statFollowers.textContent = numberFmt(data.user.followers ?? 0);
 
-      renderProjects(
-        publicRepos
-          .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
-          .slice(0, 6)
-      );
+      lastRepos = publicRepos
+        .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+        .slice(0, 6);
+      renderProjects(lastRepos);
     } catch (err) {
       console.warn("GitHub data unavailable:", err);
+      lastRepos = [];
       renderProjects([]);
     }
   }
@@ -146,7 +176,6 @@
   loadLanyard();
 
   document.addEventListener("langchange", () => {
-    const grid = document.getElementById("projectsGrid");
-    if (grid && grid.querySelector(".section__sub")) loadGithub();
+    renderProjects(lastRepos);
   });
 })();
