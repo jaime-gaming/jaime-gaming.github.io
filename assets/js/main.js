@@ -3,9 +3,15 @@
   const GH_USER = "jaime-gaming";
   const DISCORD_USER_ID = "984083829767675965";
   const EMAIL = "jaimegamingpro@gmail.com";
-  /* Dark-mode palette derived from the JAIME GAMING logo: lime-green + red */
-  const ACCENT_HEX = "c6e83f";
-  const BG_HEX = "0a0b07";
+  /* Dark-mode palette derived from the JAIME GAMING logo: lime-green + red.
+     Read from the CSS custom properties (single source of truth in style.css)
+     so the JS-generated GitHub image URLs stay in sync if the theme changes. */
+  function cssVarHex(varName, fallback) {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    return value ? value.replace(/^#/, "") : fallback;
+  }
+  const ACCENT_HEX = cssVarHex("--accent", "c6e83f");
+  const BG_HEX = cssVarHex("--bg", "0a0b07");
 
   /* ----- Year ----- */
   const yearEl = document.getElementById("year");
@@ -223,7 +229,7 @@
       if (!cached || typeof cached.timestamp !== "number") return null;
       if (Date.now() - cached.timestamp > GH_CACHE_TTL) return null;
       const { data } = cached;
-      if (!data || typeof data.user !== "object" || !Array.isArray(data.repos)) return null;
+      if (!data || typeof data.user !== "object" || data.user === null || !Array.isArray(data.repos)) return null;
       return data;
     } catch {
       return null;
