@@ -89,29 +89,32 @@
   /* To add more networks once you have handles, append objects here, e.g.
      { id: "youtube", label: "YouTube", url: "https://youtube.com/@yourhandle", icon: ICONS.youtube } */
   const SOCIALS = [
-    { id: "github", label: "GitHub", url: `https://github.com/${GH_USER}`, icon: ICONS.github },
-    { id: "pineapple", label: "Pineapple", url: "https://github.com/PineappleVA", icon: ICONS.pineapple },
-    { id: "discord", label: "Discord", url: `https://discord.com/users/${DISCORD_USER_ID}`, icon: ICONS.discord },
-    { id: "email", label: "Email", url: `mailto:${EMAIL}`, icon: ICONS.mail },
+    { id: "github", labelKey: "social.github", url: `https://github.com/${GH_USER}`, icon: ICONS.github },
+    { id: "pineapple", labelKey: "social.pineapple", url: "https://github.com/PineappleVA", icon: ICONS.pineapple },
+    { id: "discord", labelKey: "social.discord", url: `https://discord.com/users/${DISCORD_USER_ID}`, icon: ICONS.discord },
+    { id: "email", labelKey: "social.email", url: `mailto:${EMAIL}`, icon: ICONS.mail },
   ].filter((s) => s.url);
 
   function renderSocials() {
     const hero = document.getElementById("heroSocials");
     const grid = document.getElementById("socialsGrid");
     const linkAttrs = (url) => (url.startsWith("mailto:") ? "" : ' target="_blank" rel="noopener"');
+    const lang = window.currentLang || "es";
+    const labelFor = (s) => (window.i18n && window.i18n.dict[lang][s.labelKey]) || s.id;
 
     if (hero) {
       hero.innerHTML = SOCIALS.map(
-        (s) => `<a class="social-icon magnetic" href="${s.url}"${linkAttrs(s.url)} aria-label="${s.label}">${s.icon}</a>`
+        (s) => `<a class="social-icon magnetic" href="${s.url}"${linkAttrs(s.url)} aria-label="${labelFor(s)}">${s.icon}</a>`
       ).join("");
     }
     if (grid) {
       grid.innerHTML = SOCIALS.map(
-        (s) => `<a class="social-card" href="${s.url}"${linkAttrs(s.url)}>${s.icon}<span>${s.label}</span></a>`
+        (s) => `<a class="social-card" href="${s.url}"${linkAttrs(s.url)}>${s.icon}<span>${labelFor(s)}</span></a>`
       ).join("");
     }
   }
   renderSocials();
+  document.addEventListener("langchange", renderSocials);
 
   /* ----- Tech marquee ----- */
   function renderMarquee() {
