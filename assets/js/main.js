@@ -288,6 +288,11 @@
     observeReveals(grid);
   }
 
+  /* Intentionally simpler than scripts/build.mjs's slugify: GitHub repo names
+     only allow alphanumerics, hyphens, underscores and dots (no spaces), and
+     API repo lookups are case-insensitive, so lowercasing is enough to build
+     a stable `/projects/<slug>/` URL that can be mapped straight back to the
+     original repo name when fetching `api.github.com/repos/{user}/{slug}`. */
   function slugify(name) {
     return name.toLowerCase();
   }

@@ -63,7 +63,7 @@ async function writePage(relPath, html) {
 async function buildHome() {
   const bodyHtml = await readFragment("home.fragment.html");
   const html = renderLayout({
-    title: "Jaime Gaming — Portfolio",
+    title: "Portfolio",
     description:
       "Jaime Gaming — vibe-coder, creador de juegos en HTML y aprendiz de Python. CEO de Pineapple.",
     bodyHtml,
