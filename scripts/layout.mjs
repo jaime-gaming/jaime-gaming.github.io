@@ -7,10 +7,6 @@
 const SITE_NAME = "Jaime Gaming";
 const SITE_URL = "https://jaime-gaming.github.io";
 
-function navLink(href, key, label) {
-  return `<a href="${href}" data-i18n="${key}">${label}</a>`;
-}
-
 const NAV_ITEMS = [
   { href: "/", key: "nav.home", label: "Home" },
   { href: "/projects/", key: "nav.projects", label: "Projects" },
