@@ -9,6 +9,8 @@ Personal portfolio site, published via GitHub Pages at [jaime-gaming.github.io](
 - Projects, stats and the GitHub contribution chart are fetched live from the GitHub API on every page load, so the site reflects new repositories/commits automatically without a rebuild
 - Fully static (HTML/CSS/vanilla JS) — no build step required for GitHub Pages
 
+> **Note:** GitHub API requests are unauthenticated and cached client-side for 5 minutes (per visitor) to reduce calls, but they still share the public rate limit of 60 requests/hour per IP. On rare occasions (e.g. shared corporate/NAT networks) this could cause the "Projects" section to temporarily fall back to its error state; it will recover automatically once the limit resets.
+
 ## Structure
 
 ```
