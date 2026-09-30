@@ -14,6 +14,21 @@ const NAV_ITEMS = [
   { href: "/#contact", key: "nav.contact", label: "Contact" },
 ];
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function isActiveNavItem(item, activePath) {
+  if (item.href === "/") return activePath === "/";
+  if (item.href === "/#contact") return false;
+  return activePath === item.href || activePath.startsWith(item.href);
+}
+
 export function renderLayout({
   title,
   description,
@@ -21,9 +36,10 @@ export function renderLayout({
   activePath = "/",
   extraHead = "",
 }) {
-  const fullTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — Portfolio`;
+  const fullTitle = title ? `${escapeHtml(title)} — ${SITE_NAME}` : `${SITE_NAME} — Portfolio`;
+  const safeDescription = escapeHtml(description || "");
   const nav = NAV_ITEMS.map((item) => {
-    const active = item.href === activePath ? " active" : "";
+    const active = isActiveNavItem(item, activePath) ? " active" : "";
     return `<a href="${item.href}" data-i18n="${item.key}" class="${active.trim()}">${item.label}</a>`;
   }).join("\n    ");
   const mobileNav = NAV_ITEMS.map(
@@ -36,7 +52,7 @@ export function renderLayout({
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${fullTitle}</title>
-<meta name="description" content="${description}" />
+<meta name="description" content="${safeDescription}" />
 <meta name="theme-color" content="#0b0b0c" />
 <link rel="canonical" href="${SITE_URL}${activePath}" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
