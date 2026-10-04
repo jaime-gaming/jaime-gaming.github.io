@@ -1,0 +1,26 @@
+  <section class="section section--wide projects-page">
+    <div class="section__head reveal">
+      <span class="section__num">/PROJECTS</span>
+      <h1 class="section__title" data-i18n="projectsPage.title">Proyectos</h1>
+      <p class="section__sub" data-i18n="projectsPage.sub">Repositorios públicos de Jaime Gaming y PineappleVA.</p>
+    </div>
+    <div class="github__toolbar reveal">
+      <div class="github__sync" id="githubSync" data-state="loading" aria-live="polite" aria-atomic="true">
+        <span class="github__sync-dot" aria-hidden="true"></span>
+        <span class="github__sync-copy">
+          <span class="github__sync-label" id="githubSyncLabel" data-i18n="github.syncLoading">Conectando con GitHub…</span>
+          <time class="github__sync-time" id="githubSyncTime"></time>
+        </span>
+      </div>
+      <button class="sync-button" id="githubRefresh" type="button" aria-label="Actualizar datos de GitHub" data-i18n-aria="github.refreshAria">
+        <svg class="sync-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.6 9a7 7 0 0 1 11.7-2L20 12M4 12l2.7 5a7 7 0 0 0 11.7-2" /></svg>
+        <span data-i18n="github.refresh">Actualizar</span>
+      </button>
+    </div>
+    <div class="projects__grid projects__grid--full" id="projectsGrid" aria-busy="true">
+      <div class="skeleton-card" aria-hidden="true"></div>
+      <div class="skeleton-card" aria-hidden="true"></div>
+      <div class="skeleton-card" aria-hidden="true"></div>
+      <div class="skeleton-card" aria-hidden="true"></div>
+    </div>
+  </section>

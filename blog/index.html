@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog — Jaime Gaming</title>
+<meta name="description" content="Notas y novedades de Jaime Gaming." />
+<meta name="author" content="Jaime Gaming" />
+<meta name="theme-color" content="#10120f" />
+<!-- JG source mark: Jaime Gaming / jaime-gaming.github.io -->
+<link rel="canonical" href="https://jaime-gaming.github.io/blog/" />
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#top" data-i18n="aria.skipToContent">Saltar al contenido</a>
+<div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="/" class="nav__logo" aria-label="Jaime Gaming — inicio" data-i18n-aria="aria.homeLogo">JG<span class="dot">.</span></a>
+  <nav class="nav__links" aria-label="Navegación principal" data-i18n-aria="aria.mainNav">
+    <a href="/" data-i18n="nav.home" class="">Inicio</a>
+    <a href="/projects/" data-i18n="nav.projects" class="">Proyectos</a>
+    <a href="/blog/" data-i18n="nav.blog" class="active">Blog</a>
+    <a href="/#contact" data-i18n="nav.contact" class="">Contacto</a>
+  </nav>
+  <div class="nav__actions">
+    <button class="lang-switch" id="langSwitch" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
+      <span data-lang="es">ES</span>/<span data-lang="en">EN</span>
+    </button>
+    <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu" data-i18n-aria="nav.openMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Navegación móvil" data-i18n-aria="aria.mainNav">
+  <a href="/" data-i18n="nav.home">Inicio</a>
+  <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
+  <a href="/blog/" data-i18n="nav.blog">Blog</a>
+  <a href="/#contact" data-i18n="nav.contact">Contacto</a>
+</nav>
+
+<main id="top">
+  <section class="section">
+    <div class="section__head reveal">
+      <h2 class="section__title" data-i18n="blog.title">Blog</h2>
+      <p class="section__sub" data-i18n="blog.sub">Notas y novedades sobre lo que estoy construyendo.</p>
+    </div>
+    <div class="blog__list">
+      <p class="blog__empty reveal" data-i18n="blog.empty">Todavía no hay publicaciones.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© <span id="year"></span> Jaime Gaming.</p>
+  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">↑</button>
+</footer>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>
