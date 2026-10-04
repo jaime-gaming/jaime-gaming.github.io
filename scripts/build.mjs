@@ -18,7 +18,7 @@
  * with no rebuild required. Only the blog (hand-authored content) needs a
  * build step, which runs in CI on every push (see .github/workflows/build.yml).
  */
-import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
@@ -29,6 +29,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const CONTENT = path.join(ROOT, "content");
 const BLOG_SOURCE = path.join(CONTENT, "blog");
+const BLOG_OUTPUT = path.join(ROOT, "blog");
 
 async function readFragment(name) {
   return readFile(path.join(CONTENT, name), "utf8");
@@ -63,9 +64,8 @@ async function writePage(relPath, html) {
 async function buildHome() {
   const bodyHtml = await readFragment("home.fragment.html");
   const html = renderLayout({
-    title: "Portfolio",
-    description:
-      "Jaime Gaming — vibe-coder, creador de juegos en HTML y aprendiz de Python. CEO de Pineapple.",
+    title: "Inicio",
+    description: "Jaime Gaming: juegos, proyectos web y repositorios de GitHub de Jaime Gaming y PineappleVA.",
     bodyHtml,
     activePath: "/",
   });
@@ -76,7 +76,7 @@ async function buildProjectsIndex() {
   const bodyHtml = await readFragment("projects.fragment.html");
   const html = renderLayout({
     title: "Proyectos",
-    description: "Todos los repositorios públicos de Jaime Gaming, sincronizados en vivo desde GitHub.",
+    description: "Repositorios públicos de Jaime Gaming y PineappleVA, sincronizados desde GitHub.",
     bodyHtml,
     activePath: "/projects/",
   });
@@ -123,8 +123,26 @@ async function loadPosts() {
   return posts;
 }
 
+async function cleanOrphanedPostPages(posts) {
+  const activeSlugs = new Set(posts.map((post) => post.slug));
+  let entries = [];
+  try {
+    entries = await readdir(BLOG_OUTPUT, { withFileTypes: true });
+  } catch {
+    return;
+  }
+
+  await Promise.all(entries
+    .filter((entry) => entry.isDirectory() && !activeSlugs.has(entry.name))
+    .map(async (entry) => {
+      await rm(path.join(BLOG_OUTPUT, entry.name), { recursive: true, force: true });
+      console.log(`removed orphaned blog page blog/${entry.name}/`);
+    }));
+}
+
 async function buildBlog() {
   const posts = await loadPosts();
+  await cleanOrphanedPostPages(posts);
 
   const listItems = posts.length
     ? posts
@@ -136,11 +154,10 @@ async function buildBlog() {
       </a>`
         )
         .join("\n")
-    : `      <p class="blog__empty reveal" data-i18n="blog.empty">Todavía no hay posts. ¡Vuelve pronto!</p>`;
+    : `      <p class="blog__empty reveal" data-i18n="blog.empty">Todavía no hay publicaciones.</p>`;
 
   const indexBody = `  <section class="section">
     <div class="section__head reveal">
-      <span class="section__num">/blog</span>
       <h2 class="section__title" data-i18n="blog.title">Blog</h2>
       <p class="section__sub" data-i18n="blog.sub">Notas y novedades sobre lo que estoy construyendo.</p>
     </div>
