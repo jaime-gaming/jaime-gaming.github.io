@@ -105,3 +105,21 @@ El CSS utiliza una sola definición base por componente: tipografía, anchos, bo
 El build añade a CSS y JavaScript una versión calculada con SHA-256. La vista previa sirve `Cache-Control: no-store`, mantiene las rutas de detalle de proyectos y muestra el 404 del sitio para páginas inexistentes. No sustituye archivos estáticos inexistentes por HTML con estado 200.
 
 La revisión de esta corrección cubrió seis rutas a 320, 390, 768 y 1440 píxeles en Chromium, con respuestas de API controladas, además de movimiento reducido y fallos de conexión. `npm test` comprueba también las versiones de los archivos, la sintaxis del CSS y las respuestas HTTP del servidor de vista previa.
+
+## Iconos, contribuciones y Wave
+
+Los iconos son SVG locales de trazo uniforme. `scripts/icons.mjs` genera el sprite, valida los nombres usados en las plantillas y mantiene los iconos decorativos fuera del árbol accesible. El loader JG utiliza un punto y una línea de actividad indeterminada, no un porcentaje ficticio, y respeta movimiento reducido.
+
+El inicio combina tres repos recientes con diez frases preparadas, barajadas para las animaciones. Con movimiento reducido conserva una frase estable. Cada frase distingue si enlaza a un repositorio o si es una idea general.
+
+Al seleccionar un día, se consultan commits por autor y fecha UTC e issues/pull requests creados ese día en repositorios personales. GitHub puede limitar estas búsquedas. Se muestran resultados parciales como tales, se cancelan consultas anteriores y los resultados se conservan cinco minutos. El detalle no pretende reconstruir actividad privada, revisiones ni todas las acciones que contabiliza el calendario.
+
+`assets/data/contributions.json` es un respaldo fechado obtenido de la API GraphQL oficial de GitHub: contiene el calendario y resúmenes públicos por día de los repositorios personales. Si falla el servicio del calendario, se utiliza esta captura indicando la fecha. Si falla la búsqueda del detalle, se muestran los resúmenes guardados disponibles, nunca como consultas en directo. No se guardan credenciales ni repositorios privados. Para actualizarlo con GitHub CLI autenticado:
+
+```sh
+npm run sync:contributions
+npm run build
+npm test
+```
+
+La entrada `content/blog/lanzamiento-wave.md` se documentó con el README y las notas del tag `v0.1.0` de `jaime-gaming/Wave`, además de los archivos adjuntos de la release. La fecha de lanzamiento anunciada es el 17 de octubre de 2026; la entrada está fechada el 18. La captura procede de `docs/media/home-desktop.png` en ese tag. El artículo distingue el ZIP web publicado de las compilaciones nativas de prueba y explica los límites de almacenamiento local, letras externas y arranque sin conexión.

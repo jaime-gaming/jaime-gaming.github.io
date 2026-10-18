@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import { marked } from "marked";
 import { renderLayout } from "./layout.mjs";
+import { iconSprite, renderIcon } from "./icons.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -67,7 +68,7 @@ async function buildProjectsIndex() {
 
 async function buildContact() {
   const fragment = await readFragment("contact.fragment.html");
-  const bodyHtml = `<div class="contact-page">${fragment.replace('<h2 class="section__title"', '<h1 class="section__title"').replace('>¿Hablamos?</h2>', '>¿Hablamos?</h1>')}</div>`;
+  const bodyHtml = `<div class="contact-page">${fragment.replace('<h2 class="section__title"', '<h1 class="section__title"').replace('</h2>', '</h1>')}</div>`;
   await writePage("contact/index.html", renderLayout({ title: "Contacto", description: "Habla con Jaime Gaming por correo, Discord, YouTube, X o GitHub. Enlaces oficiales y contacto directo.", bodyHtml, activePath: "/contact/" }));
 }
 
@@ -137,7 +138,7 @@ async function buildBlog() {
         .map(
           (p) => `      <a class="blog-item reveal" href="/blog/${p.slug}/">
         <p class="blog-item__date">${formatDate(p.date, p.lang)}</p>
-        <h3 class="blog-item__title">${p.title}</h3>
+        <h3 class="blog-item__title">${renderIcon(p.slug === "lanzamiento-wave" ? "music" : "file")} ${p.title}</h3>
         <p class="blog-item__excerpt">${p.excerpt}</p>
       </a>`
         )
@@ -172,9 +173,9 @@ ${listItems}
       <p class="post-detail__date">${formatDate(post.date, post.lang)}</p>
       <h1 class="post-detail__title">${post.title}</h1>
     </div>
-    <div class="post-detail__body reveal">
+    <article class="post-detail__body reveal" lang="${post.lang}">
 ${post.html}
-    </div>
+    </article>
   </section>
 `;
     await writePage(
@@ -190,6 +191,7 @@ ${post.html}
 }
 
 async function main() {
+  await writePage("assets/img/icons.svg", iconSprite);
   await mkdir(path.join(ROOT, "assets/vendor"), { recursive: true });
   await copyFile(path.join(ROOT, "node_modules/marked/marked.min.js"), path.join(ROOT, "assets/vendor/marked.min.js"));
   await copyFile(path.join(ROOT, "node_modules/dompurify/dist/purify.min.js"), path.join(ROOT, "assets/vendor/purify.min.js"));

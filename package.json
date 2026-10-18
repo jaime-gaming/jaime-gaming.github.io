@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "sync:contributions": "node scripts/sync-contributions.mjs"
   },
   "repository": {
     "type": "git",

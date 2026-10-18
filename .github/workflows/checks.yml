@@ -26,4 +26,4 @@ jobs:
       - name: Test site
         run: npm test
       - name: Check generated files
-        run: git diff --exit-code -- index.html projects/index.html contact/index.html 404.html blog/ assets/vendor/ robots.txt sitemap.xml
+        run: git diff --exit-code -- index.html projects/index.html contact/index.html 404.html blog/ assets/vendor/ assets/img/icons.svg robots.txt sitemap.xml

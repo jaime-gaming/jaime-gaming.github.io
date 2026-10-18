@@ -1,3 +1,4 @@
+import { expandIcons, renderIcon } from "./icons.mjs";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
@@ -76,7 +77,7 @@ ${activePath === "/" ? `<script type="application/ld+json">${JSON.stringify({ "@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="${assetUrl("/assets/css/style.css")}" />
 ${extraHead}</head>
-<body>
+<body data-icons="${assetUrl("/assets/img/icons.svg")}">
 
 <a class="skip-link" href="#top" data-i18n="aria.skipToContent">Saltar al contenido</a>
 <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
@@ -101,12 +102,12 @@ ${extraHead}</head>
 </nav>
 
 <main id="top">
-${bodyHtml}
+${expandIcons(bodyHtml)}
 </main>
 
 <footer class="footer">
   <p>© <span id="year"></span> Jaime Gaming.</p>
-  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">↑</button>
+  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">${renderIcon("arrow")}</button>
 </footer>
 
 <script src="${assetUrl("/assets/js/i18n.js")}"></script>

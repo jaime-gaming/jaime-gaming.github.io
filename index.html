@@ -23,9 +23,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/assets/css/style.css?v=f84411f98157" />
+<link rel="stylesheet" href="/assets/css/style.css?v=cb1789579089" />
 </head>
-<body>
+<body data-icons="/assets/img/icons.svg?v=e2fbcd1e0837">
 
 <a class="skip-link" href="#top" data-i18n="aria.skipToContent">Saltar al contenido</a>
 <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
@@ -59,15 +59,15 @@
   <section class="hero" id="home">
     <div class="hero__inner">
       <div class="hero__content">
-        <h1 class="hero__title reveal" data-i18n="hero.title">Ey, soy <span class="hero__title-accent">Jaime Gaming</span></h1>
-        <p class="hero__subtitle reveal" data-i18n="hero.subtitle">Hago juegos para navegador, webs y vídeos. Aquí puedes ver mis proyectos y probar lo que voy subiendo.</p>
+        <h1 class="hero__title reveal" data-i18n="hero.title">Hola, soy <span class="hero__title-accent">Jaime Gaming</span></h1>
+        <p class="hero__subtitle reveal" data-i18n="hero.subtitle">Creo juegos para navegador, aplicaciones web y vídeos. En esta página reúno mis proyectos, el código que publico y las novedades de su desarrollo.</p>
 
         <div class="hero__work reveal">
           <div class="hero__current">
           <span class="hero__current-label" data-i18n="hero.current">EN EL CÓDIGO</span>
           <span class="hero__typed" id="typedRole" aria-live="off">Retocando esta web</span>
         </div>
-        <div class="hero__work-meta"><span id="roleSource" data-i18n="hero.roleFallback">Mientras tanto…</span><a id="roleRepoLink" hidden data-i18n="hero.openRepo">Abrir repo ↗</a></div>
+        <div class="hero__work-meta"><span id="roleSource" data-i18n="hero.roleFallback">Proyectos e ideas</span><a id="roleRepoLink" hidden data-i18n="hero.openRepo">Abrir repo ↗</a></div>
         </div>
 
         <div class="hero__cta reveal">
@@ -100,7 +100,7 @@
               <span class="hero__activity" data-presence-activity hidden></span>
             </span>
           </div>
-          <a class="profile-card__footer" href="https://www.youtube.com/@jaimegaming5731" target="_blank" rel="noopener noreferrer" data-i18n="profile.footer">Pasarte por mi canal ↗</a>
+          <a class="profile-card__footer" href="https://www.youtube.com/@jaimegaming5731" target="_blank" rel="noopener noreferrer" data-i18n="profile.footer">Ver mi canal de YouTube</a>
         </div>
       </div>
     </div>
@@ -109,13 +109,13 @@
   <section id="about" class="section">
     <div class="section__head reveal">
       <h2 class="section__title" data-i18n="about.title">Sobre mí</h2>
-      <p class="section__sub" data-i18n="about.sub">Soy Jaime. En internet uso Jaime Gaming.</p>
+      <p class="section__sub" data-i18n="about.sub">Programación, juegos y creación de contenido.</p>
     </div>
     <div class="about__grid">
       <div class="about__story">
-        <p class="about__text reveal" data-i18n="about.text">Empecé haciendo juegos en HTML para mis compañeros de clase. Ahora también hago otros proyectos y subo el código a GitHub. Soy fundador de <a href="https://github.com/PineappleVA" target="_blank" rel="noopener noreferrer">Pineapple</a>.</p>
+        <p class="about__text reveal" data-i18n="about.text">Soy Jaime Gaming, programador y creador de contenido. Empecé con HTML y con juegos que compartía con mis compañeros de clase. Desde entonces he ido ampliando mis proyectos: además de juegos, desarrollo aplicaciones y herramientas web. También soy fundador de <a href="https://github.com/PineappleVA" target="_blank" rel="noopener noreferrer">Pineapple</a>.</p>
 
-        <p class="about__learning reveal" data-i18n="about.learning">Ahora estoy con JavaScript, TypeScript y Python. En los repos puedes ver en qué los voy usando.</p>
+        <p class="about__learning reveal" data-i18n="about.learning">Trabajo con HTML y sigo formándome en JavaScript, TypeScript y Python. Publico mis repositorios en GitHub para compartir el código y los cambios. Entre mis proyectos están <a href="/projects/jaime-gaming/wave/">Wave</a>, un reproductor para una biblioteca de música local, y <a href="/projects/jaime-gaming/rngdle-infinite/">RNGdle-Infinite</a>, un juego para navegador.</p>
 
       </div>
 
@@ -132,7 +132,7 @@
           </dl>
         </div>
         <h3 class="about__card-title" data-i18n="about.cardTitle">@jaime-gaming</h3>
-        <p class="about__card-copy" data-i18n="about.cardText">Mis repositorios y el código de los proyectos.</p>
+        <p class="about__card-copy" data-i18n="about.cardText">Repositorios públicos, código fuente y documentación de los proyectos.</p>
         <a class="about__card-stamp" href="https://github.com/jaime-gaming" target="_blank" rel="noopener noreferrer" data-i18n="about.cardStamp">IR A MI GITHUB ↗</a>
       </aside>
     </div>
@@ -141,28 +141,28 @@
   <section id="skills" class="section">
     <div class="section__head reveal">
       <h2 class="section__title" data-i18n="skills.title">Lo que uso</h2>
-      <p class="section__sub" data-i18n="skills.sub">HTML, JavaScript, TypeScript y Python. Sigo aprendiendo con mis proyectos.</p>
+      <p class="section__sub" data-i18n="skills.sub">Las tecnologías que utilizo y las que estoy incorporando a mis proyectos.</p>
     </div>
     <div class="skills__grid">
       <article class="skill-card reveal">
-        <span class="skill-card__icon" aria-hidden="true">&lt;/&gt;</span>
+        <span class="skill-card__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-code"></use></svg></span>
         <h3>HTML</h3>
-        <p data-i18n="skills.html">Para las páginas y los juegos de navegador. Es con lo que empecé.</p>
+        <p data-i18n="skills.html">Mi punto de partida. Lo utilizo para estructurar páginas, interfaces y juegos para navegador.</p>
       </article>
       <article class="skill-card reveal">
-        <span class="skill-card__icon" aria-hidden="true">Py</span>
+        <span class="skill-card__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-terminal"></use></svg></span>
         <h3>Python</h3>
-        <p data-i18n="skills.python">Lo estoy aprendiendo con mis proyectos. Tengo varios subidos a GitHub.</p>
+        <p data-i18n="skills.python">Lo estoy aprendiendo mediante proyectos y pruebas. En GitHub comparto también mis repositorios escritos en Python.</p>
       </article>
       <article class="skill-card reveal">
-        <span class="skill-card__icon" aria-hidden="true">JS</span>
+        <span class="skill-card__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-code"></use></svg></span>
         <h3>JavaScript</h3>
-        <p data-i18n="skills.javascript">Para que los juegos y las páginas hagan algo más que quedarse ahí.</p>
+        <p data-i18n="skills.javascript">Lo utilizo en proyectos web y juegos. Sigo profundizando en la interacción, la lógica y el trabajo con datos.</p>
       </article>
       <article class="skill-card reveal">
-        <span class="skill-card__icon" aria-hidden="true">TS</span>
+        <span class="skill-card__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-file"></use></svg></span>
         <h3>TypeScript</h3>
-        <p data-i18n="skills.typescript">Lo estoy aprendiendo. También aparece en mis repos, como Wave.</p>
+        <p data-i18n="skills.typescript">Estoy ampliando mis conocimientos de tipado y desarrollo de aplicaciones. Es el lenguaje principal del repositorio de Wave.</p>
       </article>
     </div>
   </section>
@@ -173,10 +173,10 @@
       <p class="section__sub" data-i18n="projectsTeaser.sub">Lo último que he subido a GitHub.</p>
     </div>
     <div class="projects__grid" id="projectsGrid" data-limit="4" aria-busy="true">
-      <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__label" data-i18n="projects.loading">Cargando proyectos…</span></div>
+      <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__track" aria-hidden="true"></span><span class="jg-loader__label" data-i18n="projects.loading">Cargando proyectos…</span></div>
     </div>
     <div class="projects__viewall reveal">
-      <a href="/projects/" class="btn btn--ghost" data-i18n="projectsTeaser.viewAll">Ver el resto →</a>
+      <a href="/projects/" class="btn btn--ghost" data-i18n="projectsTeaser.viewAll">Ver todos los proyectos →</a>
     </div>
   </section>
 
@@ -221,11 +221,16 @@
         <div class="calendar__body">
           <div class="calendar__months" id="contributionMonths" aria-hidden="true"></div>
           <div class="calendar__weeks calendar__weeks--message" id="contributionCalendar" aria-busy="true" role="group" aria-label="Calendario de contribuciones" data-i18n-aria="github.calendarAria">
-            <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__label" data-i18n="github.calendarLoading">Cargando contribuciones…</span></div>
+            <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__track" aria-hidden="true"></span><span class="jg-loader__label" data-i18n="github.calendarLoading">Cargando contribuciones…</span></div>
           </div>
         </div>
       </div>
-      <p class="calendar__detail" id="contributionDetail" aria-live="polite" data-i18n="github.calendarHover">Pasa el cursor o toca un día para ver su fecha y el número de contribuciones.</p>
+      <p class="calendar__detail" id="contributionDetail" aria-live="polite" data-i18n="github.calendarHover">Selecciona un día para consultar los commits, issues y pull requests públicos que pueda recuperar GitHub.</p>
+      <p class="calendar__source" id="contributionSource"></p>
+      <section class="contribution-panel" id="contributionPanel" aria-label="Detalle de contribuciones" data-i18n-aria="github.dayPanel" hidden>
+        <div class="contribution-panel__head"><h4 id="contributionPanelTitle"></h4><button class="icon-button" id="closeContributions" type="button" aria-label="Cerrar detalle" data-i18n-aria="github.closeDay"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-close"></use></svg></button></div>
+        <div id="contributionResults" aria-live="polite"></div>
+      </section>
     </div>
 
 
@@ -233,15 +238,15 @@
 
     <section id="contact" class="section section--contact">
     <div class="section__head reveal">
-      <h2 class="section__title" data-i18n="contact.title">¿Hablamos?</h2>
+      <h2 class="section__title" data-i18n="contact.title">Contacto</h2>
     </div>
     <div class="contact-intro reveal">
-      <p class="contact__text" data-i18n="contact.text">Para comentar un proyecto, avisarme de un fallo o simplemente saludar.</p>
+      <p class="contact__text" data-i18n="contact.text">Puedes contactarme para comentar un proyecto, proponer una colaboración o comunicar un problema. Elige el correo o la red que prefieras.</p>
     </div>
     <div class="contact-layout">
       <article class="contact-mail reveal">
-        <div class="contact-mail__top"><span aria-hidden="true">↗</span><h3 data-i18n="contact.emailLabel">Por correo</h3></div>
-        <p data-i18n="contact.emailDesc">Para contarme algo con un poco más de detalle.</p>
+        <div class="contact-mail__top"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-mail"></use></svg><h3 data-i18n="contact.emailLabel">Por correo</h3></div>
+        <p data-i18n="contact.emailDesc">Para consultas, colaboraciones o mensajes que necesiten más contexto.</p>
         <a class="contact__email" href="mailto:jaimegamingpro@gmail.com">jaimegamingpro@gmail.com</a>
         <div class="contact-mail__actions">
           <a class="btn btn--primary" href="mailto:jaimegamingpro@gmail.com" data-i18n="contact.send">Abrir correo ↗</a>
@@ -252,19 +257,19 @@
       </article>
       <div class="contact-networks">
         <h3 class="reveal" data-i18n="contact.socialTitle">Redes</h3>
-        <p class="reveal" data-i18n="contact.socialSub">También puedes encontrarme aquí.</p>
+        <p class="reveal" data-i18n="contact.socialSub">Mis perfiles públicos y otras formas de contacto.</p>
         <div class="contact-links" id="contactLinks">
           <a class="contact-link reveal" href="https://discord.com/users/984083829767675965" target="_blank" rel="noopener noreferrer">
-            <span class="contact-link__initial" aria-hidden="true">D</span><span class="contact-link__body"><strong>Discord</strong><span data-i18n="contact.discordDesc">Para hablar por Discord.</span><small data-i18n="contact.discordHandle">Mi perfil de Discord</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+            <span class="contact-link__initial"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-message"></use></svg></span><span class="contact-link__body"><strong>Discord</strong><span data-i18n="contact.discordDesc">Conversaciones y contacto a través de mi perfil.</span><small data-i18n="contact.discordHandle">Mi perfil de Discord</small></span><span class="contact-link__arrow"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-external"></use></svg></span>
           </a>
           <a class="contact-link reveal" href="https://www.youtube.com/@jaimegaming5731" target="_blank" rel="noopener noreferrer">
-            <span class="contact-link__initial" aria-hidden="true">▶</span><span class="contact-link__body"><strong>YouTube</strong><span data-i18n="contact.youtubeDesc">Mis vídeos, y los comentarios para hablar de ellos.</span><small>@jaimegaming5731</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+            <span class="contact-link__initial"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-video"></use></svg></span><span class="contact-link__body"><strong>YouTube</strong><span data-i18n="contact.youtubeDesc">Vídeos y comentarios sobre el contenido del canal.</span><small>@jaimegaming5731</small></span><span class="contact-link__arrow"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-external"></use></svg></span>
           </a>
           <a class="contact-link reveal" href="https://x.com/JaimeGamingPro" target="_blank" rel="noopener noreferrer">
-            <span class="contact-link__initial" aria-hidden="true">𝕏</span><span class="contact-link__body"><strong>X / Twitter</strong><span data-i18n="contact.xDesc">También me encontrarás en X.</span><small>@JaimeGamingPro</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+            <span class="contact-link__initial"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-x"></use></svg></span><span class="contact-link__body"><strong>X / Twitter</strong><span data-i18n="contact.xDesc">Publicaciones y contacto en X.</span><small>@JaimeGamingPro</small></span><span class="contact-link__arrow"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-external"></use></svg></span>
           </a>
           <a class="contact-link reveal" href="https://github.com/jaime-gaming" target="_blank" rel="noopener noreferrer">
-            <span class="contact-link__initial" aria-hidden="true">&lt;/&gt;</span><span class="contact-link__body"><strong>GitHub</strong><span data-i18n="contact.githubDesc">Para el código, los bugs y las ideas sobre un repo.</span><small>@jaime-gaming</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+            <span class="contact-link__initial"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-github"></use></svg></span><span class="contact-link__body"><strong>GitHub</strong><span data-i18n="contact.githubDesc">Código, documentación, incidencias y propuestas de cambios.</span><small>@jaime-gaming</small></span><span class="contact-link__arrow"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-external"></use></svg></span>
           </a>
         </div>
       </div>
@@ -272,9 +277,9 @@
     <div class="contact-topics reveal">
       <h3 data-i18n="contact.quickTitle">Escribir por correo</h3>
       <div class="contact-topics__links">
-        <a href="mailto:jaimegamingpro@gmail.com?subject=Una%20idea%20para%20un%20proyecto" data-contact-subject="contact.subjectProject" data-i18n="contact.topicProject">Tengo una idea</a>
-        <a href="mailto:jaimegamingpro@gmail.com?subject=He%20encontrado%20un%20fallo" data-contact-subject="contact.subjectBug" data-i18n="contact.topicBug">He encontrado un fallo</a>
-        <a href="mailto:jaimegamingpro@gmail.com?subject=%C2%A1Hola%2C%20Jaime!" data-contact-subject="contact.subjectHello" data-i18n="contact.topicHello">Sólo venía a saludar</a>
+        <a href="mailto:jaimegamingpro@gmail.com?subject=Una%20idea%20para%20un%20proyecto" data-contact-subject="contact.subjectProject" data-i18n="contact.topicProject">Proponer un proyecto</a>
+        <a href="mailto:jaimegamingpro@gmail.com?subject=He%20encontrado%20un%20fallo" data-contact-subject="contact.subjectBug" data-i18n="contact.topicBug">Comunicar un problema</a>
+        <a href="mailto:jaimegamingpro@gmail.com?subject=%C2%A1Hola%2C%20Jaime!" data-contact-subject="contact.subjectHello" data-i18n="contact.topicHello">Contacto general</a>
       </div>
     </div>
   </section>
@@ -284,13 +289,13 @@
 
 <footer class="footer">
   <p>© <span id="year"></span> Jaime Gaming.</p>
-  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">↑</button>
+  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=e2fbcd1e0837#icon-arrow"></use></svg></button>
 </footer>
 
-<script src="/assets/js/i18n.js?v=90d74fd31e28"></script>
+<script src="/assets/js/i18n.js?v=9a838f56149b"></script>
 <script src="/assets/vendor/marked.min.js?v=5af04afe994d"></script>
 <script src="/assets/vendor/purify.min.js?v=af9523d4df30"></script>
 <script src="/assets/js/readme.js?v=3bbbf913b5be"></script>
-<script src="/assets/js/main.js?v=b7e5bdf11ec9"></script>
+<script src="/assets/js/main.js?v=183d0bd44919"></script>
 </body>
 </html>

@@ -44,7 +44,7 @@ test("renders real profile and public repositories, and keeps them on language c
     doc.querySelector("#langSwitch").click();
     assert.equal(doc.documentElement.lang, "en");
     assert.equal(doc.querySelector("#profileBio").textContent, saved.data.user.bio);
-    assert.match(doc.querySelector(".hero__subtitle").textContent, /games, websites and videos/);
+    assert.match(doc.querySelector(".hero__subtitle").textContent, /browser games, web applications and videos/);
   } finally { dom.window.close(); }
 });
 
@@ -277,7 +277,7 @@ test("contact page has real contact links without JavaScript, one h1, canonical 
 
 test("every generated page links to the current CSS and JavaScript hashes", async () => {
   const { createHash } = await import("node:crypto");
-  for (const page of ["index.html", "projects/index.html", "contact/index.html", "blog/index.html", "404.html"]) {
+  for (const page of ["index.html", "projects/index.html", "contact/index.html", "blog/index.html", "blog/lanzamiento-wave/index.html", "404.html"]) {
     const dom = new JSDOM(await readFile(new URL(`../${page}`, import.meta.url), "utf8"));
     try {
       const doc = dom.window.document;
@@ -310,5 +310,163 @@ test("stylesheet parses as one design system without duplicate base selector blo
     assert.ok(seen.has(".contact-layout"));
     assert.ok(seen.has(".jg-loader"));
     assert.doesNotMatch(css, /\.js\s+\.reveal[^}]*opacity:\s*0/);
+  } finally { dom.window.close(); }
+});
+
+const calendarFixture = { total: { lastYear: 5 }, contributions: [
+  { date: "2026-10-16", count: 2, level: 2 },
+  { date: "2026-10-17", count: 3, level: 3 },
+  { date: "2026-10-18", count: 0, level: 0 },
+] };
+
+function withCalendar(window, search) {
+  const original = window.fetch;
+  window.fetch = async (url, options) => {
+    if (url.includes("github-contributions-api")) return { ok: true, json: async () => calendarFixture };
+    if (url.includes("api.github.com/search/")) return search(url, options);
+    return original(url, options);
+  };
+}
+
+const flush = () => new Promise((resolve) => setTimeout(resolve, 20));
+
+test("selecting a contribution day lists safe commit and issue links, reuses cache and localizes the panel", async () => {
+  let requests = 0;
+  const dom = await openSite(false, (window) => withCalendar(window, async (url) => {
+    requests++;
+    assert.match(decodeURIComponent(url), /user:jaime-gaming/);
+    const items = url.includes("/commits?")
+      ? [{ html_url: "https://github.com/jaime-gaming/Wave/commit/1234567", sha: "1234567abc", commit: { message: "Fix playback <script>alert(1)</script>\nMore detail" }, repository: { full_name: "jaime-gaming/Wave" } }]
+      : [{ html_url: "https://github.com/jaime-gaming/Wave/pull/12", title: "Improve queue", number: 12, pull_request: {}, repository_url: "https://api.github.com/repos/jaime-gaming/Wave" }];
+    return { ok: true, json: async () => ({ items, total_count: 1, incomplete_results: false }) };
+  }));
+  try {
+    const doc = dom.window.document;
+    const day = doc.querySelector('button[data-date="2026-10-17"]');
+    day.click();
+    assert.equal(doc.querySelector("#contributionPanel").hidden, false);
+    assert.ok(doc.querySelector("#contributionResults .jg-loader__track"));
+    await flush();
+    assert.equal(doc.querySelectorAll(".contribution-list li").length, 2);
+    assert.equal(doc.querySelectorAll("#contributionResults script").length, 0);
+    assert.match(doc.querySelector("#contributionResults").textContent, /<script>/);
+    assert.equal(day.getAttribute("aria-pressed"), "true");
+    day.click(); await flush();
+    assert.equal(requests, 2);
+    doc.querySelector("#langSwitch").click();
+    assert.match(doc.querySelector("#contributionResults").textContent, /Issues and pull requests/);
+    doc.querySelector("#closeContributions").click();
+    assert.equal(doc.querySelector("#contributionPanel").hidden, true);
+    assert.equal(doc.querySelector('button[data-date="2026-10-17"]').getAttribute("aria-expanded"), "false");
+  } finally { dom.window.close(); }
+});
+
+test("zero-contribution days do not make searches and partial results are labelled", async () => {
+  let requests = 0;
+  const dom = await openSite(false, (window) => withCalendar(window, async (url) => {
+    requests++;
+    if (url.includes("/issues?")) return { ok: false, status: 403 };
+    return { ok: true, json: async () => ({ items: [], total_count: 0 }) };
+  }));
+  try {
+    const doc = dom.window.document;
+    doc.querySelector('button[data-date="2026-10-18"]').click();
+    await flush();
+    assert.equal(requests, 0);
+    assert.match(doc.querySelector("#contributionResults").textContent, /no registra contribuciones/);
+    doc.querySelector('button[data-date="2026-10-17"]').click();
+    await flush();
+    assert.equal(requests, 2);
+    assert.match(doc.querySelector("#contributionResults").textContent, /Parte de los resultados/);
+    assert.equal(doc.querySelector("#contributionResults").getAttribute("aria-busy"), "false");
+  } finally { dom.window.close(); }
+});
+
+test("old day responses cannot overwrite a newer day or reopen a closed panel", async () => {
+  const pending = [];
+  const dom = await openSite(false, (window) => withCalendar(window, (url) => new Promise((resolve) => pending.push({ url, resolve }))));
+  try {
+    const doc = dom.window.document;
+    doc.querySelector('button[data-date="2026-10-16"]').click();
+    doc.querySelector('button[data-date="2026-10-18"]').click();
+    for (const request of pending) request.resolve({ ok: true, json: async () => ({ items: [], total_count: 0 }) });
+    await flush();
+    assert.match(doc.querySelector("#contributionPanelTitle").textContent, /18/);
+    assert.match(doc.querySelector("#contributionResults").textContent, /no registra contribuciones/);
+    doc.querySelector('button[data-date="2026-10-17"]').click();
+    doc.querySelector("#closeContributions").click();
+    for (const request of pending) request.resolve({ ok: true, json: async () => ({ items: [], total_count: 0 }) });
+    await flush();
+    assert.equal(doc.querySelector("#contributionPanel").hidden, true);
+  } finally { dom.window.close(); }
+});
+
+test("calendar and daily summary can use a dated official snapshot when external services fail", async () => {
+  const record = JSON.parse(await readFile(new URL("../assets/data/contributions.json", import.meta.url), "utf8"));
+  const date = Object.keys(record.details)[0];
+  const dom = await openSite(false, (window) => {
+    const original = window.fetch;
+    window.fetch = async (url, options) => {
+      if (url === "/assets/data/contributions.json") return { ok: true, json: async () => record };
+      if (url.includes("github-contributions-api") || url.includes("/search/")) throw new Error("Unavailable");
+      return original(url, options);
+    };
+  });
+  try {
+    const doc = dom.window.document;
+    assert.equal(doc.querySelectorAll(".calendar__day[data-date]").length, 365);
+    assert.match(doc.querySelector("#contributionSource").textContent, /Datos consultados/);
+    doc.querySelector(`button[data-date="${date}"]`).click();
+    await flush();
+    assert.match(doc.querySelector("#contributionResults").textContent, /Resumen de GitHub guardado/);
+    assert.ok(doc.querySelector(".contribution-list a"));
+    assert.equal(doc.querySelector("#contributionResults").getAttribute("aria-busy"), "false");
+  } finally { dom.window.close(); }
+});
+
+test("icons resolve to a local SVG sprite and loaders have no fake progress percentage", async () => {
+  const sprite = new JSDOM(await readFile(new URL("../assets/img/icons.svg", import.meta.url), "utf8"), { contentType: "image/svg+xml" });
+  const dom = await openSite();
+  try {
+    const doc = dom.window.document;
+    assert.ok(doc.querySelectorAll("svg.icon use").length > 10);
+    for (const use of doc.querySelectorAll("svg.icon use")) {
+      const id = use.getAttribute("href").split("#")[1];
+      assert.ok(sprite.window.document.getElementById(id), id);
+      assert.equal(use.parentElement.getAttribute("aria-hidden"), "true");
+    }
+    assert.doesNotMatch(html, /aria-valuenow/);
+    assert.match(html, /jg-loader__track/);
+    assert.equal(dom.window.i18n.dict.es["hero.roles"].length, 10);
+  } finally { dom.window.close(); sprite.window.close(); }
+});
+
+test("Wave launch post links the verified release and preserves platform limitations", async () => {
+  const content = await readFile(new URL("../blog/lanzamiento-wave/index.html", import.meta.url), "utf8");
+  const dom = new JSDOM(content);
+  try {
+    const doc = dom.window.document;
+    assert.match(doc.querySelector("h1").textContent, /Wave 0.1.0/);
+    assert.equal(doc.querySelector("article").lang, "es");
+    assert.ok(doc.querySelector('a[href="https://github.com/jaime-gaming/Wave/releases/tag/v0.1.0"]'));
+    assert.match(doc.querySelector("article").textContent, /17 de octubre de 2026/);
+    assert.match(doc.querySelector("article").textContent, /sin firma o de depuración/);
+    assert.match(doc.querySelector("article").textContent, /no es una copia de seguridad/);
+    const image = doc.querySelector('img[src="/assets/img/wave-home.png"]');
+    assert.ok(image);
+    assert.ok((await readFile(new URL("../assets/img/wave-home.png", import.meta.url))).length > 1000);
+  } finally { dom.window.close(); }
+});
+
+test("failed daily lookups without a saved detail show a real GitHub link and clear the loader", async () => {
+  const dom = await openSite(false, (window) => withCalendar(window, async () => ({ ok: false, status: 403 })));
+  try {
+    const doc = dom.window.document;
+    doc.querySelector('button[data-date="2026-10-17"]').click();
+    await flush();
+    assert.match(doc.querySelector("#contributionResults").textContent, /No se pudo consultar GitHub/);
+    assert.equal(doc.querySelectorAll("#contributionResults .jg-loader").length, 0);
+    assert.equal(doc.querySelector("#contributionResults").getAttribute("aria-busy"), "false");
+    assert.match(doc.querySelector(".contribution-panel__source").href, /from=2026-10-17&to=2026-10-17/);
   } finally { dom.window.close(); }
 });
