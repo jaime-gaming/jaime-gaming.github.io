@@ -1,0 +1,29 @@
+name: Check site
+
+on:
+  pull_request:
+  push:
+    branches: ["arena/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build site
+        run: npm run build
+      - name: Test site
+        run: npm test
+      - name: Check generated files
+        run: git diff --exit-code -- index.html projects/index.html contact/index.html 404.html blog/ assets/vendor/ robots.txt sitemap.xml

@@ -3,11 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Inicio — Jaime Gaming</title>
-<meta name="description" content="Jaime Gaming: juegos, proyectos web y repositorios de GitHub de Jaime Gaming y PineappleVA." />
+<title>Jaime Gaming — juegos, programación y YouTube</title>
+<meta name="description" content="Jaime Gaming, youtuber y programador. Juegos para navegador, vídeos y proyectos web. Aprendiendo JavaScript, TypeScript y Python." />
 <meta name="author" content="Jaime Gaming" />
 <meta name="theme-color" content="#10120f" />
-<!-- JG source mark: Jaime Gaming / jaime-gaming.github.io -->
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Jaime Gaming" />
+<meta property="og:title" content="Jaime Gaming — juegos, programación y YouTube" />
+<meta property="og:description" content="Jaime Gaming, youtuber y programador. Juegos para navegador, vídeos y proyectos web. Aprendiendo JavaScript, TypeScript y Python." />
+<meta property="og:url" content="https://jaime-gaming.github.io/" />
+<meta property="og:image" content="https://jaime-gaming.github.io/assets/img/social-card.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@JaimeGamingPro" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","@id":"https://jaime-gaming.github.io/#jaime-gaming","name":"Jaime Gaming","alternateName":["jaime-gaming","JaimeGamingPro"],"url":"https://jaime-gaming.github.io/","description":"Youtuber y programador. Juegos para navegador y proyectos web.","sameAs":["https://github.com/jaime-gaming","https://www.youtube.com/@jaimegaming5731","https://x.com/JaimeGamingPro"]}</script>
+
 <link rel="canonical" href="https://jaime-gaming.github.io/" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,7 +36,7 @@
     <a href="/" data-i18n="nav.home" class="active">Inicio</a>
     <a href="/projects/" data-i18n="nav.projects" class="">Proyectos</a>
     <a href="/blog/" data-i18n="nav.blog" class="">Blog</a>
-    <a href="/#contact" data-i18n="nav.contact" class="">Contacto</a>
+    <a href="/contact/" data-i18n="nav.contact" class="">Hablamos</a>
   </nav>
   <div class="nav__actions">
     <button class="lang-switch" id="langSwitch" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
@@ -42,31 +52,27 @@
   <a href="/" data-i18n="nav.home">Inicio</a>
   <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
   <a href="/blog/" data-i18n="nav.blog">Blog</a>
-  <a href="/#contact" data-i18n="nav.contact">Contacto</a>
+  <a href="/contact/" data-i18n="nav.contact">Hablamos</a>
 </nav>
 
 <main id="top">
   <section class="hero" id="home">
     <div class="hero__inner">
       <div class="hero__content">
-        <h1 class="hero__title reveal" data-i18n="hero.title">Hola, soy <span class="hero__title-accent">Jaime Gaming</span></h1>
-        <p class="hero__subtitle reveal" data-i18n="hero.subtitle">Hago juegos y proyectos web. Me gusta probar ideas, compartirlas y aprender a medida que avanzo. Ahora estoy aprendiendo Python.</p>
+        <h1 class="hero__title reveal" data-i18n="hero.title">Ey, soy <span class="hero__title-accent">Jaime Gaming</span></h1>
+        <p class="hero__subtitle reveal" data-i18n="hero.subtitle">Hago juegos, webs y vídeos. Aquí tienes lo que voy subiendo; si algo te llama la atención, entra y pruébalo.</p>
 
-        <div class="hero__current reveal">
-          <span class="hero__current-label" data-i18n="hero.current">AHORA MISMO</span>
-          <span class="hero__typed" id="typedRole" aria-live="polite">juegos para el navegador</span>
+        <div class="hero__work reveal">
+        <div class="hero__current">
+          <span class="hero__current-label" data-i18n="hero.current">POR AQUÍ</span>
+          <span class="hero__typed" id="typedRole" aria-live="off">Retocando esta web</span>
         </div>
-
-        <div class="hero__badges reveal" aria-label="Áreas de interés" data-i18n-aria="aria.interests">
-          <span class="badge" data-i18n="badge.html">HTML</span>
-          <span class="badge" data-i18n="badge.gamedev">Desarrollo de juegos</span>
-          <span class="badge" data-i18n="badge.learning">Aprendiendo Python</span>
-          <span class="badge" data-i18n="badge.ceo">CEO de Pineapple</span>
+        <div class="hero__work-meta"><span id="roleSource" data-i18n="hero.roleFallback">Mientras tanto…</span><a id="roleRepoLink" hidden data-i18n="hero.openRepo">Abrir repo ↗</a></div>
         </div>
 
         <div class="hero__cta reveal">
-          <a href="/projects/" class="btn btn--primary" data-i18n="hero.ctaPrimary">Ver proyectos</a>
-          <a href="#contact" class="btn btn--ghost" data-i18n="hero.ctaSecondary">Contacto</a>
+          <a href="/projects/" class="btn btn--primary" data-i18n="hero.ctaPrimary">Ver qué hago</a>
+          <a href="#contact" class="btn btn--ghost" data-i18n="hero.ctaSecondary">Hablamos</a>
         </div>
         <div class="hero__socials reveal" id="heroSocials" aria-label="Redes sociales" data-i18n-aria="aria.socials"></div>
       </div>
@@ -75,7 +81,7 @@
         <div class="hero__visual-orbit" aria-hidden="true"><span>✦</span></div>
         <div class="profile-card">
           <div class="profile-card__top">
-            <span class="profile-card__label" data-i18n="profile.label">CREATOR PROFILE / 001</span>
+            <span class="profile-card__label" data-i18n="profile.label">@jaime-gaming</span>
             <span class="profile-card__mark" aria-hidden="true">JG<span>.</span></span>
           </div>
           <div class="profile-card__main">
@@ -84,7 +90,7 @@
               <img id="avatarImg" class="profile-card__avatar" alt="Jaime Gaming" fetchpriority="high" decoding="async" />
             </div>
             <div class="profile-card__identity">
-              <span class="profile-card__kicker" data-i18n="profile.kicker">JUEGOS · WEB · CURIOSIDAD</span>
+              <span class="profile-card__kicker" data-i18n="profile.kicker">JUEGOS, WEBS Y VÍDEOS</span>
               <strong class="profile-card__name">Jaime Gaming</strong>
             </div>
           </div>
@@ -95,70 +101,60 @@
               <span class="hero__activity" data-presence-activity hidden></span>
             </span>
           </div>
-          <div class="profile-card__footer" data-i18n="profile.footer">Aprender · crear · compartir</div>
+          <a class="profile-card__footer" href="https://www.youtube.com/@jaimegaming5731" target="_blank" rel="noopener noreferrer" data-i18n="profile.footer">Pasarte por mi canal ↗</a>
         </div>
-        <p class="hero__visual-caption"><span class="hero__visual-caption-mark" aria-hidden="true">↗</span><span data-i18n="hero.visualCaption">Un proyecto a la vez. Siempre en movimiento.</span></p>
+        <p class="hero__visual-caption"><span class="hero__visual-caption-mark" aria-hidden="true">↗</span><span data-i18n="hero.visualCaption">También me encontrarás por YouTube.</span></p>
       </div>
     </div>
-    <a class="hero__scroll" href="#about"><span class="hero__scroll-line" aria-hidden="true"></span><span data-i18n="hero.scroll">DESLIZA PARA EXPLORAR</span></a>
+    <a class="hero__scroll" href="#about"><span class="hero__scroll-line" aria-hidden="true"></span><span data-i18n="hero.scroll">SOBRE MÍ</span></a>
   </section>
 
   <section id="about" class="section">
     <div class="section__head reveal">
       <span class="section__num">01</span>
-      <h2 class="section__title" data-i18n="about.title">Sobre mí</h2>
-      <p class="section__sub" data-i18n="about.sub">Me gusta aprender construyendo: si una idea me ronda la cabeza, intento convertirla en algo que se pueda probar.</p>
+      <h2 class="section__title" data-i18n="about.title">Y yo, ¿quién soy?</h2>
+      <p class="section__sub" data-i18n="about.sub">En internet, Jaime Gaming. Por aquí, Jaime.</p>
     </div>
     <div class="about__grid">
       <div class="about__story">
-        <p class="about__text reveal" data-i18n="about.text">Soy Jaime Gaming. Empecé haciendo juegos sencillos y proyectos web. Programo sobre todo en HTML y ahora estoy aprendiendo Python. También soy CEO de <a href="https://github.com/PineappleVA" target="_blank" rel="noopener noreferrer">Pineapple</a>, una organización donde compartimos proyectos.</p>
+        <p class="about__text reveal" data-i18n="about.text">Empecé con HTML y con juegos que pasaba a mis compañeros de clase. Sigo haciendo juegos y ahora también subo mis otros proyectos aquí. Ah, y fundé <a href="https://github.com/PineappleVA" target="_blank" rel="noopener noreferrer">Pineapple</a>.</p>
 
         <div class="timeline">
           <div class="timeline__item reveal">
-            <p class="timeline__year" data-i18n="timeline.html.year">01 / MI BASE</p>
-            <h3 class="timeline__title" data-i18n="timeline.html.title">Empezar por la web</h3>
-            <p class="timeline__desc" data-i18n="timeline.html.desc">HTML fue la puerta de entrada; ahora lo uso para crear páginas, prototipos y juegos para el navegador.</p>
+            <p class="timeline__year" data-i18n="timeline.html.year">EL PRINCIPIO</p>
+            <h3 class="timeline__title" data-i18n="timeline.html.title">Una página en HTML</h3>
+            <p class="timeline__desc" data-i18n="timeline.html.desc">Fue lo primero que usé. Y todavía lo uso para mis páginas y juegos.</p>
           </div>
           <div class="timeline__item reveal">
-            <p class="timeline__year" data-i18n="timeline.share.year">02 / COMPARTIR</p>
-            <h3 class="timeline__title" data-i18n="timeline.share.title">Probarlo con otras personas</h3>
-            <p class="timeline__desc" data-i18n="timeline.share.desc">Comparto juegos pequeños, escucho qué funciona y vuelvo al código con nuevas ideas.</p>
+            <p class="timeline__year" data-i18n="timeline.share.year">CON LOS DE CLASE</p>
+            <h3 class="timeline__title" data-i18n="timeline.share.title">«Prueba esto un momento»</h3>
+            <p class="timeline__desc" data-i18n="timeline.share.desc">Hice juegos para pasárselos a mis compañeros. Así empezó la cosa.</p>
           </div>
           <div class="timeline__item reveal">
-            <p class="timeline__year" data-i18n="timeline.python.year">03 / SIGUIENTE PASO</p>
-            <h3 class="timeline__title" data-i18n="timeline.python.title">Explorar Python</h3>
-            <p class="timeline__desc" data-i18n="timeline.python.desc">Lo estoy aprendiendo poco a poco para ampliar lo que puedo construir.</p>
+            <p class="timeline__year" data-i18n="timeline.python.year">AHORA</p>
+            <h3 class="timeline__title" data-i18n="timeline.python.title">Más allá de HTML</h3>
+            <p class="timeline__desc" data-i18n="timeline.python.desc">Ando con JavaScript, TypeScript y Python. Con JavaScript ya me voy defendiendo.</p>
           </div>
         </div>
 
-        <a class="venture reveal" href="https://github.com/PineappleVA" target="_blank" rel="noopener noreferrer">
-          <span class="venture__icon" aria-hidden="true">🍍</span>
-          <span class="venture__body">
-            <span class="venture__title" data-i18n="venture.title">También construyo con <span>Pineapple</span></span>
-            <span class="venture__desc" data-i18n="venture.desc">Una organización de GitHub donde comparto ideas y proyectos.</span>
-          </span>
-          <span class="venture__arrow" aria-hidden="true">↗</span>
-        </a>
       </div>
 
       <aside class="about__card reveal">
         <div class="about__card-top">
-          <span class="about__card-kicker" data-i18n="about.cardLabel">CÓMO ME GUSTA CREAR</span>
+          <span class="about__card-kicker" data-i18n="about.cardLabel">POR SI QUIERES COTILLEAR</span>
           <span class="about__card-index">01</span>
         </div>
-        <div class="about__terminal" aria-label="Ejemplo de código">
-          <div class="about__terminal-bar"><span></span><span></span><span></span><code>idea.js</code></div>
-          <div class="about__terminal-code">
-            <div><span class="code-muted">01</span><span class="code-keyword">const</span> idea = <span class="code-string">"un juego pequeño"</span>;</div>
-            <div><span class="code-muted">02</span><span class="code-keyword">while</span> (curiosidad) {</div>
-            <div><span class="code-muted">03</span>&nbsp;&nbsp;probar(); <span class="code-comment">// y aprender</span></div>
-            <div><span class="code-muted">04</span>&nbsp;&nbsp;compartir();</div>
-            <div><span class="code-muted">05</span>}</div>
-          </div>
+        <div id="githubProfile" class="public-profile" aria-live="polite">
+          <p id="profileBio">youtuber and programmer</p>
+          <dl>
+            <div><dt data-i18n="github.location">Ubicación</dt><dd id="profileLocation">Spain</dd></div>
+            <div><dt data-i18n="github.profileRepos">Repos públicos</dt><dd id="profileRepos">—</dd></div>
+            <div><dt data-i18n="github.followers">Seguidores</dt><dd id="profileFollowers">—</dd></div>
+          </dl>
         </div>
-        <h3 class="about__card-title" data-i18n="about.cardTitle">Pequeños prototipos. Mucha curiosidad.</h3>
-        <p class="about__card-copy" data-i18n="about.cardText">No hace falta empezar con una gran idea: basta con dar el primer paso y seguir probando.</p>
-        <span class="about__card-stamp" data-i18n="about.cardStamp">APRENDER · CREAR · REPETIR</span>
+        <h3 class="about__card-title" data-i18n="about.cardTitle">@jaime-gaming</h3>
+        <p class="about__card-copy" data-i18n="about.cardText">El código está en GitHub. Puedes echarle un vistazo, probarlo o decirme si algo se ha roto.</p>
+        <a class="about__card-stamp" href="https://github.com/jaime-gaming" target="_blank" rel="noopener noreferrer" data-i18n="about.cardStamp">IR A MI GITHUB ↗</a>
       </aside>
     </div>
   </section>
@@ -166,30 +162,33 @@
   <section id="skills" class="section">
     <div class="section__head reveal">
       <span class="section__num">02</span>
-      <h2 class="section__title" data-i18n="skills.title">Lo que estoy aprendiendo</h2>
-      <p class="section__sub" data-i18n="skills.sub">Lo que ya uso, lo que practico y lo que quiero explorar.</p>
+      <h2 class="section__title" data-i18n="skills.title">Con qué ando</h2>
+      <p class="section__sub" data-i18n="skills.sub">HTML fue el primero. Los demás han ido llegando después.</p>
     </div>
     <div class="skills__grid">
       <article class="skill-card reveal">
         <div class="skill-card__top"><span class="skill-card__icon">&lt;/&gt;</span><span class="skill-card__number">01</span></div>
         <h3>HTML</h3>
-        <p data-i18n="skills.html">La base de mis páginas y juegos para navegador: estructura, ideas y espacio para experimentar.</p>
-        <div class="skill-card__footer"><span data-i18n="skills.htmlLevel">LO USO A DIARIO</span><span>↗</span></div>
-        <div class="skill-bar" aria-hidden="true"><span style="--level:90%"></span></div>
+        <p data-i18n="skills.html">Para las páginas y los juegos de navegador. Es con lo que empecé.</p>
+        <div class="skill-card__footer"><span data-i18n="skills.htmlLevel">DESDE EL PRINCIPIO</span><span>↗</span></div>
       </article>
       <article class="skill-card reveal">
         <div class="skill-card__top"><span class="skill-card__icon">Py</span><span class="skill-card__number">02</span></div>
         <h3>Python</h3>
-        <p data-i18n="skills.python">Estoy construyendo una base paso a paso y practicando con proyectos pequeños.</p>
-        <div class="skill-card__footer"><span data-i18n="skills.pythonLevel">APRENDIENDO</span><span>↗</span></div>
-        <div class="skill-bar" aria-hidden="true"><span style="--level:45%"></span></div>
+        <p data-i18n="skills.python">Lo estoy aprendiendo con mis proyectos. Tengo varios subidos a GitHub.</p>
+        <div class="skill-card__footer"><span data-i18n="skills.pythonLevel">EN ELLO</span><span>↗</span></div>
       </article>
       <article class="skill-card reveal">
-        <div class="skill-card__top"><span class="skill-card__icon">🎮</span><span class="skill-card__number">03</span></div>
-        <h3 data-i18n="skills.gamesTitle">Desarrollo de juegos</h3>
-        <p data-i18n="skills.games">Diseñar una mecánica, probarla y mejorarla con los comentarios que recibo.</p>
-        <div class="skill-card__footer"><span data-i18n="skills.gamesLevel">SIEMPRE EXPLORANDO</span><span>↗</span></div>
-        <div class="skill-bar" aria-hidden="true"><span style="--level:70%"></span></div>
+        <div class="skill-card__top"><span class="skill-card__icon">JS</span><span class="skill-card__number">03</span></div>
+        <h3>JavaScript</h3>
+        <p data-i18n="skills.javascript">Para que los juegos y las páginas hagan algo más que quedarse ahí.</p>
+        <div class="skill-card__footer"><span data-i18n="skills.pythonLevel">EN ELLO</span></div>
+      </article>
+      <article class="skill-card reveal">
+        <div class="skill-card__top"><span class="skill-card__icon">TS</span><span class="skill-card__number">04</span></div>
+        <h3>TypeScript</h3>
+        <p data-i18n="skills.typescript">Lo estoy aprendiendo. También aparece en mis repos, como Wave.</p>
+        <div class="skill-card__footer"><span data-i18n="skills.pythonLevel">EN ELLO</span></div>
       </article>
     </div>
   </section>
@@ -197,25 +196,22 @@
   <section id="projects-teaser" class="section">
     <div class="section__head reveal">
       <span class="section__num">03</span>
-      <h2 class="section__title" data-i18n="projectsTeaser.title">Proyectos recientes</h2>
-      <p class="section__sub" data-i18n="projectsTeaser.sub">Repositorios públicos de Jaime Gaming y PineappleVA, ordenados por su actividad más reciente.</p>
+      <h2 class="section__title" data-i18n="projectsTeaser.title">Lo que voy haciendo</h2>
+      <p class="section__sub" data-i18n="projectsTeaser.sub">Juegos, alguna herramienta y cosas que me da por probar.</p>
     </div>
     <div class="projects__grid" id="projectsGrid" data-limit="4" aria-busy="true">
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
+      <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__label" data-i18n="projects.loading">Cargando proyectos…</span></div>
     </div>
     <div class="projects__viewall reveal">
-      <a href="/projects/" class="btn btn--ghost" data-i18n="projectsTeaser.viewAll">Ver todos los proyectos <span aria-hidden="true">→</span></a>
+      <a href="/projects/" class="btn btn--ghost" data-i18n="projectsTeaser.viewAll">Ver el resto →</a>
     </div>
   </section>
 
   <section id="github" class="section">
     <div class="section__head reveal">
       <span class="section__num">04</span>
-      <h2 class="section__title" data-i18n="github.title">Actividad en GitHub</h2>
-      <p class="section__sub" data-i18n="github.sub">Los proyectos se sincronizan con GitHub cada 10 minutos.</p>
+      <h2 class="section__title" data-i18n="github.title">Mi rincón de GitHub</h2>
+      <p class="section__sub" data-i18n="github.sub">Repos, estrellas y días de tocar código. Las cifras vienen de GitHub.</p>
     </div>
 
     <div class="github__toolbar reveal">
@@ -233,8 +229,8 @@
     </div>
 
     <div class="github__stats reveal" id="githubStats" aria-live="polite">
-      <div class="stat"><span class="stat__value" id="statRepos">—</span><span class="stat__label" data-i18n="github.repos">Repositorios</span></div>
-      <div class="stat"><span class="stat__value" id="statStars">—</span><span class="stat__label" data-i18n="github.stars">Estrellas</span></div>
+      <div class="stat"><span class="stat__value" id="statRepos">—</span><span class="stat__label" data-i18n="github.repos">Repos de proyectos</span></div>
+      <div class="stat"><span class="stat__value" id="statStars">—</span><span class="stat__label" data-i18n="github.stars">Estrellas en proyectos</span></div>
       <div class="stat"><span class="stat__value" id="statFollowers">—</span><span class="stat__label" data-i18n="github.followers">Seguidores</span></div>
     </div>
 
@@ -252,8 +248,8 @@
         <div class="calendar__weekdays" id="contributionWeekdays" aria-hidden="true"></div>
         <div class="calendar__body">
           <div class="calendar__months" id="contributionMonths" aria-hidden="true"></div>
-          <div class="calendar__weeks calendar__weeks--message" id="contributionCalendar" role="group" aria-label="Calendario de contribuciones" data-i18n-aria="github.calendarAria">
-            <p class="calendar__message" id="contributionMessage" data-i18n="github.calendarLoading">Cargando contribuciones…</p>
+          <div class="calendar__weeks calendar__weeks--message" id="contributionCalendar" aria-busy="true" role="group" aria-label="Calendario de contribuciones" data-i18n-aria="github.calendarAria">
+            <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__label" data-i18n="github.calendarLoading">Cargando contribuciones…</span></div>
           </div>
         </div>
       </div>
@@ -261,22 +257,62 @@
     </div>
 
     <div class="github__detail-stats reveal" aria-label="Más estadísticas de GitHub" data-i18n-aria="github.detailStats">
-      <div class="github__detail-stat"><span class="github__detail-stat-value" id="statPersonalRepos">—</span><span class="github__detail-stat-label" data-i18n="github.personalRepos">Repos personales</span></div>
-      <div class="github__detail-stat"><span class="github__detail-stat-value" id="statOrgRepos">—</span><span class="github__detail-stat-label" data-i18n="github.orgRepos">Repos PineappleVA</span></div>
-      <div class="github__detail-stat"><span class="github__detail-stat-value" id="statForks">—</span><span class="github__detail-stat-label" data-i18n="github.forks">Forks</span></div>
+      <div class="github__detail-stat"><span class="github__detail-stat-value" id="statPersonalRepos">—</span><span class="github__detail-stat-label" data-i18n="github.personalRepos">Repos personales visibles</span></div>
+      <div class="github__detail-stat"><span class="github__detail-stat-value" id="statForks">—</span><span class="github__detail-stat-label" data-i18n="github.forks">Forks de proyectos</span></div>
       <div class="github__detail-stat"><span class="github__detail-stat-value" id="statLanguages">—</span><span class="github__detail-stat-label" data-i18n="github.languages">Lenguajes usados</span></div>
     </div>
   </section>
 
-  <section id="contact" class="section section--contact">
+    <section id="contact" class="section section--contact">
     <div class="section__head reveal">
       <span class="section__num">05</span>
-      <h2 class="section__title" data-i18n="contact.title">Contacto</h2>
+      <h2 class="section__title" data-i18n="contact.title">¿Hablamos?</h2>
     </div>
-    <p class="contact__text reveal" data-i18n="contact.text">Si quieres hablar de un proyecto, colaborar o saludar, escríbeme.</p>
-    <a class="contact__email reveal" href="mailto:jaimegamingpro@gmail.com">jaimegamingpro@gmail.com</a>
-    <div class="socials__grid reveal" id="socialsGrid"></div>
+    <div class="contact-intro reveal">
+      <span class="contact-eyebrow" data-i18n="contact.eyebrow">CORREO Y REDES</span>
+      <p class="contact__text" data-i18n="contact.text">¿Has probado un juego mío? ¿Hay algo que no funciona? Cuéntamelo. Y si sólo venías a saludar, también vale.</p>
+    </div>
+    <div class="contact-layout">
+      <article class="contact-mail reveal">
+        <div class="contact-mail__top"><span aria-hidden="true">↗</span><h3 data-i18n="contact.emailLabel">Por correo</h3></div>
+        <p data-i18n="contact.emailDesc">Para contarme algo con un poco más de detalle.</p>
+        <a class="contact__email" href="mailto:jaimegamingpro@gmail.com">jaimegamingpro@gmail.com</a>
+        <div class="contact-mail__actions">
+          <a class="btn btn--primary" href="mailto:jaimegamingpro@gmail.com" data-i18n="contact.send">Abrir correo ↗</a>
+          <button class="btn btn--ghost" type="button" id="copyEmail" data-i18n="contact.copy" hidden>Copiar dirección</button>
+        </div>
+        <p class="contact-hint" data-i18n="contact.copyHint">Se abrirá tu aplicación de correo. También puedes copiar la dirección.</p>
+        <p class="contact-feedback" id="copyFeedback" role="status" aria-live="polite"></p>
+      </article>
+      <div class="contact-networks">
+        <h3 class="reveal" data-i18n="contact.socialTitle">O por donde te venga mejor</h3>
+        <p class="reveal" data-i18n="contact.socialSub">Para hablar, seguir lo que subo o mirar el código.</p>
+        <div class="contact-links" id="contactLinks">
+          <a class="contact-link reveal" href="https://discord.com/users/984083829767675965" target="_blank" rel="noopener noreferrer">
+            <span class="contact-link__initial" aria-hidden="true">D</span><span class="contact-link__body"><strong>Discord</strong><span data-i18n="contact.discordDesc">Para hablar por Discord.</span><small data-i18n="contact.discordHandle">Mi perfil de Discord</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="contact-link reveal" href="https://www.youtube.com/@jaimegaming5731" target="_blank" rel="noopener noreferrer">
+            <span class="contact-link__initial" aria-hidden="true">▶</span><span class="contact-link__body"><strong>YouTube</strong><span data-i18n="contact.youtubeDesc">Mis vídeos, y los comentarios para hablar de ellos.</span><small>@jaimegaming5731</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="contact-link reveal" href="https://x.com/JaimeGamingPro" target="_blank" rel="noopener noreferrer">
+            <span class="contact-link__initial" aria-hidden="true">𝕏</span><span class="contact-link__body"><strong>X / Twitter</strong><span data-i18n="contact.xDesc">También me encontrarás en X.</span><small>@JaimeGamingPro</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="contact-link reveal" href="https://github.com/jaime-gaming" target="_blank" rel="noopener noreferrer">
+            <span class="contact-link__initial" aria-hidden="true">&lt;/&gt;</span><span class="contact-link__body"><strong>GitHub</strong><span data-i18n="contact.githubDesc">Para el código, los bugs y las ideas sobre un repo.</span><small>@jaime-gaming</small></span><span class="contact-link__arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="contact-topics reveal">
+      <h3 data-i18n="contact.quickTitle">¿No sabes por dónde empezar?</h3>
+      <div class="contact-topics__links">
+        <a href="mailto:jaimegamingpro@gmail.com?subject=Una%20idea%20para%20un%20proyecto" data-contact-subject="contact.subjectProject" data-i18n="contact.topicProject">Tengo una idea</a>
+        <a href="mailto:jaimegamingpro@gmail.com?subject=He%20encontrado%20un%20fallo" data-contact-subject="contact.subjectBug" data-i18n="contact.topicBug">He encontrado un fallo</a>
+        <a href="mailto:jaimegamingpro@gmail.com?subject=%C2%A1Hola%2C%20Jaime!" data-contact-subject="contact.subjectHello" data-i18n="contact.topicHello">Sólo venía a saludar</a>
+      </div>
+    </div>
   </section>
+
 
 </main>
 
@@ -286,6 +322,9 @@
 </footer>
 
 <script src="/assets/js/i18n.js"></script>
+<script src="/assets/vendor/marked.min.js"></script>
+<script src="/assets/vendor/purify.min.js"></script>
+<script src="/assets/js/readme.js"></script>
 <script src="/assets/js/main.js"></script>
 </body>
 </html>

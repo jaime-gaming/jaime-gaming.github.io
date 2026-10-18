@@ -1,9 +1,3 @@
-/**
- * Shared HTML layout used by every generated page (home, projects, blog).
- * Keeping a single template means the header/nav/footer only need to be
- * edited in one place and stay perfectly in sync across the whole site.
- */
-
 const SITE_NAME = "Jaime Gaming";
 const SITE_URL = "https://jaime-gaming.github.io";
 
@@ -11,7 +5,7 @@ const NAV_ITEMS = [
   { href: "/", key: "nav.home", label: "Inicio" },
   { href: "/projects/", key: "nav.projects", label: "Proyectos" },
   { href: "/blog/", key: "nav.blog", label: "Blog" },
-  { href: "/#contact", key: "nav.contact", label: "Contacto" },
+  { href: "/contact/", key: "nav.contact", label: "Hablamos" },
 ];
 
 function escapeHtml(str) {
@@ -36,7 +30,7 @@ export function renderLayout({
   activePath = "/",
   extraHead = "",
 }) {
-  const fullTitle = title ? `${escapeHtml(title)} — ${SITE_NAME}` : SITE_NAME;
+  const fullTitle = activePath === "/" ? "Jaime Gaming — juegos, programación y YouTube" : title ? `${escapeHtml(title)} — ${SITE_NAME}` : SITE_NAME;
   const safeDescription = escapeHtml(description || "");
   const nav = NAV_ITEMS.map((item) => {
     const active = isActiveNavItem(item, activePath) ? " active" : "";
@@ -55,7 +49,17 @@ export function renderLayout({
 <meta name="description" content="${safeDescription}" />
 <meta name="author" content="Jaime Gaming" />
 <meta name="theme-color" content="#10120f" />
-<!-- JG source mark: Jaime Gaming / jaime-gaming.github.io -->
+<meta name="robots" content="${title === "Proyecto" ? "noindex, follow" : "index, follow"}" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Jaime Gaming" />
+<meta property="og:title" content="${fullTitle}" />
+<meta property="og:description" content="${safeDescription}" />
+<meta property="og:url" content="${SITE_URL}${activePath}" />
+<meta property="og:image" content="${SITE_URL}/assets/img/social-card.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@JaimeGamingPro" />
+${activePath === "/" ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Person", "@id": SITE_URL + "/#jaime-gaming", name: "Jaime Gaming", alternateName: ["jaime-gaming", "JaimeGamingPro"], url: SITE_URL + "/", description: "Youtuber y programador. Juegos para navegador y proyectos web.", sameAs: ["https://github.com/jaime-gaming", "https://www.youtube.com/@jaimegaming5731", "https://x.com/JaimeGamingPro"] })}</script>` : ""}
+
 <link rel="canonical" href="${SITE_URL}${activePath}" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -97,6 +101,9 @@ ${bodyHtml}
 </footer>
 
 <script src="/assets/js/i18n.js"></script>
+<script src="/assets/vendor/marked.min.js"></script>
+<script src="/assets/vendor/purify.min.js"></script>
+<script src="/assets/js/readme.js"></script>
 <script src="/assets/js/main.js"></script>
 </body>
 </html>

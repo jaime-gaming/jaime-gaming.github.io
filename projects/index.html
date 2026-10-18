@@ -4,10 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Proyectos — Jaime Gaming</title>
-<meta name="description" content="Repositorios públicos de Jaime Gaming y PineappleVA, sincronizados desde GitHub." />
+<meta name="description" content="Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub." />
 <meta name="author" content="Jaime Gaming" />
 <meta name="theme-color" content="#10120f" />
-<!-- JG source mark: Jaime Gaming / jaime-gaming.github.io -->
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Jaime Gaming" />
+<meta property="og:title" content="Proyectos — Jaime Gaming" />
+<meta property="og:description" content="Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub." />
+<meta property="og:url" content="https://jaime-gaming.github.io/projects/" />
+<meta property="og:image" content="https://jaime-gaming.github.io/assets/img/social-card.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@JaimeGamingPro" />
+
+
 <link rel="canonical" href="https://jaime-gaming.github.io/projects/" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,7 +36,7 @@
     <a href="/" data-i18n="nav.home" class="">Inicio</a>
     <a href="/projects/" data-i18n="nav.projects" class="active">Proyectos</a>
     <a href="/blog/" data-i18n="nav.blog" class="">Blog</a>
-    <a href="/#contact" data-i18n="nav.contact" class="">Contacto</a>
+    <a href="/contact/" data-i18n="nav.contact" class="">Hablamos</a>
   </nav>
   <div class="nav__actions">
     <button class="lang-switch" id="langSwitch" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
@@ -42,15 +52,15 @@
   <a href="/" data-i18n="nav.home">Inicio</a>
   <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
   <a href="/blog/" data-i18n="nav.blog">Blog</a>
-  <a href="/#contact" data-i18n="nav.contact">Contacto</a>
+  <a href="/contact/" data-i18n="nav.contact">Hablamos</a>
 </nav>
 
 <main id="top">
   <section class="section section--wide projects-page">
     <div class="section__head reveal">
       <span class="section__num">/PROJECTS</span>
-      <h1 class="section__title" data-i18n="projectsPage.title">Proyectos</h1>
-      <p class="section__sub" data-i18n="projectsPage.sub">Repositorios públicos de Jaime Gaming y PineappleVA.</p>
+      <h1 class="section__title" data-i18n="projectsPage.title">Mis proyectos</h1>
+      <p class="section__sub" data-i18n="projectsPage.sub">Aquí está lo que he subido a GitHub. Abre uno para ver de qué va y encontrar su código.</p>
     </div>
     <div class="github__toolbar reveal">
       <div class="github__sync" id="githubSync" data-state="loading" aria-live="polite" aria-atomic="true">
@@ -66,10 +76,7 @@
       </button>
     </div>
     <div class="projects__grid projects__grid--full" id="projectsGrid" aria-busy="true">
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
+      <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__label" data-i18n="projects.loading">Cargando proyectos…</span></div>
     </div>
   </section>
 
@@ -81,6 +88,9 @@
 </footer>
 
 <script src="/assets/js/i18n.js"></script>
+<script src="/assets/vendor/marked.min.js"></script>
+<script src="/assets/vendor/purify.min.js"></script>
+<script src="/assets/js/readme.js"></script>
 <script src="/assets/js/main.js"></script>
 </body>
 </html>

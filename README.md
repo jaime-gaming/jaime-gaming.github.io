@@ -6,7 +6,7 @@ Sitio personal de Jaime Gaming, publicado en [jaime-gaming.github.io](https://ja
 
 - Diseño oscuro adaptable a móvil, con perfil en directo, tarjetas visuales y animaciones; respeta la preferencia de movimiento reducido.
 - Interfaz en español e inglés.
-- Lista de repositorios públicos de la cuenta `jaime-gaming` y de la organización `PineappleVA`, incluidos los forks. Los datos se actualizan cada diez minutos.
+- Lista de repositorios públicos de la cuenta `jaime-gaming` incluidos los forks. No se muestran repositorios de organizaciones. Los datos se actualizan cada diez minutos.
 - Página de detalle por repositorio, con enlaces al proyecto y lectura de su README cuando está disponible.
 - Calendario de contribuciones diario, navegable con teclado y seleccionable con toque.
 - Estado y actividad de Discord mediante Lanyard.
@@ -18,6 +18,7 @@ Sitio personal de Jaime Gaming, publicado en [jaime-gaming.github.io](https://ja
 content/                    # Fuentes editables
   home.fragment.html        # Secciones de inicio
   projects.fragment.html    # Listado de proyectos
+  contact.fragment.html     # Contacto compartido entre inicio y /contact/
   404.fragment.html         # Página de error y detalle de proyectos
   blog/*.md                 # Posts en Markdown
 scripts/
@@ -26,12 +27,12 @@ scripts/
 assets/css/style.css        # Estilos
 assets/js/i18n.js           # Textos ES/EN
 assets/js/main.js           # Sincronización, calendario y presencia
-index.html, projects/, blog/ # Páginas generadas; no editar a mano
+index.html, projects/, blog/, contact/ # Páginas generadas; no editar a mano
 ```
 
 ## Proyectos
 
-La lista combina las API públicas de GitHub para el usuario `jaime-gaming` y la organización `PineappleVA`. Cada repositorio enlaza a `/projects/<propietario>/<repositorio>/`. GitHub Pages sirve `404.html` para esa ruta y `main.js` carga los datos y el README en el navegador, por lo que las páginas no necesitan generarse una a una.
+La lista consulta únicamente la API pública de GitHub para el usuario `jaime-gaming`. Cada repositorio enlaza a `/projects/<propietario>/<repositorio>/`. GitHub Pages sirve `404.html` para esa ruta y `main.js` carga los datos y el README en el navegador, por lo que las páginas no necesitan generarse una a una.
 
 Las consultas a GitHub son anónimas y comparten el límite público de solicitudes por IP. El sitio conserva una copia local reciente para mostrarla si la API no responde. El calendario usa la API pública `github-contributions-api` de Jogruber; sus respuestas se guardan en la caché del navegador.
 
@@ -61,3 +62,38 @@ python3 scripts/preview_server.py
 ```
 
 El servidor local enlaza `0.0.0.0:8000` y sirve `404.html` como fallback para las rutas dinámicas `/projects/<propietario>/<repositorio>/`, igual que GitHub Pages. El build regenera `index.html`, `projects/index.html`, `404.html` y las páginas del blog; los cambios en `assets/` se sirven directamente.
+
+## Datos del perfil y comprobaciones
+
+La presentación sigue el README público de `jaime-gaming/jaime-gaming`: HTML, aprendizaje de JavaScript, TypeScript y Python, juegos compartidos con compañeros y fundador de Pineapple. No se asignan porcentajes de dominio.
+
+La biografía, ubicación, repositorios públicos y seguidores se consultan en la API REST de GitHub junto con los proyectos. No se consultan ni se muestran eventos de actividad pública.
+
+Si la API falla y no hay caché del navegador, se usa `assets/data/github.json`, una captura real con su fecha de consulta. La interfaz la identifica como datos guardados, no como datos en directo. Este archivo no contiene credenciales. El calendario depende de un servicio externo y Discord depende de Lanyard; un error de conexión no se presenta como estado desconectado del usuario.
+
+```sh
+npm ci
+npm run build
+npm test
+python3 scripts/preview_server.py
+```
+
+Las pruebas comprueban el perfil, los repositorios, el cambio de idioma y la recuperación con datos guardados cuando la API no responde.
+
+## Buscadores
+
+La portada incluye título y descripción específicos de Jaime Gaming, URL canónica, metadatos Open Graph/Twitter y datos estructurados `Person` con los enlaces confirmados de GitHub, YouTube y X. `robots.txt` permite el rastreo y enlaza `sitemap.xml`, que se regenera con las páginas y entradas del blog.
+
+Después de publicar, se puede verificar `https://jaime-gaming.github.io/` en Google Search Console, enviar el sitemap y solicitar la indexación de la portada. La verificación requiere acceso del propietario; no se ha realizado desde este entorno. La indexación y la posición para «Jaime Gaming» dependen de Google, no son inmediatas ni se pueden garantizar.
+
+Los README se obtienen del endpoint oficial `/readme` de GitHub (no se presupone nombre, mayúsculas o extensión), se procesan con Marked y se sanean con DOMPurify. Las bibliotecas se copian al directorio `assets/vendor/` durante el build; sus licencias se conservan allí. El renderizador soporta tablas, código, HTML seguro, listas e imágenes con rutas relativas.
+
+## Inicio y contacto
+
+La cabecera alterna frases preparadas mientras se consulta GitHub. Cuando llegan los datos, usa los tres repositorios personales más recientes, excluyendo forks, repos archivados o deshabilitados. El enlace de cada frase apunta al proyecto correspondiente. «Repos recientes» describe la fuente; no significa que Jaime esté programando en ese momento. El texto deja de escribirse carácter a carácter con movimiento reducido y pausa el efecto cuando la pestaña está oculta.
+
+`content/contact.fragment.html` se reutiliza en la portada y en `/contact/`. Correo y redes tienen enlaces reales incluso sin JavaScript. El botón de copiar sólo aparece con JavaScript y comunica si la copia falla. Los accesos por tema preparan el asunto de un correo; no envían mensajes ni guardan datos.
+
+Referencias de esta revisión: [janiito.com](https://janiito.com/en) por su presentación directa y los proyectos en primer plano, y [mateag.com](https://mateag.com/home/) por el tono personal y la cabecera dinámica. Se conserva la paleta y la estructura propia; no se han copiado sus textos ni recursos.
+
+Además de `npm test`, se revisaron la portada y el contacto en Chromium a 1440 y 390 píxeles, sin desbordamientos horizontales ni errores de JavaScript. La comprobación de navegador utilizó respuestas controladas de GitHub; no verifica la disponibilidad de los servicios externos. El workflow `checks.yml` ejecuta build y pruebas en las ramas de trabajo y las pull requests.

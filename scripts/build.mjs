@@ -1,24 +1,6 @@
 #!/usr/bin/env node
-/**
- * Static build script for the portfolio.
- *
- * Generates every page from the shared layout in scripts/layout.mjs so the
- * header/nav/footer stay perfectly in sync:
- *   - /index.html          from content/home.fragment.html
- *   - /projects/index.html from content/projects.fragment.html
- *   - /404.html            from content/404.fragment.html (also doubles as
- *                          the client-rendered "project detail" page via
- *                          GitHub Pages' 404 fallback, see assets/js/main.js)
- *   - /blog/index.html     generated from content/blog/*.md front matter
- *   - /blog/<slug>/index.html one per markdown post
- *
- * Project pages are intentionally NOT pre-rendered here: the projects list
- * and each project's detail page are fetched live from the GitHub REST API
- * in the browser (assets/js/main.js), so new repos show up automatically
- * with no rebuild required. Only the blog (hand-authored content) needs a
- * build step, which runs in CI on every push (see .github/workflows/build.yml).
- */
-import { readFile, writeFile, mkdir, readdir, rm } from "node:fs/promises";
+
+import { readFile, writeFile, mkdir, readdir, rm, copyFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
@@ -62,10 +44,10 @@ async function writePage(relPath, html) {
 }
 
 async function buildHome() {
-  const bodyHtml = await readFragment("home.fragment.html");
+  const bodyHtml = (await readFragment("home.fragment.html")).replace("{{CONTACT}}", await readFragment("contact.fragment.html"));
   const html = renderLayout({
     title: "Inicio",
-    description: "Jaime Gaming: juegos, proyectos web y repositorios de GitHub de Jaime Gaming y PineappleVA.",
+    description: "Jaime Gaming, youtuber y programador. Juegos para navegador, vídeos y proyectos web. Aprendiendo JavaScript, TypeScript y Python.",
     bodyHtml,
     activePath: "/",
   });
@@ -76,11 +58,17 @@ async function buildProjectsIndex() {
   const bodyHtml = await readFragment("projects.fragment.html");
   const html = renderLayout({
     title: "Proyectos",
-    description: "Repositorios públicos de Jaime Gaming y PineappleVA, sincronizados desde GitHub.",
+    description: "Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub.",
     bodyHtml,
     activePath: "/projects/",
   });
   await writePage("projects/index.html", html);
+}
+
+async function buildContact() {
+  const fragment = await readFragment("contact.fragment.html");
+  const bodyHtml = `<div class="contact-page">${fragment.replace('<h2 class="section__title"', '<h1 class="section__title"').replace('>¿Hablamos?</h2>', '>¿Hablamos?</h1>')}</div>`;
+  await writePage("contact/index.html", renderLayout({ title: "Contacto", description: "Habla con Jaime Gaming por correo, Discord, YouTube, X o GitHub. Enlaces oficiales y contacto directo.", bodyHtml, activePath: "/contact/" }));
 }
 
 async function build404() {
@@ -202,10 +190,25 @@ ${post.html}
 }
 
 async function main() {
+  await mkdir(path.join(ROOT, "assets/vendor"), { recursive: true });
+  await copyFile(path.join(ROOT, "node_modules/marked/marked.min.js"), path.join(ROOT, "assets/vendor/marked.min.js"));
+  await copyFile(path.join(ROOT, "node_modules/dompurify/dist/purify.min.js"), path.join(ROOT, "assets/vendor/purify.min.js"));
+  await copyFile(path.join(ROOT, "node_modules/marked/LICENSE.md"), path.join(ROOT, "assets/vendor/marked.LICENSE.txt"));
+  await copyFile(path.join(ROOT, "node_modules/dompurify/LICENSE"), path.join(ROOT, "assets/vendor/dompurify.LICENSE.txt"));
+  for (const name of ["marked.min.js", "purify.min.js"]) {
+    const file = path.join(ROOT, "assets/vendor", name);
+    const source = await readFile(file, "utf8");
+    await writeFile(file, source.replace(/^\/\*[\s\S]*?\*\/\s*/, "").replace(/\n\/\/# sourceMappingURL=.*$/m, ""));
+  }
   await buildHome();
   await buildProjectsIndex();
   await build404();
+  await buildContact();
   await buildBlog();
+  const posts = await loadPosts();
+  const urls = ["/", "/projects/", "/blog/", "/contact/", ...posts.map((post) => `/blog/${post.slug}/`)];
+  await writePage("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>https://jaime-gaming.github.io${url}</loc></url>`).join("")}</urlset>\n`);
+  await writePage("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: https://jaime-gaming.github.io/sitemap.xml\n");
 }
 
 main().catch((err) => {
