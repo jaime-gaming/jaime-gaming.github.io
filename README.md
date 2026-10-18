@@ -97,3 +97,11 @@ La cabecera alterna frases preparadas mientras se consulta GitHub. Cuando llegan
 Referencias de esta revisión: [janiito.com](https://janiito.com/en) por su presentación directa y los proyectos en primer plano, y [mateag.com](https://mateag.com/home/) por el tono personal y la cabecera dinámica. Se conserva la paleta y la estructura propia; no se han copiado sus textos ni recursos.
 
 Además de `npm test`, se revisaron la portada y el contacto en Chromium a 1440 y 390 píxeles, sin desbordamientos horizontales ni errores de JavaScript. La comprobación de navegador utilizó respuestas controladas de GitHub; no verifica la disponibilidad de los servicios externos. El workflow `checks.yml` ejecuta build y pruebas en las ramas de trabajo y las pull requests.
+
+## Estilos y vista previa
+
+El CSS utiliza una sola definición base por componente: tipografía, anchos, botones, tarjetas, contacto, README, cargas y errores. Se han eliminado las capas de rediseños anteriores, las animaciones permanentes de la tarjeta, la cronología repetida y las estadísticas secundarias duplicadas. Las entradas animadas no esconden contenido.
+
+El build añade a CSS y JavaScript una versión calculada con SHA-256. La vista previa sirve `Cache-Control: no-store`, mantiene las rutas de detalle de proyectos y muestra el 404 del sitio para páginas inexistentes. No sustituye archivos estáticos inexistentes por HTML con estado 200.
+
+La revisión de esta corrección cubrió seis rutas a 320, 390, 768 y 1440 píxeles en Chromium, con respuestas de API controladas, además de movimiento reducido y fallos de conexión. `npm test` comprueba también las versiones de los archivos, la sintaxis del CSS y las respuestas HTTP del servidor de vista previa.

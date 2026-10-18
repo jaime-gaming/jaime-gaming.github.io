@@ -1,3 +1,12 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+
+function assetUrl(path) {
+  const content = readFileSync(new URL(`..${path}`, import.meta.url));
+  const version = createHash("sha256").update(content).digest("hex").slice(0, 12);
+  return `${path}?v=${version}`;
+}
+
 const SITE_NAME = "Jaime Gaming";
 const SITE_URL = "https://jaime-gaming.github.io";
 
@@ -5,7 +14,7 @@ const NAV_ITEMS = [
   { href: "/", key: "nav.home", label: "Inicio" },
   { href: "/projects/", key: "nav.projects", label: "Proyectos" },
   { href: "/blog/", key: "nav.blog", label: "Blog" },
-  { href: "/contact/", key: "nav.contact", label: "Hablamos" },
+  { href: "/contact/", key: "nav.contact", label: "Contacto" },
 ];
 
 function escapeHtml(str) {
@@ -65,7 +74,7 @@ ${activePath === "/" ? `<script type="application/ld+json">${JSON.stringify({ "@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/assets/css/style.css" />
+<link rel="stylesheet" href="${assetUrl("/assets/css/style.css")}" />
 ${extraHead}</head>
 <body>
 
@@ -100,11 +109,11 @@ ${bodyHtml}
   <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">↑</button>
 </footer>
 
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/vendor/marked.min.js"></script>
-<script src="/assets/vendor/purify.min.js"></script>
-<script src="/assets/js/readme.js"></script>
-<script src="/assets/js/main.js"></script>
+<script src="${assetUrl("/assets/js/i18n.js")}"></script>
+<script src="${assetUrl("/assets/vendor/marked.min.js")}"></script>
+<script src="${assetUrl("/assets/vendor/purify.min.js")}"></script>
+<script src="${assetUrl("/assets/js/readme.js")}"></script>
+<script src="${assetUrl("/assets/js/main.js")}"></script>
 </body>
 </html>
 `;

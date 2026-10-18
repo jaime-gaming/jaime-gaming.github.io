@@ -1007,6 +1007,24 @@
       const bytes = Uint8Array.from(atob(data.content.replace(/\s/g, "")), (char) => char.charCodeAt(0));
       const markdown = new TextDecoder().decode(bytes);
       element.innerHTML = window.renderProjectMarkdown(markdown, { owner, name: repo.name, branch, path: data.path || "README.md" });
+      element.querySelectorAll("img").forEach((image) => {
+        const replaceBrokenImage = () => {
+          if (!image.isConnected) return;
+          const source = safeHttpUrl(image.src);
+          const fallback = document.createElement(source ? "a" : "span");
+          fallback.className = "readme-image-fallback";
+          fallback.textContent = [image.alt, textFor("project.imageUnavailable", "Image unavailable")].filter(Boolean).join(" · ");
+          if (source) {
+            fallback.href = source;
+            fallback.target = "_blank";
+            fallback.rel = "noopener noreferrer";
+          }
+          if (image.parentElement && image.parentElement.tagName === "A") image.replaceWith(document.createTextNode(fallback.textContent));
+          else image.replaceWith(fallback);
+        };
+        image.addEventListener("error", replaceBrokenImage, { once: true });
+        if (image.complete && !image.naturalWidth) replaceBrokenImage();
+      });
       observeReveals(element);
     } catch {
       const githubUrl = safeHttpUrl(repo.html_url);
@@ -1055,13 +1073,15 @@
     presenceElement.dataset.connection = state;
     if (lastPresence && Date.now() - lastPresenceAt < 60000) return;
     lastPresence = null;
-    const key = state === "reconnecting" ? "discord.reconnecting" : state === "offline" ? "discord.unavailable" : "discord.connecting";
+    presenceElement.removeAttribute("aria-label");
+    const unavailable = state === "offline" || state === "reconnecting";
+    const key = unavailable ? "discord.unavailable" : "discord.connecting";
     if (presenceLabel) presenceLabel.textContent = textFor(key, "Connecting to Discord…");
     if (presenceActivity) {
       presenceActivity.hidden = true;
       presenceActivity.textContent = "";
     }
-    presenceElement.dataset.status = state === "offline" ? "unavailable" : "loading";
+    presenceElement.dataset.status = unavailable ? "unavailable" : "loading";
   }
 
   function normalizePresence(data) {

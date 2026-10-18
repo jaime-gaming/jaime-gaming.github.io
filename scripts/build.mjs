@@ -146,7 +146,7 @@ async function buildBlog() {
 
   const indexBody = `  <section class="section">
     <div class="section__head reveal">
-      <h2 class="section__title" data-i18n="blog.title">Blog</h2>
+      <h1 class="section__title" data-i18n="blog.title">Blog</h1>
       <p class="section__sub" data-i18n="blog.sub">Notas y novedades sobre lo que estoy construyendo.</p>
     </div>
     <div class="blog__list">

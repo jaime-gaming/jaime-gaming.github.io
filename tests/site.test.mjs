@@ -127,7 +127,7 @@ test("project detail loads the official README endpoint and decodes UTF-8", asyn
     const calls = [];
     window.fetch = async (url) => {
       calls.push(url);
-      return { ok: true, json: async () => url.endsWith("/readme") ? { encoding: "base64", content: Buffer.from("# Juego 🎮\n\nTexto en español: acción.").toString("base64"), path: "Readme.md" } : repo };
+      return { ok: true, json: async () => url.endsWith("/readme") ? { encoding: "base64", content: Buffer.from("# Juego 🎮\n\nTexto en español: acción.\n\n![Captura](cover.png)").toString("base64"), path: "Readme.md" } : repo };
     };
     for (const file of ["assets/js/i18n.js", "assets/vendor/marked.min.js", "assets/vendor/purify.min.js", "assets/js/readme.js", "assets/js/main.js"]) {
       window.eval(await readFile(new URL(`../${file}`, import.meta.url), "utf8"));
@@ -137,6 +137,10 @@ test("project detail loads the official README endpoint and decodes UTF-8", asyn
     assert.equal(window.document.querySelector("#projectReadme h1").textContent, "Juego 🎮");
     assert.match(window.document.querySelector("#projectReadme p").textContent, /acción/);
     assert.equal(window.document.querySelector("#projectReadme").hasAttribute("aria-busy"), false);
+    const image = window.document.querySelector("#projectReadme img");
+    if (image) image.dispatchEvent(new window.Event("error"));
+    assert.ok(window.document.querySelector(".readme-image-fallback"));
+    assert.match(window.document.querySelector(".readme-image-fallback").textContent, /Captura/);
   } finally { dom.window.close(); }
 });
 
@@ -268,5 +272,43 @@ test("contact page has real contact links without JavaScript, one h1, canonical 
     assert.equal(doc.querySelector('link[rel="canonical"]').href, "https://jaime-gaming.github.io/contact/");
     const sitemap = await readFile(new URL("../sitemap.xml", import.meta.url), "utf8");
     assert.match(sitemap, /<loc>https:\/\/jaime-gaming.github.io\/contact\/<\/loc>/);
+  } finally { dom.window.close(); }
+});
+
+test("every generated page links to the current CSS and JavaScript hashes", async () => {
+  const { createHash } = await import("node:crypto");
+  for (const page of ["index.html", "projects/index.html", "contact/index.html", "blog/index.html", "404.html"]) {
+    const dom = new JSDOM(await readFile(new URL(`../${page}`, import.meta.url), "utf8"));
+    try {
+      const doc = dom.window.document;
+      for (const element of doc.querySelectorAll('link[rel="stylesheet"], script[src]')) {
+        const path = element.getAttribute("href") || element.getAttribute("src");
+        if (!path.startsWith("/assets/")) continue;
+        const url = new URL(path, "https://jaime-gaming.github.io");
+        const content = await readFile(new URL(`..${url.pathname}`, import.meta.url));
+        assert.equal(url.searchParams.get("v"), createHash("sha256").update(content).digest("hex").slice(0, 12), `${page}: ${path}`);
+      }
+    } finally { dom.window.close(); }
+  }
+});
+
+test("stylesheet parses as one design system without duplicate base selector blocks or hidden reveal content", async () => {
+  const css = await readFile(new URL("../assets/css/style.css", import.meta.url), "utf8");
+  const dom = new JSDOM("<style></style>");
+  try {
+    const style = dom.window.document.querySelector("style");
+    style.textContent = css;
+    assert.ok(style.sheet.cssRules.length > 100);
+    const seen = new Set();
+    for (const rule of style.sheet.cssRules) {
+      if (!rule.selectorText) continue;
+      assert.equal(seen.has(rule.selectorText), false, `Repeated base selector: ${rule.selectorText}`);
+      seen.add(rule.selectorText);
+    }
+    assert.ok(seen.has(":root"));
+    assert.ok(seen.has(".project-card"));
+    assert.ok(seen.has(".contact-layout"));
+    assert.ok(seen.has(".jg-loader"));
+    assert.doesNotMatch(css, /\.js\s+\.reveal[^}]*opacity:\s*0/);
   } finally { dom.window.close(); }
 });
