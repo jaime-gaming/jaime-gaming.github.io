@@ -154,11 +154,11 @@
   }
 
 
-  const ICONS = { github: iconHtml("github"), mail: iconHtml("mail"), discord: iconHtml("message") };
+  const ICONS = { github: iconHtml("github"), mail: iconHtml("mail"), discord: iconHtml("discord") };
   const SOCIALS = [
     { id: "github", labelKey: "social.github", url: `https://github.com/${GH_USER}`, icon: ICONS.github },
     { id: "discord", labelKey: "social.discord", url: `https://discord.com/users/${DISCORD_USER_ID}`, icon: ICONS.discord },
-    { id: "youtube", labelKey: "social.youtube", url: "https://www.youtube.com/@jaimegaming5731", icon: iconHtml("video") },
+    { id: "youtube", labelKey: "social.youtube", url: "https://www.youtube.com/@jaimegaming5731", icon: iconHtml("youtube") },
     { id: "x", labelKey: "social.x", url: "https://x.com/JaimeGamingPro", icon: iconHtml("x") },
     { id: "email", labelKey: "social.email", url: `mailto:${EMAIL}`, icon: ICONS.mail },
   ];
@@ -462,7 +462,7 @@
     const name = escapeHtml(repo.name || "Untitled project");
     const owner = getRepoOwner(repo);
     const description = repo.description
-      ? escapeHtml(repo.description)
+      ? escapeHtml(repoDescription(repo))
       : escapeHtml(textFor("projects.noDescription", "More details coming soon."));
     const language = repo.language ? `<span class="project-card__lang">${escapeHtml(repo.language)}</span>` : "";
     const fork = repo.fork ? `<span class="project-card__fork">${escapeHtml(textFor("github.forkLabel", "fork"))}</span>` : "";
@@ -563,9 +563,20 @@
     values.forEach(([id, value]) => animateCount(document.getElementById(id), value));
   }
 
+  const translatedDescriptions = {
+    "A little project I made about keeping your daily journal": "Un proyecto para llevar tu diario personal.",
+    "all your agents in one place": "Todos tus agentes en un solo lugar.",
+    "One number, infinite possibilities.": "Un número, infinitas posibilidades.",
+    "Michael Burns disappeared last year. Would you come in?  VOID is a new psychological game set in a mysterious corporation where everyone and everything disappears...": "Michael Burns desapareció el año pasado. ¿Entrarías? VOID es un juego psicológico ambientado en una misteriosa corporación donde todos y todo desaparece…",
+    "A local-first music player for web, Android and Windows.": "Un reproductor de música local para web, Android y Windows.",
+  };
+  function repoDescription(repo) {
+    return getLang() === "es" ? translatedDescriptions[repo.description] || repo.description : repo.description;
+  }
+
   function renderPublicProfile(snapshot) {
     const user = snapshot.user;
-    const values = { profileBio: user.bio || "—", profileLocation: user.location || "—", profileRepos: numberFmt(user.public_repos), profileFollowers: numberFmt(user.followers) };
+    const values = { profileBio: user.bio?.toLowerCase() === "youtuber and programmer" ? textFor("about.cardBio") : user.bio || "—", profileLocation: user.location === "Spain" ? textFor("profile.spain") : user.location || "—", profileRepos: numberFmt(user.public_repos), profileFollowers: numberFmt(user.followers) };
     Object.entries(values).forEach(([id, value]) => {
       const element = document.getElementById(id);
       if (element) element.textContent = value;
@@ -1059,7 +1070,9 @@
     }
   }
 
+  let currentProjectRepo = null;
   function renderProjectDetail(repo) {
+    currentProjectRepo = repo;
     if (!projectDetailContainer || !projectDetailSection) return;
     const lang = getLang();
     const dict = (window.i18n && window.i18n.dict[lang]) || {};
@@ -1078,7 +1091,7 @@
     projectDetailContainer.innerHTML = `<div class="project-detail__head reveal">
       <p class="project-detail__owner">${escapeHtml(fullName)} ${forkLabel}</p>
       <h1 class="project-detail__name">${escapeHtml(repo.name)}</h1>
-      <p class="project-detail__desc">${repo.description ? escapeHtml(repo.description) : ""}</p>
+      <p class="project-detail__desc">${repo.description ? escapeHtml(repoDescription(repo)) : ""}</p>
       <div class="project-detail__meta">
         ${repo.language ? `<span>${escapeHtml(repo.language)}</span>` : ""}
         <span>${iconHtml("star")} <strong>${numberFmt(Number(repo.stargazers_count) || 0)}</strong> <span data-i18n="project.stars">${escapeHtml(dict["project.stars"] || "stars")}</span></span>
@@ -1090,7 +1103,7 @@
         ${githubUrl ? `<a class="btn btn--primary" href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener noreferrer"><span data-i18n="project.viewOnGithub">${escapeHtml(dict["project.viewOnGithub"] || "View on GitHub")}</span> ↗</a>` : ""}
         ${homepage ? `<a class="btn btn--ghost" href="${escapeHtml(homepage)}" target="_blank" rel="noopener noreferrer"><span data-i18n="project.liveDemo">${escapeHtml(dict["project.liveDemo"] || "Open project")}</span> ↗</a>` : ""}
       </div>
-    </div><div class="project-detail__readme reveal" id="projectReadme"></div>`;
+    </div><p class="readme-source-note" data-i18n="project.readmeOriginal">${escapeHtml(textFor("project.readmeOriginal"))}</p><div class="project-detail__readme reveal" id="projectReadme"></div>`;
     observeReveals(projectDetailContainer);
     updateRelativeTimes(projectDetailContainer);
     loadReadme(repo, document.getElementById("projectReadme"));
@@ -1416,6 +1429,10 @@
       if (label) label.textContent = textFor(githubRefreshButton.disabled ? "github.refreshing" : "github.refresh", "Refresh");
     }
     if (contributionCalendar && lastContributionData) renderContributionCalendar(lastContributionData, contributionSnapshotAt);
+    if (currentProjectRepo) {
+      const description = document.querySelector(".project-detail__desc");
+      if (description) description.textContent = repoDescription(currentProjectRepo) || "";
+    }
     updateRelativeTimes();
   });
 

@@ -1,13 +1,14 @@
 (function () {
   "use strict";
   window.renderProjectMarkdown = function (markdown, repo) {
+    const label = (key, fallback) => window.i18n?.dict[window.currentLang || document.documentElement.lang]?.[key] || fallback;
     const segments = (value) => value.split("/").map(encodeURIComponent).join("/");
     const root = `${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.name)}`;
     const directory = repo.path.includes("/") ? repo.path.slice(0, repo.path.lastIndexOf("/") + 1) : "";
     const rawBase = `https://raw.githubusercontent.com/${root}/${encodeURIComponent(repo.branch)}/${segments(directory)}`;
     const linkBase = `https://github.com/${root}/blob/${encodeURIComponent(repo.branch)}/${segments(directory)}`;
     const renderer = new window.marked.Renderer();
-    renderer.checkbox = (checked) => `<span class="readme-checkbox" role="img" aria-label="${checked ? "Completed" : "Not completed"}">${checked ? "☑" : "☐"}</span> `;
+    renderer.checkbox = (checked) => `<span class="readme-checkbox" role="img" data-i18n-aria="${checked ? "readme.completed" : "readme.incomplete"}" aria-label="${checked ? label("readme.completed", "Completed") : label("readme.incomplete", "Not completed")}">${checked ? "☑" : "☐"}</span> `;
     const clean = window.DOMPurify.sanitize(window.marked.parse(markdown, { gfm: true, breaks: false, renderer }), {
       USE_PROFILES: { html: true },
       FORBID_TAGS: ["form", "input", "button", "style", "iframe", "video", "audio"],
@@ -53,7 +54,8 @@
       wrapper.className = "readme-table";
       wrapper.tabIndex = 0;
       wrapper.setAttribute("role", "region");
-      wrapper.setAttribute("aria-label", "README table");
+      wrapper.setAttribute("aria-label", label("readme.table", "README table"));
+      wrapper.setAttribute("data-i18n-aria", "readme.table");
       table.replaceWith(wrapper);
       wrapper.append(table);
     });

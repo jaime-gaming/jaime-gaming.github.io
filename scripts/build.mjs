@@ -108,8 +108,19 @@ async function loadPosts() {
       html: marked.parse(content),
     });
   }
-  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-  return posts;
+  const grouped = new Map();
+  for (const post of posts) {
+    if (!["es", "en"].includes(post.lang)) throw new Error(`Unsupported blog language: ${post.lang}`);
+    const variants = grouped.get(post.slug) || {};
+    if (variants[post.lang]) throw new Error(`Duplicate ${post.lang} translation: ${post.slug}`);
+    variants[post.lang] = post;
+    grouped.set(post.slug, variants);
+  }
+  return Array.from(grouped, ([slug, translations]) => {
+    if (!translations.es || !translations.en) throw new Error(`Both es and en translations are required for ${slug}`);
+    if (translations.es.date !== translations.en.date) throw new Error(`Translation dates differ: ${slug}`);
+    return { ...translations.es, translations };
+  }).sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
 async function cleanOrphanedPostPages(posts) {
@@ -137,9 +148,9 @@ async function buildBlog() {
     ? posts
         .map(
           (p) => `      <a class="blog-item reveal" href="/blog/${p.slug}/">
-        <p class="blog-item__date">${formatDate(p.date, p.lang)}</p>
-        <h3 class="blog-item__title">${renderIcon(p.slug === "lanzamiento-wave" ? "music" : "file")} ${p.title}</h3>
-        <p class="blog-item__excerpt">${p.excerpt}</p>
+        <time class="blog-item__date" datetime="${p.date}" data-i18n-date>${formatDate(p.date, p.lang)}</time>
+        <h3 class="blog-item__title">${renderIcon(p.slug === "lanzamiento-wave" ? "music" : "file")} <span data-content-key="${p.slug}.title">${p.title}</span></h3>
+        <p class="blog-item__excerpt" data-content-key="${p.slug}.excerpt">${p.excerpt}</p>
       </a>`
         )
         .join("\n")
@@ -163,6 +174,9 @@ ${listItems}
       description: "Notas y novedades de Jaime Gaming.",
       bodyHtml: indexBody,
       activePath: "/blog/",
+      translations: Object.fromEntries(["es", "en"].map((lang) => [lang, {
+        fields: Object.fromEntries(posts.flatMap((post) => [[`${post.slug}.title`, post.translations[lang].title], [`${post.slug}.excerpt`, post.translations[lang].excerpt]])),
+      }])),
     })
   );
 
@@ -170,10 +184,10 @@ ${listItems}
     const postBody = `  <section class="section">
     <a href="/blog/" class="back-link reveal">← <span data-i18n="blog.back">Volver al blog</span></a>
     <div class="post-detail__head reveal">
-      <p class="post-detail__date">${formatDate(post.date, post.lang)}</p>
-      <h1 class="post-detail__title">${post.title}</h1>
+      <time class="post-detail__date" datetime="${post.date}" data-i18n-date>${formatDate(post.date, post.lang)}</time>
+      <h1 class="post-detail__title" data-content-key="post.title">${post.title}</h1>
     </div>
-    <article class="post-detail__body reveal" lang="${post.lang}">
+    <article class="post-detail__body reveal" lang="${post.lang}" data-content-key="post.body" data-content-language>
 ${post.html}
     </article>
   </section>
@@ -185,6 +199,11 @@ ${post.html}
         description: post.excerpt || post.title,
         bodyHtml: postBody,
         activePath: `/blog/${post.slug}/`,
+        translations: Object.fromEntries(["es", "en"].map((lang) => [lang, {
+          title: `${post.translations[lang].title} — Jaime Gaming`,
+          description: post.translations[lang].excerpt,
+          fields: { "post.title": post.translations[lang].title, "post.body": post.translations[lang].html },
+        }])),
       })
     );
   }
@@ -202,6 +221,9 @@ async function main() {
     const source = await readFile(file, "utf8");
     await writeFile(file, source.replace(/^\/\*[\s\S]*?\*\/\s*/, "").replace(/\n\/\/# sourceMappingURL=.*$/m, ""));
   }
+  await copyFile(path.join(ROOT, "node_modules/simple-icons/LICENSE.md"), path.join(ROOT, "assets/vendor/simple-icons.LICENSE.txt"));
+  await copyFile(path.join(ROOT, "node_modules/simple-icons/DISCLAIMER.md"), path.join(ROOT, "assets/vendor/simple-icons.DISCLAIMER.txt"));
+  await copyFile(path.join(ROOT, "node_modules/lucide-static/LICENSE"), path.join(ROOT, "assets/vendor/lucide.LICENSE.txt"));
   await buildHome();
   await buildProjectsIndex();
   await build404();

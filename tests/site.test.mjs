@@ -36,14 +36,14 @@ test("renders real profile and public repositories, and keeps them on language c
   const dom = await openSite();
   try {
     const doc = dom.window.document;
-    assert.equal(doc.querySelector("#profileBio").textContent, saved.data.user.bio);
+    assert.equal(doc.querySelector("#profileBio").textContent, dom.window.i18n.dict[doc.documentElement.lang]["about.cardBio"]);
     assert.equal(doc.querySelector("#profileRepos").textContent, String(saved.data.user.public_repos));
     assert.equal(doc.querySelector("#githubSync").dataset.state, "fresh");
     assert.ok(doc.querySelectorAll(".project-card").length > 0);
     assert.equal(doc.querySelectorAll(".skill-bar").length, 0);
     doc.querySelector("#langSwitch").click();
     assert.equal(doc.documentElement.lang, "en");
-    assert.equal(doc.querySelector("#profileBio").textContent, saved.data.user.bio);
+    assert.equal(doc.querySelector("#profileBio").textContent, dom.window.i18n.dict[doc.documentElement.lang]["about.cardBio"]);
     assert.match(doc.querySelector(".hero__subtitle").textContent, /browser games, web applications and videos/);
   } finally { dom.window.close(); }
 });
@@ -54,7 +54,7 @@ test("API failure uses dated saved data without claiming to be live or Discord o
     const doc = dom.window.document;
     assert.equal(doc.querySelector("#githubSync").dataset.state, "stale");
     assert.equal(doc.querySelector("#githubSyncTime").dateTime, new Date(saved.timestamp).toISOString());
-    assert.equal(doc.querySelector("#profileBio").textContent, saved.data.user.bio);
+    assert.equal(doc.querySelector("#profileBio").textContent, dom.window.i18n.dict[doc.documentElement.lang]["about.cardBio"]);
     assert.ok(doc.querySelectorAll(".project-card").length > 0);
     assert.notEqual(doc.querySelector("#lanyardStatus").dataset.status, "offline");
   } finally { dom.window.close(); }
@@ -469,4 +469,149 @@ test("failed daily lookups without a saved detail show a real GitHub link and cl
     assert.equal(doc.querySelector("#contributionResults").getAttribute("aria-busy"), "false");
     assert.match(doc.querySelector(".contribution-panel__source").href, /from=2026-10-17&to=2026-10-17/);
   } finally { dom.window.close(); }
+});
+
+test("blog translates the complete article, dates, image descriptions and SEO without duplicate posts", async () => {
+  const post = await readFile(new URL("../blog/lanzamiento-wave/index.html", import.meta.url), "utf8");
+  const index = await readFile(new URL("../blog/index.html", import.meta.url), "utf8");
+  const dom = new JSDOM(post, { url: "https://jaime-gaming.github.io/blog/lanzamiento-wave/", runScripts: "outside-only" });
+  try {
+    const { window } = dom;
+    window.localStorage.setItem("lang", "es");
+    window.eval(i18n);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const doc = window.document;
+    const spanishBody = doc.querySelector("article").innerHTML;
+    const spanishTitle = doc.title;
+    doc.querySelector("#langSwitch").click();
+    assert.equal(doc.documentElement.lang, "en");
+    assert.equal(doc.querySelector("article").lang, "en");
+    assert.equal(doc.querySelectorAll("h1").length, 1);
+    assert.equal(doc.querySelector("h1").textContent, "Wave 0.1.0: a player for your own music");
+    assert.match(doc.querySelector("article").textContent, /Wave is not a backup/);
+    assert.match(doc.querySelector("article").textContent, /unsigned test or debug builds/);
+    assert.match(doc.querySelector("article").textContent, /Automatic lookup is initially disabled/);
+    assert.match(doc.querySelector("article").textContent, /offline startup are still pending/);
+    assert.match(doc.querySelector("article img").alt, /desktop library/);
+    assert.equal(doc.querySelector("time").textContent, "October 18, 2026");
+    assert.match(doc.title, /a player for your own music/);
+    assert.equal(doc.querySelector('meta[property="og:title"]').content, doc.title);
+    assert.equal(doc.querySelector('meta[name="twitter:title"]').content, doc.title);
+    assert.match(doc.querySelector('meta[name="description"]').content, /first version of Wave/);
+    assert.equal(doc.querySelector('meta[property="og:locale"]').content, "en_US");
+    assert.equal(window.localStorage.getItem("lang"), "en");
+    const listing = new JSDOM(index, { url: "https://jaime-gaming.github.io/blog/", runScripts: "outside-only" });
+    try {
+      listing.window.localStorage.setItem("lang", window.localStorage.getItem("lang"));
+      listing.window.eval(i18n);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      assert.equal(listing.window.document.querySelectorAll(".blog-item").length, 1);
+      assert.match(listing.window.document.querySelector(".blog-item__title").textContent, /a player for your own music/);
+      assert.match(listing.window.document.querySelector(".blog-item__excerpt").textContent, /without an account or subscription/);
+      assert.equal(listing.window.document.querySelector("time").textContent, "October 18, 2026");
+    } finally { listing.window.close(); }
+    doc.querySelector("#langSwitch").click();
+    assert.equal(doc.querySelector("article").innerHTML, spanishBody);
+    assert.equal(doc.title, spanishTitle);
+    assert.equal(doc.querySelector("time").textContent, "18 de octubre de 2026");
+    assert.equal(doc.querySelector("article").lang, "es");
+  } finally { dom.window.close(); }
+});
+
+test("globe alternates flag state with an accessible destination label and persists the selection", async () => {
+  const dom = await openSite();
+  try {
+    const { document: doc } = dom.window;
+    const button = doc.getElementById("langSwitch");
+    assert.ok(button.querySelector(".language-globe use[href$='#icon-globe']"));
+    assert.ok(button.querySelector(".flag-es"));
+    assert.ok(button.querySelector(".flag-en"));
+    assert.equal(button.dataset.active, "es");
+    assert.equal(button.getAttribute("aria-label"), "Español. Cambiar a inglés");
+    button.click();
+    assert.equal(button.dataset.active, "en");
+    assert.equal(button.title, "English. Switch to Spanish");
+    assert.equal(button.getAttribute("aria-label"), button.title);
+    assert.equal(doc.querySelector("#languageName").textContent, "English");
+    assert.equal(dom.window.localStorage.getItem("lang"), "en");
+    assert.equal(doc.title, "Jaime Gaming — games, programming and YouTube");
+    button.click();
+    assert.equal(button.dataset.active, "es");
+    assert.equal(doc.querySelector("#languageName").textContent, "Español");
+    assert.equal(doc.querySelector("#profileLocation").textContent, "España");
+    assert.match(doc.querySelector('.project-card[href$="/wave/"] .project-card__desc').textContent, /reproductor de música local/);
+  } finally { dom.window.close(); }
+});
+
+test("brand icons use published Simple Icons paths and interface symbols come from Lucide", async () => {
+  const { siGithub, siDiscord, siYoutube, siX } = await import("simple-icons");
+  const sprite = new JSDOM(await readFile(new URL("../assets/img/icons.svg", import.meta.url), "utf8"), { contentType: "image/svg+xml" });
+  try {
+    for (const [name, brand] of Object.entries({ github: siGithub, discord: siDiscord, youtube: siYoutube, x: siX })) {
+      const path = sprite.window.document.querySelector(`#icon-${name} path`);
+      assert.equal(path.getAttribute("d"), brand.path);
+      assert.equal(path.getAttribute("fill"), "currentColor");
+      assert.equal(path.getAttribute("stroke"), "none");
+    }
+    const original = new JSDOM(await readFile(new URL("../node_modules/lucide-static/icons/globe.svg", import.meta.url), "utf8"), { contentType: "image/svg+xml" });
+    try {
+      assert.deepEqual(Array.from(sprite.window.document.querySelectorAll("#icon-globe path"), (p) => p.getAttribute("d")), Array.from(original.window.document.querySelectorAll("path"), (p) => p.getAttribute("d")));
+    } finally { original.window.close(); }
+    const contact = new JSDOM(await readFile(new URL("../contact/index.html", import.meta.url), "utf8"));
+    try {
+      assert.ok(contact.window.document.querySelector('a[href*="discord.com"] use[href$="#icon-discord"]'));
+      assert.ok(contact.window.document.querySelector('a[href*="youtube.com"] use[href$="#icon-youtube"]'));
+    } finally { contact.window.close(); }
+  } finally { sprite.window.close(); }
+});
+
+test("localized page payload cannot close its JSON script element", async () => {
+  const { renderLayout } = await import("../scripts/layout.mjs");
+  const value = '</script><script id="injected">alert(1)</script>';
+  const dom = new JSDOM(renderLayout({ title: "Blog", bodyHtml: "", activePath: "/blog/", translations: { en: { fields: { title: value } } } }));
+  try {
+    assert.equal(dom.window.document.getElementById("injected"), null);
+    assert.equal(JSON.parse(dom.window.document.getElementById("pageTranslations").textContent).en.fields.title, value);
+  } finally { dom.window.close(); }
+});
+
+test("README accessibility labels follow the chosen language without changing the source document", async () => {
+  const dom = await openSite();
+  try {
+    const { window } = dom;
+    for (const file of ["assets/vendor/marked.min.js", "assets/vendor/purify.min.js", "assets/js/readme.js"]) window.eval(await readFile(new URL(`../${file}`, import.meta.url), "utf8"));
+    const wrapper = window.document.createElement("div");
+    wrapper.innerHTML = window.renderProjectMarkdown("- [x] Original task\n\n| A | B |\n| - | - |\n| 1 | 2 |", { owner: "jaime-gaming", name: "Wave", branch: "main", path: "README.md" });
+    window.document.body.append(wrapper);
+    assert.equal(wrapper.querySelector(".readme-checkbox").getAttribute("aria-label"), "Completado");
+    assert.equal(wrapper.querySelector(".readme-table").getAttribute("aria-label"), "Tabla del README");
+    window.i18n.applyLang("en");
+    assert.equal(wrapper.querySelector(".readme-checkbox").getAttribute("aria-label"), "Completed");
+    assert.equal(wrapper.querySelector(".readme-table").getAttribute("aria-label"), "README table");
+    assert.match(wrapper.textContent, /Original task/);
+  } finally { dom.window.close(); }
+});
+
+test("all generated page labels and metadata have both Spanish and English translations", async () => {
+  for (const file of ["index.html", "projects/index.html", "contact/index.html", "404.html", "blog/index.html", "blog/lanzamiento-wave/index.html"]) {
+    const dom = new JSDOM(await readFile(new URL(`../${file}`, import.meta.url), "utf8"), { url: "https://jaime-gaming.github.io", runScripts: "outside-only" });
+    try {
+      const { window } = dom;
+      window.eval(i18n);
+      assert.deepEqual(Object.keys(window.i18n.dict.es).sort(), Object.keys(window.i18n.dict.en).sort());
+      for (const lang of ["en", "es"]) {
+        window.i18n.applyLang(lang);
+        for (const element of window.document.querySelectorAll("[data-i18n], [data-i18n-aria]")) {
+          const key = element.dataset.i18n || element.dataset.i18nAria;
+          assert.equal(typeof window.i18n.dict[lang][key], "string", `${file}: ${lang}.${key}`);
+        }
+        const doc = window.document;
+        assert.equal(doc.documentElement.lang, lang);
+        assert.equal(doc.querySelector('meta[property="og:title"]').content, doc.title);
+        assert.equal(doc.querySelector('meta[name="twitter:title"]').content, doc.title);
+        assert.equal(doc.querySelector('meta[property="og:description"]').content, doc.querySelector('meta[name="description"]').content);
+        if (lang === "en") assert.doesNotMatch(doc.title, /Proyectos|Contacto|Proyecto|juegos|programación/);
+      }
+    } finally { dom.window.close(); }
+  }
 });

@@ -7,7 +7,7 @@
       "nav.contact": "Contacto",
       "nav.openMenu": "Abrir menú",
       "nav.closeMenu": "Cerrar menú",
-      "aria.langSwitch": "Cambiar idioma",
+      "aria.langSwitch": "Español. Cambiar a inglés",
       "aria.homeLogo": "Jaime Gaming — inicio",
       "aria.mainNav": "Navegación principal",
       "aria.backToTop": "Volver arriba",
@@ -135,7 +135,7 @@
       "blog.back": "Volver al blog",
       "contact.title": "Contacto",
       "contact.text": "Puedes contactarme para comentar un proyecto, proponer una colaboración o comunicar un problema. Elige el correo o la red que prefieras.",
-      "about.cardBio": "youtuber and programmer",
+      "about.cardBio": "Creador de contenido y programador",
       "skills.javascript": "Lo utilizo en proyectos web y juegos. Sigo profundizando en la interacción, la lógica y el trabajo con datos.",
       "skills.typescript": "Estoy ampliando mis conocimientos de tipado y desarrollo de aplicaciones. Es el lenguaje principal del repositorio de Wave.",
       "github.profileRepos": "Repos públicos",
@@ -191,6 +191,21 @@
       "github.dayIssues": "Issues y pull requests",
       "github.dayPartial": "Parte de los resultados no se ha podido recuperar.",
       "github.dayNoCategory": "Sin resultados públicos en esta categoría.",
+      "profile.spain": "España",
+      "project.readmeOriginal": "README original de GitHub. Su contenido se muestra en el idioma del repositorio.",
+      "readme.completed": "Completado",
+      "readme.incomplete": "Sin completar",
+      "readme.table": "Tabla del README",
+      "meta.home.title": "Jaime Gaming — juegos, programación y YouTube",
+      "meta.home.description": "Jaime Gaming, youtuber y programador. Juegos para navegador, vídeos y proyectos web. Aprendiendo JavaScript, TypeScript y Python.",
+      "meta.projects.title": "Proyectos — Jaime Gaming",
+      "meta.projects.description": "Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub.",
+      "meta.contact.title": "Contacto — Jaime Gaming",
+      "meta.contact.description": "Habla con Jaime Gaming por correo, Discord, YouTube, X o GitHub. Enlaces oficiales y contacto directo.",
+      "meta.blog.title": "Blog — Jaime Gaming",
+      "meta.blog.description": "Lanzamientos, novedades y notas sobre el desarrollo de los proyectos de Jaime Gaming.",
+      "meta.project.title": "Proyecto — Jaime Gaming",
+      "meta.project.description": "Detalle de proyecto de Jaime Gaming.",
     },
     en: {
       "nav.home": "Home",
@@ -199,7 +214,7 @@
       "nav.contact": "Contact",
       "nav.openMenu": "Open menu",
       "nav.closeMenu": "Close menu",
-      "aria.langSwitch": "Switch language",
+      "aria.langSwitch": "English. Switch to Spanish",
       "aria.homeLogo": "Jaime Gaming — home",
       "aria.mainNav": "Main navigation",
       "aria.backToTop": "Back to top",
@@ -382,6 +397,22 @@
       "github.dayIssues": "Issues and pull requests",
       "github.dayPartial": "Some results could not be retrieved.",
       "github.dayNoCategory": "No public results in this category.",
+      "about.cardBio": "YouTuber and programmer",
+      "profile.spain": "Spain",
+      "project.readmeOriginal": "Original README from GitHub. Its content is displayed in the repository’s language.",
+      "readme.completed": "Completed",
+      "readme.incomplete": "Not completed",
+      "readme.table": "README table",
+      "meta.home.title": "Jaime Gaming — games, programming and YouTube",
+      "meta.home.description": "Jaime Gaming, YouTuber and programmer. Browser games, videos and web projects. Learning JavaScript, TypeScript and Python.",
+      "meta.projects.title": "Projects — Jaime Gaming",
+      "meta.projects.description": "Games, experiments and public repositories by Jaime Gaming, synced from GitHub.",
+      "meta.contact.title": "Contact — Jaime Gaming",
+      "meta.contact.description": "Contact Jaime Gaming by email, Discord, YouTube, X or GitHub. Official profiles and direct contact.",
+      "meta.blog.title": "Blog — Jaime Gaming",
+      "meta.blog.description": "Releases, updates and notes on the development of Jaime Gaming’s projects.",
+      "meta.project.title": "Project — Jaime Gaming",
+      "meta.project.description": "Project details from Jaime Gaming.",
     },
   };
 
@@ -411,8 +442,43 @@
       const value = dict[lang][element.getAttribute("data-i18n-aria")];
       if (typeof value === "string") element.setAttribute("aria-label", value);
     });
+    const pageData = JSON.parse(document.getElementById("pageTranslations")?.textContent || "{}")[lang] || {};
+    document.querySelectorAll("[data-content-key]").forEach((element) => {
+      const value = pageData.fields?.[element.dataset.contentKey];
+      if (typeof value !== "string") return;
+      if (element.hasAttribute("data-content-language")) {
+        element.innerHTML = value;
+        element.lang = lang;
+      } else element.textContent = value;
+    });
+    document.querySelectorAll("[data-i18n-date]").forEach((element) => {
+      const date = new Date(`${element.getAttribute("datetime")}T00:00:00Z`);
+      if (Number.isFinite(date.getTime())) element.textContent = new Intl.DateTimeFormat(lang === "es" ? "es-ES" : "en-US", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);
+    });
+    const page = document.body.dataset.page;
+    const title = pageData.title || dict[lang][`meta.${page}.title`];
+    const description = pageData.description || dict[lang][`meta.${page}.description`];
+    if (title) {
+      document.title = title;
+      document.querySelectorAll('meta[property="og:title"], meta[name="twitter:title"]').forEach((element) => element.content = title);
+    }
+    if (description) document.querySelectorAll('meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]').forEach((element) => element.content = description);
+    const structuredData = document.getElementById("personStructuredData");
+    if (structuredData && description) {
+      const person = JSON.parse(structuredData.textContent);
+      person.description = description;
+      person.inLanguage = lang;
+      structuredData.textContent = JSON.stringify(person);
+    }
+    const ogLocale = document.querySelector('meta[property="og:locale"]');
+    if (ogLocale) ogLocale.content = lang === "es" ? "es_ES" : "en_US";
     const switchButton = document.getElementById("langSwitch");
-    if (switchButton) switchButton.setAttribute("data-active", lang);
+    if (switchButton) {
+      switchButton.setAttribute("data-active", lang);
+      switchButton.title = dict[lang]["aria.langSwitch"];
+      const name = document.getElementById("languageName");
+      if (name) name.textContent = lang === "es" ? "Español" : "English";
+    }
     if (persist) storageSet("lang", lang);
     window.currentLang = lang;
     document.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));

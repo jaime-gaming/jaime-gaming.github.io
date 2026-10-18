@@ -39,6 +39,7 @@ export function renderLayout({
   bodyHtml,
   activePath = "/",
   extraHead = "",
+  translations = {},
 }) {
   const fullTitle = activePath === "/" ? "Jaime Gaming — juegos, programación y YouTube" : title ? `${escapeHtml(title)} — ${SITE_NAME}` : SITE_NAME;
   const safeDescription = escapeHtml(description || "");
@@ -60,7 +61,8 @@ export function renderLayout({
 <meta name="author" content="Jaime Gaming" />
 <meta name="theme-color" content="#10120f" />
 <meta name="robots" content="${title === "Proyecto" ? "noindex, follow" : "index, follow"}" />
-<meta property="og:type" content="website" />
+<meta property="og:type" content="${translations.es?.fields?.["post.body"] ? "article" : "website"}" />
+<meta property="og:locale" content="es_ES" />
 <meta property="og:site_name" content="Jaime Gaming" />
 <meta property="og:title" content="${fullTitle}" />
 <meta property="og:description" content="${safeDescription}" />
@@ -68,7 +70,9 @@ export function renderLayout({
 <meta property="og:image" content="${SITE_URL}/assets/img/social-card.png" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@JaimeGamingPro" />
-${activePath === "/" ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Person", "@id": SITE_URL + "/#jaime-gaming", name: "Jaime Gaming", alternateName: ["jaime-gaming", "JaimeGamingPro"], url: SITE_URL + "/", description: "Youtuber y programador. Juegos para navegador y proyectos web.", sameAs: ["https://github.com/jaime-gaming", "https://www.youtube.com/@jaimegaming5731", "https://x.com/JaimeGamingPro"] })}</script>` : ""}
+<meta name="twitter:title" content="${fullTitle}" />
+<meta name="twitter:description" content="${safeDescription}" />
+${activePath === "/" ? `<script type="application/ld+json" id="personStructuredData">${JSON.stringify({ "@context": "https://schema.org", "@type": "Person", "@id": SITE_URL + "/#jaime-gaming", name: "Jaime Gaming", alternateName: ["jaime-gaming", "JaimeGamingPro"], url: SITE_URL + "/", description: "Youtuber y programador. Juegos para navegador y proyectos web.", sameAs: ["https://github.com/jaime-gaming", "https://www.youtube.com/@jaimegaming5731", "https://x.com/JaimeGamingPro"] })}</script>` : ""}
 
 <link rel="canonical" href="${SITE_URL}${activePath}" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
@@ -77,7 +81,7 @@ ${activePath === "/" ? `<script type="application/ld+json">${JSON.stringify({ "@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="${assetUrl("/assets/css/style.css")}" />
 ${extraHead}</head>
-<body data-icons="${assetUrl("/assets/img/icons.svg")}">
+<body data-icons="${assetUrl("/assets/img/icons.svg")}" data-page="${title === "Proyecto" ? "project" : activePath === "/" ? "home" : activePath.split("/")[1]}">
 
 <a class="skip-link" href="#top" data-i18n="aria.skipToContent">Saltar al contenido</a>
 <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
@@ -88,8 +92,18 @@ ${extraHead}</head>
     ${nav}
   </nav>
   <div class="nav__actions">
-    <button class="lang-switch" id="langSwitch" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
-      <span data-lang="es">ES</span>/<span data-lang="en">EN</span>
+    <button class="lang-switch" id="langSwitch" data-active="es" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
+      <svg class="language-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="languageFlag" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g class="flag-es"><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
+            <g class="flag-en"><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          </pattern>
+        </defs>
+        <circle cx="12" cy="12" r="9.5" fill="url(#languageFlag)"/>
+        <use href="${assetUrl("/assets/img/icons.svg")}#icon-globe" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width=".9" stroke-linecap="round"/>
+      </svg>
+      <span class="sr-only" id="languageName">Español</span>
     </button>
     <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu" data-i18n-aria="nav.openMenu">
       <span></span><span></span><span></span>
@@ -110,6 +124,7 @@ ${expandIcons(bodyHtml)}
   <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">${renderIcon("arrow")}</button>
 </footer>
 
+<script type="application/json" id="pageTranslations">${JSON.stringify(translations).replace(/</g, "\\u003c")}</script>
 <script src="${assetUrl("/assets/js/i18n.js")}"></script>
 <script src="${assetUrl("/assets/vendor/marked.min.js")}"></script>
 <script src="${assetUrl("/assets/vendor/purify.min.js")}"></script>

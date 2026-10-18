@@ -108,7 +108,7 @@ La revisión de esta corrección cubrió seis rutas a 320, 390, 768 y 1440 píxe
 
 ## Iconos, contribuciones y Wave
 
-Los iconos son SVG locales de trazo uniforme. `scripts/icons.mjs` genera el sprite, valida los nombres usados en las plantillas y mantiene los iconos decorativos fuera del árbol accesible. El loader JG utiliza un punto y una línea de actividad indeterminada, no un porcentaje ficticio, y respeta movimiento reducido.
+Los iconos se sirven en un sprite SVG local: las marcas proceden de Simple Icons y los controles de Lucide, sin reinterpretar sus trazados. `scripts/icons.mjs` genera el sprite, valida los nombres usados en las plantillas y mantiene los iconos decorativos fuera del árbol accesible. Las dependencias quedan fijadas por `package-lock.json`; sus licencias y el aviso de marcas se copian a `assets/vendor/`. El loader JG utiliza un punto y una línea de actividad indeterminada, no un porcentaje ficticio, y respeta movimiento reducido.
 
 El inicio combina tres repos recientes con diez frases preparadas, barajadas para las animaciones. Con movimiento reducido conserva una frase estable. Cada frase distingue si enlaza a un repositorio o si es una idea general.
 
@@ -123,3 +123,22 @@ npm test
 ```
 
 La entrada `content/blog/lanzamiento-wave.md` se documentó con el README y las notas del tag `v0.1.0` de `jaime-gaming/Wave`, además de los archivos adjuntos de la release. La fecha de lanzamiento anunciada es el 17 de octubre de 2026; la entrada está fechada el 18. La captura procede de `docs/media/home-desktop.png` en ese tag. El artículo distingue el ZIP web publicado de las compilaciones nativas de prueba y explica los límites de almacenamiento local, letras externas y arranque sin conexión.
+
+
+## Traducciones e iconos publicados
+
+El selector utiliza el globo de Lucide sobre los colores de las banderas española y británica. Cada pulsación alterna español e inglés; el idioma se conserva al navegar y recargar, y el nombre accesible indica el idioma actual y el siguiente. No depende de un servicio de traducción externo.
+
+Los textos de la interfaz, etiquetas accesibles, fechas y metadatos están en `assets/js/i18n.js`. El blog requiere una versión completa en cada idioma: `content/blog/lanzamiento-wave.md` y `content/blog/lanzamiento-wave.en.md` comparten `slug` y fecha. El build agrupa ambas versiones en una sola entrada y URL, y falla si falta una traducción o hay duplicados. El HTML inicial es español; JavaScript aplica el idioma guardado, incluidos artículo, título, descripción, texto alternativo y fecha. No se generan URLs inglesas independientes ni se promete su indexación por separado.
+
+El contenido bilingüe se incorpora como JSON escapado dentro de cada página; no se solicita ni genera traducción al cambiar de idioma. Las descripciones actuales de los proyectos y la biografía pública tienen equivalentes revisados. Si GitHub devuelve una descripción nueva no catalogada, se conserva el original para no sustituir datos recientes por una traducción obsoleta. Los README completos y los títulos de commits/issues se mantienen como documentos originales de GitHub; una nota traducida lo indica y las etiquetas accesibles del renderizador sí cambian de idioma.
+
+Fuentes de los iconos de marca, distribuidos por [Simple Icons](https://github.com/simple-icons/simple-icons):
+
+- GitHub: <https://github.com/logos>
+- Discord: <https://discord.com/branding>
+- YouTube: <https://www.youtube.com/howyoutubeworks/resources/brand-resources/#logos-icons-and-colors>
+- X: <https://x.com>
+- Interfaz y globo: [Lucide](https://github.com/lucide-icons/lucide), licencia ISC.
+
+Las pruebas comprueban los trazados contra las bibliotecas, las traducciones completas del blog, la persistencia del selector, los metadatos, las etiquetas del README y el escape del JSON. La revisión en Chromium cubre español/inglés y teclado a 1280, 390 y 320 píxeles, con respuestas externas controladas o bloqueadas; no certifica la disponibilidad de servicios externos.
