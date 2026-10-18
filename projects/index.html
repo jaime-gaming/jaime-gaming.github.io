@@ -4,18 +4,31 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Proyectos — Jaime Gaming</title>
-<meta name="description" content="Repositorios públicos de Jaime Gaming y PineappleVA, sincronizados desde GitHub." />
+<meta name="description" content="Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub." />
 <meta name="author" content="Jaime Gaming" />
 <meta name="theme-color" content="#10120f" />
-<!-- JG source mark: Jaime Gaming / jaime-gaming.github.io -->
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:site_name" content="Jaime Gaming" />
+<meta property="og:title" content="Proyectos — Jaime Gaming" />
+<meta property="og:description" content="Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub." />
+<meta property="og:url" content="https://jaime-gaming.github.io/projects/" />
+<meta property="og:image" content="https://jaime-gaming.github.io/assets/img/social-card.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@JaimeGamingPro" />
+<meta name="twitter:title" content="Proyectos — Jaime Gaming" />
+<meta name="twitter:description" content="Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub." />
+
+
 <link rel="canonical" href="https://jaime-gaming.github.io/projects/" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/assets/css/style.css" />
+<link rel="stylesheet" href="/assets/css/style.css?v=b3b582499cbb" />
 </head>
-<body>
+<body data-icons="/assets/img/icons.svg?v=8aeedb76bbea" data-page="projects">
 
 <a class="skip-link" href="#top" data-i18n="aria.skipToContent">Saltar al contenido</a>
 <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
@@ -26,11 +39,21 @@
     <a href="/" data-i18n="nav.home" class="">Inicio</a>
     <a href="/projects/" data-i18n="nav.projects" class="active">Proyectos</a>
     <a href="/blog/" data-i18n="nav.blog" class="">Blog</a>
-    <a href="/#contact" data-i18n="nav.contact" class="">Contacto</a>
+    <a href="/contact/" data-i18n="nav.contact" class="">Contacto</a>
   </nav>
   <div class="nav__actions">
-    <button class="lang-switch" id="langSwitch" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
-      <span data-lang="es">ES</span>/<span data-lang="en">EN</span>
+    <button class="lang-switch" id="langSwitch" data-active="es" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
+      <svg class="language-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="languageFlag" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g class="flag-es"><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
+            <g class="flag-en"><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          </pattern>
+        </defs>
+        <circle cx="12" cy="12" r="9.5" fill="url(#languageFlag)"/>
+        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width=".9" stroke-linecap="round"/>
+      </svg>
+      <span class="sr-only" id="languageName">Español</span>
     </button>
     <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu" data-i18n-aria="nav.openMenu">
       <span></span><span></span><span></span>
@@ -42,15 +65,14 @@
   <a href="/" data-i18n="nav.home">Inicio</a>
   <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
   <a href="/blog/" data-i18n="nav.blog">Blog</a>
-  <a href="/#contact" data-i18n="nav.contact">Contacto</a>
+  <a href="/contact/" data-i18n="nav.contact">Contacto</a>
 </nav>
 
 <main id="top">
   <section class="section section--wide projects-page">
     <div class="section__head reveal">
-      <span class="section__num">/PROJECTS</span>
-      <h1 class="section__title" data-i18n="projectsPage.title">Proyectos</h1>
-      <p class="section__sub" data-i18n="projectsPage.sub">Repositorios públicos de Jaime Gaming y PineappleVA.</p>
+      <h1 class="section__title" data-i18n="projectsPage.title">Mis proyectos</h1>
+      <p class="section__sub" data-i18n="projectsPage.sub">Juegos, aplicaciones y herramientas que publico en GitHub. Cada proyecto incluye su descripción, documentación y enlaces al código o a la aplicación cuando están disponibles.</p>
     </div>
     <div class="github__toolbar reveal">
       <div class="github__sync" id="githubSync" data-state="loading" aria-live="polite" aria-atomic="true">
@@ -66,10 +88,7 @@
       </button>
     </div>
     <div class="projects__grid projects__grid--full" id="projectsGrid" aria-busy="true">
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
-      <div class="skeleton-card" aria-hidden="true"></div>
+      <div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__track" aria-hidden="true"></span><span class="jg-loader__label" data-i18n="projects.loading">Cargando proyectos…</span></div>
     </div>
   </section>
 
@@ -77,10 +96,14 @@
 
 <footer class="footer">
   <p>© <span id="year"></span> Jaime Gaming.</p>
-  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">↑</button>
+  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-arrow"></use></svg></button>
 </footer>
 
-<script src="/assets/js/i18n.js"></script>
-<script src="/assets/js/main.js"></script>
+<script type="application/json" id="pageTranslations">{}</script>
+<script src="/assets/js/i18n.js?v=814336b0b4c2"></script>
+<script src="/assets/vendor/marked.min.js?v=5af04afe994d"></script>
+<script src="/assets/vendor/purify.min.js?v=af9523d4df30"></script>
+<script src="/assets/js/readme.js?v=935c2e4df0a5"></script>
+<script src="/assets/js/main.js?v=18ec30a3c5c1"></script>
 </body>
 </html>

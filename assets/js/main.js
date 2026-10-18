@@ -1,10 +1,8 @@
-/* Lightweight interactions for navigation, GitHub data and live presence. */
 (function () {
   "use strict";
   document.documentElement.classList.add("js");
 
   const GH_USER = "jaime-gaming";
-  const GH_ORG = "PineappleVA";
   const DISCORD_USER_ID = "984083829767675965";
   const EMAIL = "jaimegamingpro@gmail.com";
   const EXCLUDED_REPOS = new Set([
@@ -12,7 +10,7 @@
     "jaime-gaming/jaime-gaming.github.io",
     "pineappleva/.github",
   ]);
-  const GH_CACHE_KEY = `gh-cache-v2-${GH_USER}-${GH_ORG.toLowerCase()}`;
+  const GH_CACHE_KEY = `gh-cache-v3-${GH_USER}`;
   const GH_CACHE_FRESH_MS = 5 * 60 * 1000;
   const GH_REFRESH_INTERVAL = 10 * 60 * 1000;
   const GH_MAX_STALE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -38,6 +36,15 @@
     return element.innerHTML.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
+  function iconHtml(name) {
+    const base = document.body.dataset.icons || "/assets/img/icons.svg";
+    return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="${escapeHtml(base)}#icon-${name}"></use></svg>`;
+  }
+
+  function loaderHtml(key, fallback) {
+    return `<div class="jg-loader" role="status"><span class="jg-loader__mark" aria-hidden="true"><span>J</span><span>G</span><span class="jg-loader__dot">.</span></span><span class="jg-loader__track" aria-hidden="true"></span><span class="jg-loader__label" data-i18n="${key}">${escapeHtml(textFor(key, fallback))}</span></div>`;
+  }
+
   function readCacheRecord(key, validate) {
     try {
       const record = JSON.parse(window.localStorage.getItem(key) || "null");
@@ -53,7 +60,7 @@
     try {
       window.localStorage.setItem(key, JSON.stringify(record));
     } catch {
-      // Storage is optional; the live page still works without it.
+
     }
     return record;
   }
@@ -64,7 +71,7 @@
     return date.toLocaleDateString(locale(), options);
   }
 
-  /* Keep the small pieces of page chrome out of the way. */
+
   const year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
   const avatar = document.getElementById("avatarImg");
@@ -146,23 +153,18 @@
     }, { passive: true });
   }
 
-  /* Small social links; labels follow the selected language. */
-  const ICONS = {
-    github: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.02 3.25 9.27 7.77 10.77.57.1.78-.25.78-.55 0-.27-.01-1-.02-1.96-3.16.69-3.83-1.53-3.83-1.53-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.04-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.14 1.16a10.9 10.9 0 0 1 5.72 0c2.18-1.47 3.14-1.16 3.14-1.16.62 1.57.23 2.73.11 3.02.73.79 1.17 1.8 1.17 3.04 0 4.35-2.66 5.31-5.19 5.59.41.35.77 1.04.77 2.1 0 1.52-.01 2.74-.01 3.11 0 .3.2.66.79.55A10.53 10.53 0 0 0 23.5 12c0-6.27-5.23-11.5-11.5-11.5Z"/></svg>',
-    mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm2.2.5 7.34 5.5a.75.75 0 0 0 .92 0L19.8 6H4.2Zm15.8 1.6-6.86 5.15a2.75 2.75 0 0 1-3.28 0L4 7.6V18h16V7.6Z"/></svg>',
-    pineapple: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 1 1.4 1.6 2.4 2-1 .3-1.8.9-2.4 1.8-.6-.9-1.4-1.5-2.4-1.8 1-.4 1.8-1 2.4-2Zm0 5c3.9 0 7 3.8 7 8.5S15.9 22 12 22s-7-2.8-7-6.5S8.1 7 12 7Zm-2.2 4.4c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l1.8-1.8 1.8 1.8c.4.4 1 .4 1.4 0 .4-.4.4-1 0-1.4L13.4 9.6c-.4-.4-1-.4-1.4 0l-2.2 1.8Z"/></svg>',
-    discord: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 5.4A18 18 0 0 0 15.9 4c-.2.4-.5.9-.6 1.3a16.6 16.6 0 0 0-4.6 0A8.9 8.9 0 0 0 10 4a18 18 0 0 0-4.4 1.4C2.7 9.3 2 13 2.3 16.7a18 18 0 0 0 5.5 2.8c.4-.6.8-1.3 1.1-2a11.6 11.6 0 0 1-1.8-.9l.4-.3a12.9 12.9 0 0 0 9 0l.4.3c-.6.3-1.2.6-1.8.9.3.7.7 1.4 1.1 2a18 18 0 0 0 5.5-2.8c.4-4.3-.7-8-2.9-11.3ZM9.7 14.3c-.8 0-1.5-.8-1.5-1.7 0-1 .7-1.7 1.5-1.7.9 0 1.6.8 1.5 1.7 0 .9-.6 1.7-1.5 1.7Zm4.6 0c-.8 0-1.5-.8-1.5-1.7 0-1 .7-1.7 1.5-1.7.9 0 1.6.8 1.5 1.7 0 .9-.6 1.7-1.5 1.7Z"/></svg>',
-  };
+
+  const ICONS = { github: iconHtml("github"), mail: iconHtml("mail"), discord: iconHtml("discord") };
   const SOCIALS = [
     { id: "github", labelKey: "social.github", url: `https://github.com/${GH_USER}`, icon: ICONS.github },
-    { id: "pineapple", labelKey: "social.pineapple", url: `https://github.com/${GH_ORG}`, icon: ICONS.pineapple },
     { id: "discord", labelKey: "social.discord", url: `https://discord.com/users/${DISCORD_USER_ID}`, icon: ICONS.discord },
+    { id: "youtube", labelKey: "social.youtube", url: "https://www.youtube.com/@jaimegaming5731", icon: iconHtml("youtube") },
+    { id: "x", labelKey: "social.x", url: "https://x.com/JaimeGamingPro", icon: iconHtml("x") },
     { id: "email", labelKey: "social.email", url: `mailto:${EMAIL}`, icon: ICONS.mail },
   ];
 
   function renderSocials() {
     const hero = document.getElementById("heroSocials");
-    const grid = document.getElementById("socialsGrid");
     const labelFor = (social) => escapeHtml(textFor(social.labelKey, social.id));
     const linkAttrs = (url) => url.startsWith("mailto:") ? "" : ' target="_blank" rel="noopener noreferrer"';
     if (hero) {
@@ -170,20 +172,14 @@
         `<a class="social-icon" href="${social.url}"${linkAttrs(social.url)} aria-label="${labelFor(social)}">${social.icon}</a>`
       ).join("");
     }
-    if (grid) {
-      grid.innerHTML = SOCIALS.map((social) =>
-        `<a class="social-card reveal" href="${social.url}"${linkAttrs(social.url)} aria-label="${labelFor(social)}">${social.icon}<span>${labelFor(social)}</span></a>`
-      ).join("");
-      setStaggerDelays(grid);
-      observeReveals(grid);
-    }
+
   }
 
-  /* Subtle reveal, with a visible fallback if motion preferences or JS differ. */
+
   let revealObserver = null;
 
   function setStaggerDelays(root = document) {
-    const selectors = ".skills__grid, .timeline, .projects__grid, .socials__grid";
+    const selectors = ".skills__grid, .timeline, .projects__grid, .contact-links";
     const containers = [];
     if (root.matches && root.matches(selectors)) containers.push(root);
     containers.push(...root.querySelectorAll(selectors));
@@ -240,11 +236,49 @@
   bindSpotlights();
   renderSocials();
 
+  const copyEmail = document.getElementById("copyEmail");
+  const copyFeedback = document.getElementById("copyFeedback");
+  let copyFeedbackKey = "";
+  let copyResetTimer = 0;
+
+  function localizeContact() {
+    document.querySelectorAll("[data-contact-subject]").forEach((link) => {
+      link.href = `mailto:${EMAIL}?subject=${encodeURIComponent(textFor(link.dataset.contactSubject))}`;
+    });
+    if (copyFeedback && copyFeedbackKey) copyFeedback.textContent = textFor(copyFeedbackKey);
+  }
+
+  if (copyEmail) {
+    copyEmail.hidden = false;
+    copyEmail.addEventListener("click", async () => {
+      if (copyEmail.disabled) return;
+      copyEmail.disabled = true;
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("Clipboard unavailable");
+        await navigator.clipboard.writeText(EMAIL);
+        copyFeedbackKey = "contact.copied";
+      } catch {
+        copyFeedbackKey = "contact.copyError";
+      } finally {
+        copyEmail.disabled = false;
+        if (copyFeedback) copyFeedback.textContent = textFor(copyFeedbackKey);
+        if (copyResetTimer) window.clearTimeout(copyResetTimer);
+        copyResetTimer = window.setTimeout(() => {
+          copyFeedbackKey = "";
+          if (copyFeedback) copyFeedback.textContent = "";
+        }, 6000);
+      }
+    });
+    localizeContact();
+  }
+
   const typedRole = document.getElementById("typedRole");
   let typeTimer = 0;
   let roleIndex = 0;
   let characterIndex = 0;
   let deletingRole = false;
+  let roleRepos = [];
+  let roleSignature = "";
 
   function startRoleRotation() {
     if (typeTimer) window.clearTimeout(typeTimer);
@@ -253,20 +287,56 @@
     characterIndex = 0;
     deletingRole = false;
     if (!typedRole) return;
-    const roles = textFor("hero.roles", []);
-    if (!Array.isArray(roles) || !roles.length) return;
+    const verbs = getLang() === "es" ? ["Programando", "Desarrollando", "Trabajando en"] : ["Coding", "Tweaking", "Working on"];
+    const fallback = textFor("hero.roles", []);
+    const repoRoles = roleRepos.map((repo, index) => ({ text: `${verbs[index % verbs.length]} ${repo.name}`, href: `/projects/${encodeURIComponent(GH_USER)}/${encodeURIComponent(repo.name.toLowerCase())}/` }));
+    const roles = [...repoRoles, ...(Array.isArray(fallback) ? fallback : []).map((text) => ({ text, href: "" }))];
+    if (!reducedMotion) {
+      for (let index = roles.length - 1; index > 0; index -= 1) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [roles[index], roles[other]] = [roles[other], roles[index]];
+      }
+    }
+    if (!roles.length) return;
+    const source = document.getElementById("roleSource");
+    const link = document.getElementById("roleRepoLink");
+    if (source) {
+      const key = roleRepos.length ? "hero.roleSource" : "hero.roleFallback";
+      source.dataset.i18n = key;
+      source.textContent = textFor(key);
+    }
+    function showRole(role) {
+      if (source) {
+        const key = role.href ? "hero.roleSource" : "hero.roleFallback";
+        source.dataset.i18n = key;
+        source.textContent = textFor(key);
+      }
+      typedRole.setAttribute("aria-label", role.text);
+      if (link) {
+        link.hidden = !role.href;
+        if (role.href) link.setAttribute("href", role.href);
+        else link.removeAttribute("href");
+      }
+    }
+    showRole(roles[0]);
     if (reducedMotion) {
-      typedRole.textContent = roles[0];
+      typedRole.textContent = roles[0].text;
       return;
     }
     function typeNextCharacter() {
-      const role = roles[roleIndex % roles.length];
+      if (document.visibilityState === "hidden") {
+        typeTimer = window.setTimeout(typeNextCharacter, 1000);
+        return;
+      }
+      const current = roles[roleIndex % roles.length];
+      if (!deletingRole && characterIndex === 0) showRole(current);
+      const role = current.text;
       characterIndex += deletingRole ? -1 : 1;
       typedRole.textContent = role.slice(0, characterIndex);
       let delay = deletingRole ? 34 : 52;
       if (!deletingRole && characterIndex >= role.length) {
         deletingRole = true;
-        delay = 1500;
+        delay = 2600;
       } else if (deletingRole && characterIndex <= 0) {
         deletingRole = false;
         roleIndex = (roleIndex + 1) % roles.length;
@@ -328,7 +398,7 @@
     }
   }
 
-  /* GitHub public repositories from both the personal account and PineappleVA. */
+
   function isGithubSnapshot(data) {
     return Boolean(data && data.user && typeof data.user === "object" && Array.isArray(data.repos));
   }
@@ -345,7 +415,7 @@
     if (!Array.isArray(repos)) return [];
     const unique = new Map();
     repos.forEach((repo) => {
-      if (!repo || !repo.name || repo.private) return;
+      if (!repo || !repo.name || repo.private || getRepoOwner(repo).toLowerCase() !== GH_USER) return;
       const fullName = repoFullName(repo);
       if (EXCLUDED_REPOS.has(fullName)) return;
       unique.set(fullName, repo);
@@ -392,7 +462,7 @@
     const name = escapeHtml(repo.name || "Untitled project");
     const owner = getRepoOwner(repo);
     const description = repo.description
-      ? escapeHtml(repo.description)
+      ? escapeHtml(repoDescription(repo))
       : escapeHtml(textFor("projects.noDescription", "More details coming soon."));
     const language = repo.language ? `<span class="project-card__lang">${escapeHtml(repo.language)}</span>` : "";
     const fork = repo.fork ? `<span class="project-card__fork">${escapeHtml(textFor("github.forkLabel", "fork"))}</span>` : "";
@@ -412,8 +482,8 @@
       <span class="project-card__name">${name}</span>
       <span class="project-card__desc">${description}</span>
       <span class="project-card__meta">
-        <span>★ <strong>${numberFmt(Number(repo.stargazers_count) || 0)}</strong> ${escapeHtml(textFor("github.starsShort", "stars"))}</span>
-        <span>⑂ <strong>${numberFmt(Number(repo.forks_count) || 0)}</strong> ${escapeHtml(textFor("github.forksShort", "forks"))}</span>
+        <span>${iconHtml("star")} <strong>${numberFmt(Number(repo.stargazers_count) || 0)}</strong> ${escapeHtml(textFor("github.starsShort", "stars"))}</span>
+        <span>${iconHtml("fork")} <strong>${numberFmt(Number(repo.forks_count) || 0)}</strong> ${escapeHtml(textFor("github.forksShort", "forks"))}</span>
         ${relativeDate}
       </span>
       <span class="project-card__arrow" aria-hidden="true">↗</span>
@@ -481,18 +551,37 @@
     const stars = repos.reduce((sum, repo) => sum + (Number(repo.stargazers_count) || 0), 0);
     const forks = repos.reduce((sum, repo) => sum + (Number(repo.forks_count) || 0), 0);
     const personalRepos = repos.filter((repo) => getRepoOwner(repo).toLowerCase() === GH_USER).length;
-    const orgRepos = repos.filter((repo) => getRepoOwner(repo).toLowerCase() === GH_ORG.toLowerCase()).length;
     const languages = new Set(repos.map((repo) => repo.language).filter(Boolean)).size;
     const values = [
       ["statRepos", repos.length],
       ["statStars", stars],
       ["statFollowers", Number(snapshot.user.followers) || 0],
       ["statPersonalRepos", personalRepos],
-      ["statOrgRepos", orgRepos],
       ["statForks", forks],
       ["statLanguages", languages],
     ];
     values.forEach(([id, value]) => animateCount(document.getElementById(id), value));
+  }
+
+  const translatedDescriptions = {
+    "A little project I made about keeping your daily journal": "Un proyecto para llevar tu diario personal.",
+    "all your agents in one place": "Todos tus agentes en un solo lugar.",
+    "One number, infinite possibilities.": "Un número, infinitas posibilidades.",
+    "Michael Burns disappeared last year. Would you come in?  VOID is a new psychological game set in a mysterious corporation where everyone and everything disappears...": "Michael Burns desapareció el año pasado. ¿Entrarías? VOID es un juego psicológico ambientado en una misteriosa corporación donde todos y todo desaparece…",
+    "A local-first music player for web, Android and Windows.": "Un reproductor de música local para web, Android y Windows.",
+  };
+  function repoDescription(repo) {
+    return getLang() === "es" ? translatedDescriptions[repo.description] || repo.description : repo.description;
+  }
+
+  function renderPublicProfile(snapshot) {
+    const user = snapshot.user;
+    const values = { profileBio: user.bio?.toLowerCase() === "youtuber and programmer" ? textFor("about.cardBio") : user.bio || "—", profileLocation: user.location === "Spain" ? textFor("profile.spain") : user.location || "—", profileRepos: numberFmt(user.public_repos), profileFollowers: numberFmt(user.followers) };
+    Object.entries(values).forEach(([id, value]) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    });
+    document.querySelectorAll(".profile-card__name").forEach((element) => { element.textContent = user.name || user.login; });
   }
 
   function applyGithubSnapshot(snapshot, timestamp = Date.now(), state = "fresh") {
@@ -500,13 +589,20 @@
     lastGithubSnapshot = snapshot;
     lastSyncAt = timestamp;
     lastRepos = publicRepos(snapshot.repos);
+    roleRepos = lastRepos.filter((repo) => !repo.fork && !repo.archived && !repo.disabled).slice(0, 3);
+    const nextSignature = roleRepos.map((repo) => repo.name).join("|");
+    if (roleSignature !== nextSignature) {
+      roleSignature = nextSignature;
+      startRoleRotation();
+    }
     updateStats(snapshot);
+    renderPublicProfile(snapshot);
     renderProjectsGrid(lastRepos);
     setGithubSyncState(state, timestamp);
   }
 
   async function fetchAllRepos(owner, options) {
-    const route = owner.toLowerCase() === GH_USER ? "users" : "orgs";
+    const route = "users";
     const repositories = [];
     let page = 1;
     let nextUrl = `https://api.github.com/${route}/${encodeURIComponent(owner)}/repos?per_page=100&sort=pushed&page=${page}`;
@@ -541,15 +637,14 @@
       signal: controller.signal,
     };
     try {
-      const [userResponse, personalRepos, organizationRepos] = await Promise.all([
+      const [userResponse, personalRepos] = await Promise.all([
         fetch(`https://api.github.com/users/${GH_USER}`, options),
         fetchAllRepos(GH_USER, options),
-        fetchAllRepos(GH_ORG, options),
       ]);
       if (!userResponse.ok) throw new Error(`GitHub profile error (${userResponse.status})`);
       const user = await userResponse.json();
       if (!user || typeof user !== "object") throw new Error("Unexpected GitHub profile response");
-      return { user, repos: [...personalRepos, ...organizationRepos] };
+      return { user, repos: personalRepos };
     } finally {
       window.clearTimeout(timeout);
     }
@@ -569,6 +664,10 @@
     }
 
     setGithubSyncState("updating", lastSyncAt);
+    if (!lastGithubSnapshot) {
+      projectsGrid.innerHTML = loaderHtml("projects.loading", "Loading projects…");
+      projectsGrid.setAttribute("aria-busy", "true");
+    }
     if (githubRefreshButton) {
       githubRefreshButton.disabled = true;
       githubRefreshButton.setAttribute("aria-busy", "true");
@@ -590,6 +689,12 @@
         } else {
           setGithubSyncState(navigator.onLine ? "error" : "offline");
           renderProjectsGrid([], { error: true });
+          try {
+            const response = await fetch("/assets/data/github.json");
+            if (!response.ok) throw new Error("Snapshot unavailable");
+            const record = await response.json();
+            if (Number.isFinite(record.timestamp) && isGithubSnapshot(record.data)) applyGithubSnapshot(record.data, record.timestamp, "stale");
+          } catch {}
         }
         return null;
       } finally {
@@ -635,11 +740,11 @@
       const record = JSON.parse(event.newValue);
       if (isGithubSnapshot(record.data) && record.timestamp > lastSyncAt) applyGithubSnapshot(record.data, record.timestamp, "fresh");
     } catch {
-      // Ignore malformed cross-tab cache updates.
+
     }
   });
 
-  /* A compact, keyboard- and touch-friendly contribution calendar. */
+
   const contributionCalendar = document.getElementById("contributionCalendar");
   const contributionTotal = document.getElementById("contributionTotal");
   const contributionDetail = document.getElementById("contributionDetail");
@@ -667,12 +772,161 @@
     if (!day) return;
     const count = Math.max(0, Number(day.count) || 0);
     if (contributionDetail) contributionDetail.textContent = `${contributionDateLabel(day.date)} · ${contributionCountText(count)}`;
-    selectedContribution = day;
   }
 
-  function renderContributionCalendar(data) {
+  const contributionPanel = document.getElementById("contributionPanel");
+  const contributionResults = document.getElementById("contributionResults");
+  const contributionPanelTitle = document.getElementById("contributionPanelTitle");
+  const dayCache = new Map();
+  let dayController = null;
+  let dayState = null;
+  let bundledContributionRequest = null;
+  let contributionSnapshotAt = 0;
+  let lastContributionData = null;
+
+  function loadBundledContributions() {
+    if (!bundledContributionRequest) bundledContributionRequest = fetch("/assets/data/contributions.json")
+      .then((response) => { if (!response.ok) throw new Error("Snapshot unavailable"); return response.json(); })
+      .then((record) => {
+        if (!Number.isFinite(record.timestamp) || !isContributionData(record.data) || !record.details) throw new Error("Invalid contribution snapshot");
+        return record;
+      }).catch((error) => { bundledContributionRequest = null; throw error; });
+    return bundledContributionRequest;
+  }
+
+  function githubResultUrl(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" && url.hostname === "github.com" ? url.href : "";
+    } catch { return ""; }
+  }
+
+  function renderContributionDay() {
+    if (!dayState || !contributionPanel || !contributionResults) return;
+    contributionPanel.hidden = false;
+    contributionPanelTitle.textContent = contributionDateLabel(dayState.day.date);
+    contributionCalendar.querySelectorAll("button[data-date]").forEach((button) => {
+      const selected = button.dataset.date === dayState.day.date;
+      button.setAttribute("aria-pressed", String(selected));
+      button.setAttribute("aria-expanded", String(selected));
+    });
+    if (dayState.status === "loading") {
+      contributionResults.innerHTML = loaderHtml("github.dayLoading", "Loading contributions…");
+      contributionResults.setAttribute("aria-busy", "true");
+      return;
+    }
+    contributionResults.setAttribute("aria-busy", "false");
+    const date = dayState.day.date;
+    const profileUrl = `https://github.com/${GH_USER}?tab=overview&from=${date}&to=${date}`;
+    const source = `<a class="contribution-panel__source" href="${profileUrl}" target="_blank" rel="noopener noreferrer">${iconHtml("external")} ${escapeHtml(textFor("github.daySource"))}</a>`;
+    if (dayState.status === "empty" || dayState.status === "error") {
+      contributionResults.innerHTML = `<p>${escapeHtml(textFor(dayState.status === "empty" ? "github.dayEmpty" : "github.dayError"))}</p>${source}`;
+      return;
+    }
+    if (dayState.status === "saved") {
+      const saved = dayState.record;
+      const rows = (saved.details[date] || []).filter((item) => githubResultUrl(item.url)).map((item) => `<li>${iconHtml(item.type === "commits" ? "commit" : item.type === "pull" ? "pull" : "issue")}<div><a href="${escapeHtml(githubResultUrl(item.url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.type === "commits" ? `${item.count} commits · ${item.repo}` : item.title)}</a><span>${escapeHtml(item.repo)}</span></div></li>`).join("");
+      const savedDate = new Date(saved.timestamp).toLocaleString(locale(), { dateStyle: "medium", timeStyle: "short" });
+      contributionResults.innerHTML = `${saved.detailIncomplete ? `<p class="contribution-panel__notice">${escapeHtml(textFor("github.dayPartial"))}</p>` : ""}<p class="contribution-panel__notice">${escapeHtml(textFor("github.daySaved").replace("{date}", savedDate))}</p><ul class="contribution-list">${rows}</ul><p class="contribution-panel__notice">${escapeHtml(textFor("github.daySavedNotice"))}</p>${source}`;
+      return;
+    }
+    const data = dayState.data;
+    function list(items, commits) {
+      const rows = items.filter((item) => githubResultUrl(item.html_url)).map((item) => {
+        const title = commits ? String(item.commit && item.commit.message || "Commit").split("\n")[0] : item.title || "Issue";
+        const repo = commits ? item.repository && item.repository.full_name : String(item.repository_url || "").split("/repos/")[1];
+        const kind = commits ? "commit" : item.pull_request ? "pull" : "issue";
+        const identifier = commits ? String(item.sha || "").slice(0, 7) : `#${item.number}`;
+        return `<li>${iconHtml(kind)}<div><a href="${escapeHtml(githubResultUrl(item.html_url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a><span>${escapeHtml(repo || GH_USER)} · ${escapeHtml(identifier)}</span></div></li>`;
+      });
+      return rows.length ? `<ul class="contribution-list">${rows.join("")}</ul>` : `<p class="contribution-panel__muted">${escapeHtml(textFor("github.dayNoCategory"))}</p>`;
+    }
+    const warning = data.partial ? `<p class="contribution-panel__notice">${escapeHtml(textFor("github.dayPartial"))}</p>` : "";
+    contributionResults.innerHTML = `${warning}<h5>${iconHtml("commit")} ${escapeHtml(textFor("github.dayCommits"))}</h5>${list(data.commits, true)}<h5>${iconHtml("pull")} ${escapeHtml(textFor("github.dayIssues"))}</h5>${list(data.issues, false)}<p class="contribution-panel__notice">${escapeHtml(textFor("github.dayNotice"))}</p>${source}`;
+  }
+
+  async function openContributionDay(day) {
+    if (!contributionPanel || !/^\d{4}-\d{2}-\d{2}$/.test(day.date)) return;
+    if (dayController) dayController.abort();
+    selectedContribution = day;
+    describeContribution(day);
+    if (!day.count) {
+      dayState = { day, status: "empty" };
+      renderContributionDay();
+      return;
+    }
+    const cached = dayCache.get(day.date);
+    if (cached && Date.now() - cached.timestamp < GH_CACHE_FRESH_MS) {
+      dayState = { day, status: "ready", data: cached.data };
+      renderContributionDay();
+      return;
+    }
+    dayState = { day, status: "loading" };
+    renderContributionDay();
+    const controller = new AbortController();
+    dayController = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    async function search(type, query) {
+      const response = await fetch(`https://api.github.com/search/${type}?q=${encodeURIComponent(query)}&per_page=30`, {
+        headers: { Accept: "application/vnd.github+json" }, signal: controller.signal,
+      });
+      if (!response.ok) throw new Error(`GitHub search error: ${response.status}`);
+      const result = await response.json();
+      if (!Array.isArray(result.items)) throw new Error("Invalid GitHub search result");
+      return { items: result.items, incomplete: Boolean(result.incomplete_results) || Number(result.total_count) > result.items.length };
+    }
+    try {
+      const results = await Promise.allSettled([
+        search("commits", `author:${GH_USER} author-date:${day.date} user:${GH_USER}`),
+        search("issues", `author:${GH_USER} created:${day.date} user:${GH_USER}`),
+      ]);
+      if (dayController !== controller || !selectedContribution || selectedContribution.date !== day.date) return;
+      if (results.every((result) => result.status === "rejected")) {
+        try {
+          const record = await loadBundledContributions();
+          if (dayController !== controller || !selectedContribution || selectedContribution.date !== day.date) return;
+          dayState = record.details[day.date] && record.details[day.date].length ? { day, status: "saved", record } : { day, status: "error" };
+        } catch { dayState = { day, status: "error" }; }
+      } else {
+        const data = {
+          commits: results[0].status === "fulfilled" ? results[0].value.items : [],
+          issues: results[1].status === "fulfilled" ? results[1].value.items : [],
+          partial: results.some((result) => result.status === "rejected" || result.value.incomplete),
+        };
+        dayCache.set(day.date, { data, timestamp: Date.now() });
+        dayState = { day, status: "ready", data };
+      }
+      renderContributionDay();
+    } finally {
+      window.clearTimeout(timeout);
+      if (dayController === controller) dayController = null;
+    }
+  }
+
+  const closeContributions = document.getElementById("closeContributions");
+  if (closeContributions) closeContributions.addEventListener("click", () => {
+    const selectedButton = contributionCalendar.querySelector('[aria-pressed="true"]');
+    if (dayController) dayController.abort();
+    dayController = null;
+    selectedContribution = null;
+    dayState = null;
+    contributionPanel.hidden = true;
+    contributionResults.replaceChildren();
+    contributionCalendar.querySelectorAll("button[data-date]").forEach((button) => {
+      button.setAttribute("aria-pressed", "false");
+      button.setAttribute("aria-expanded", "false");
+    });
+    if (selectedButton) selectedButton.focus();
+  });
+
+  function renderContributionCalendar(data, timestamp = contributionSnapshotAt || Date.now()) {
+    contributionSnapshotAt = timestamp;
+    lastContributionData = data;
+    const source = document.getElementById("contributionSource");
+    if (source) source.textContent = textFor("github.calendarSource").replace("{date}", new Date(timestamp).toLocaleString(locale(), { dateStyle: "medium", timeStyle: "short" }));
     if (!contributionCalendar) return;
     contributionCalendar.classList.remove("calendar__weeks--message");
+    contributionCalendar.setAttribute("aria-busy", "false");
     const days = data.contributions;
     const firstDate = new Date(`${days[0].date}T00:00:00Z`);
     const leadingDays = firstDate.getUTCDay();
@@ -711,21 +965,24 @@
         ? suppliedLevel
         : count === 0 ? 0 : count < 3 ? 1 : count < 6 ? 2 : count < 10 ? 3 : 4;
       const description = `${contributionDateLabel(day.date)} · ${contributionCountText(count)}`;
-      return `<button class="calendar__day" type="button" data-date="${day.date}" data-count="${count}" data-level="${level}" aria-label="${escapeHtml(description)}" title="${escapeHtml(description)}" tabindex="-1"></button>`;
+      return `<button class="calendar__day" type="button" data-date="${day.date}" data-count="${count}" data-level="${level}" aria-label="${escapeHtml(description)}" title="${escapeHtml(description)}" aria-controls="contributionPanel" aria-expanded="false" aria-pressed="false" tabindex="-1"></button>`;
     }).join("")}</span>`).join("");
 
     const sum = days.reduce((total, day) => total + (Number(day.count) || 0), 0);
     const apiTotal = Number(data.total && data.total.lastYear);
     if (contributionTotal) contributionTotal.textContent = numberFmt(Number.isFinite(apiTotal) ? apiTotal : sum);
-    const firstButton = contributionCalendar.querySelector(".calendar__day:not(.calendar__day--empty)");
-    if (firstButton) firstButton.tabIndex = 0;
+    const dayButtons = Array.from(contributionCalendar.querySelectorAll("button[data-date]"));
+    const activeButton = dayButtons.find((button) => selectedContribution && button.dataset.date === selectedContribution.date)
+      || dayButtons.filter((button) => Number(button.dataset.count) > 0).at(-1) || dayButtons.at(-1);
+    if (activeButton) activeButton.tabIndex = 0;
     if (contributionDetail && !selectedContribution) contributionDetail.textContent = textFor("github.calendarHover", "Hover over a day to see its contributions.");
-    if (selectedContribution) describeContribution(selectedContribution);
+    if (selectedContribution) { describeContribution(selectedContribution); renderContributionDay(); }
   }
 
   function setContributionMessage(key) {
     if (!contributionCalendar) return;
     contributionCalendar.classList.add("calendar__weeks--message");
+    contributionCalendar.setAttribute("aria-busy", "false");
     contributionCalendar.innerHTML = `<p class="calendar__message" id="contributionMessage" data-i18n="${key}">${escapeHtml(textFor(key, "Contribution data is unavailable."))}</p>`;
     if (contributionTotal) contributionTotal.textContent = "—";
   }
@@ -736,7 +993,7 @@
     const cached = readCacheRecord(CONTRIBUTION_CACHE_KEY, isContributionData);
     const age = cached ? Date.now() - cached.timestamp : Infinity;
     if (!force && cached && age <= CONTRIBUTION_MAX_STALE) {
-      renderContributionCalendar(cached.data);
+      renderContributionCalendar(cached.data, cached.timestamp);
       if (age <= CONTRIBUTION_CACHE_TTL) return;
     }
     if (!navigator.onLine) {
@@ -746,15 +1003,20 @@
 
     contributionRequest = (async () => {
       try {
-        const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=last`, { cache: "default", headers: { Accept: "application/json" } });
+        const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=last`, { cache: "default", headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000) });
         if (!response.ok) throw new Error(`Contribution API error (${response.status})`);
         const data = await response.json();
         if (!isContributionData(data)) throw new Error("Unexpected contribution data");
-        writeCache(CONTRIBUTION_CACHE_KEY, data);
-        renderContributionCalendar(data);
+        const record = writeCache(CONTRIBUTION_CACHE_KEY, data);
+        renderContributionCalendar(data, record.timestamp);
       } catch (error) {
         console.warn("Contribution data unavailable:", error);
-        if (!cached || age > CONTRIBUTION_MAX_STALE) setContributionMessage("github.calendarError");
+        if (!cached || age > CONTRIBUTION_MAX_STALE) {
+          try {
+            const record = await loadBundledContributions();
+            renderContributionCalendar(record.data, record.timestamp);
+          } catch { setContributionMessage("github.calendarError"); }
+        }
       } finally {
         contributionRequest = null;
       }
@@ -773,7 +1035,7 @@
     });
     contributionCalendar.addEventListener("click", (event) => {
       const button = event.target.closest(".calendar__day[data-date]");
-      if (button) describeContribution({ date: button.dataset.date, count: Number(button.dataset.count) });
+      if (button) openContributionDay({ date: button.dataset.date, count: Number(button.dataset.count) });
     });
     contributionCalendar.addEventListener("keydown", (event) => {
       const moves = { ArrowLeft: -7, ArrowRight: 7, ArrowUp: -1, ArrowDown: 1 };
@@ -784,13 +1046,15 @@
       const next = buttons[index + move];
       if (next) {
         event.preventDefault();
+        if (event.target.matches("button")) event.target.tabIndex = -1;
+        next.tabIndex = 0;
         next.focus();
       }
     });
     loadContributions();
   }
 
-  /* Project details use the repository's actual owner, including org repos. */
+
   const PROJECT_PATH_RE = /^\/projects\/([^/]+)\/([^/]+)\/?$/;
   const LEGACY_PROJECT_PATH_RE = /^\/projects\/([^/]+)\/?$/;
   const projectDetailContainer = document.getElementById("projectDetail");
@@ -806,67 +1070,9 @@
     }
   }
 
-  function renderMarkdownLite(markdown, baseUrl) {
-    const escaped = escapeHtml(markdown);
-    const lines = escaped.replace(/```([\s\S]*?)```/g, (_, code) => `<pre><code>${code.trim()}</code></pre>`).split("\n");
-    const output = [];
-    let inList = false;
-    let inCode = false;
-
-    for (const line of lines) {
-      if (line.startsWith("<pre>") || line.startsWith("</pre>") || inCode) {
-        output.push(line);
-        if (line.includes("<pre>")) inCode = true;
-        if (line.includes("</pre>")) inCode = false;
-        continue;
-      }
-      const heading = line.match(/^(#{1,3})\s+(.*)/);
-      const listItem = line.match(/^[-*]\s+(.*)/);
-      if (heading) {
-        if (inList) { output.push("</ul>"); inList = false; }
-        const level = heading[1].length;
-        output.push(`<h${level}>${inline(heading[2])}</h${level}>`);
-      } else if (listItem) {
-        if (!inList) { output.push("<ul>"); inList = true; }
-        output.push(`<li>${inline(listItem[1])}</li>`);
-      } else if (line.trim() === "") {
-        if (inList) { output.push("</ul>"); inList = false; }
-      } else {
-        if (inList) { output.push("</ul>"); inList = false; }
-        output.push(`<p>${inline(line)}</p>`);
-      }
-    }
-    if (inList) output.push("</ul>");
-    return output.join("\n");
-
-    function safeMarkdownUrl(rawUrl) {
-      const decoded = String(rawUrl).replace(/&amp;/g, "&").replace(/&#39;/g, "'").trim();
-      try {
-        const resolved = new URL(decoded, baseUrl);
-        if (resolved.protocol !== "https:" && resolved.protocol !== "http:") return "";
-        return escapeHtml(resolved.href);
-      } catch {
-        return "";
-      }
-    }
-
-    function inline(value) {
-      return value
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, rawUrl) => {
-          const src = safeMarkdownUrl(rawUrl);
-          return src ? `<img alt="${alt}" src="${src}" loading="lazy" />` : "";
-        })
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, rawUrl) => {
-          const href = safeMarkdownUrl(rawUrl);
-          return href ? `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>` : label;
-        })
-        .replace(/`([^`]+)`/g, "<code>$1</code>")
-        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-        .replace(/\*([^*]+)\*/g, "<em>$1</em>");
-    }
-  }
-
+  let currentProjectRepo = null;
   function renderProjectDetail(repo) {
+    currentProjectRepo = repo;
     if (!projectDetailContainer || !projectDetailSection) return;
     const lang = getLang();
     const dict = (window.i18n && window.i18n.dict[lang]) || {};
@@ -885,11 +1091,11 @@
     projectDetailContainer.innerHTML = `<div class="project-detail__head reveal">
       <p class="project-detail__owner">${escapeHtml(fullName)} ${forkLabel}</p>
       <h1 class="project-detail__name">${escapeHtml(repo.name)}</h1>
-      <p class="project-detail__desc">${repo.description ? escapeHtml(repo.description) : ""}</p>
+      <p class="project-detail__desc">${repo.description ? escapeHtml(repoDescription(repo)) : ""}</p>
       <div class="project-detail__meta">
         ${repo.language ? `<span>${escapeHtml(repo.language)}</span>` : ""}
-        <span>★ <strong>${numberFmt(Number(repo.stargazers_count) || 0)}</strong> <span data-i18n="project.stars">${escapeHtml(dict["project.stars"] || "stars")}</span></span>
-        <span>⑂ <strong>${numberFmt(Number(repo.forks_count) || 0)}</strong> <span data-i18n="project.forks">${escapeHtml(dict["project.forks"] || "forks")}</span></span>
+        <span>${iconHtml("star")} <strong>${numberFmt(Number(repo.stargazers_count) || 0)}</strong> <span data-i18n="project.stars">${escapeHtml(dict["project.stars"] || "stars")}</span></span>
+        <span>${iconHtml("fork")} <strong>${numberFmt(Number(repo.forks_count) || 0)}</strong> <span data-i18n="project.forks">${escapeHtml(dict["project.forks"] || "forks")}</span></span>
         ${pushedAt ? `<span><span data-i18n="project.updated">${escapeHtml(dict["project.updated"] || "Updated")}</span> <time data-calendar-time datetime="${pushedAt}">${escapeHtml(formatDate(pushedAt, { day: "numeric", month: "short", year: "numeric" }))}</time></span>` : ""}
       </div>
       ${topics}
@@ -897,7 +1103,7 @@
         ${githubUrl ? `<a class="btn btn--primary" href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener noreferrer"><span data-i18n="project.viewOnGithub">${escapeHtml(dict["project.viewOnGithub"] || "View on GitHub")}</span> ↗</a>` : ""}
         ${homepage ? `<a class="btn btn--ghost" href="${escapeHtml(homepage)}" target="_blank" rel="noopener noreferrer"><span data-i18n="project.liveDemo">${escapeHtml(dict["project.liveDemo"] || "Open project")}</span> ↗</a>` : ""}
       </div>
-    </div><div class="project-detail__readme reveal" id="projectReadme"></div>`;
+    </div><p class="readme-source-note" data-i18n="project.readmeOriginal">${escapeHtml(textFor("project.readmeOriginal"))}</p><div class="project-detail__readme reveal" id="projectReadme"></div>`;
     observeReveals(projectDetailContainer);
     updateRelativeTimes(projectDetailContainer);
     loadReadme(repo, document.getElementById("projectReadme"));
@@ -905,8 +1111,13 @@
 
   async function loadProjectDetail(owner, name) {
     if (!projectDetailContainer || !projectDetailSection) return;
+    if (notFoundSection) notFoundSection.hidden = true;
+    projectDetailSection.hidden = false;
+    projectDetailContainer.setAttribute("aria-busy", "true");
+    projectDetailContainer.innerHTML = loaderHtml("project.loading", "Loading project…");
     try {
       const ownerKey = owner.toLowerCase();
+      if (ownerKey !== GH_USER) throw Object.assign(new Error("Repository unavailable"), { code: "not-found" });
       const nameKey = name.toLowerCase();
       const cacheKey = `gh-repo-v2-${ownerKey}-${nameKey}`;
       const cached = readCacheRecord(cacheKey, (data) => data && typeof data.name === "string");
@@ -915,7 +1126,7 @@
         repo = cached.data;
       } else {
         try {
-          const response = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`, { cache: "no-store", headers: { Accept: "application/vnd.github+json" } });
+          const response = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`, { cache: "no-store", headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(15000) });
           if (!response.ok) {
             const error = new Error("Repository request failed");
             error.status = response.status;
@@ -954,6 +1165,9 @@
         title.textContent = textFor(titleKey, missing ? "Page not found" : "Project temporarily unavailable");
         message.textContent = textFor(messageKey, missing ? "The project could not be found." : "GitHub could not be reached right now.");
       }
+      projectDetailContainer.replaceChildren();
+    } finally {
+      projectDetailContainer.removeAttribute("aria-busy");
     }
   }
 
@@ -961,11 +1175,37 @@
     if (!element) return;
     const owner = getRepoOwner(repo);
     const branch = repo.default_branch || "main";
-    const baseUrl = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}/${encodeURIComponent(branch)}/`;
+    element.setAttribute("aria-busy", "true");
+    element.innerHTML = loaderHtml("project.readmeLoading", "Loading README…");
     try {
-      const response = await fetch(`${baseUrl}README.md`, { cache: "default" });
+      const response = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}/readme`, {
+        headers: { Accept: "application/vnd.github+json" },
+        signal: AbortSignal.timeout(15000),
+      });
       if (!response.ok) throw new Error("No README available");
-      element.innerHTML = renderMarkdownLite(await response.text(), baseUrl);
+      const data = await response.json();
+      if (data.encoding !== "base64" || typeof data.content !== "string") throw new Error("Unexpected README response");
+      const bytes = Uint8Array.from(atob(data.content.replace(/\s/g, "")), (char) => char.charCodeAt(0));
+      const markdown = new TextDecoder().decode(bytes);
+      element.innerHTML = window.renderProjectMarkdown(markdown, { owner, name: repo.name, branch, path: data.path || "README.md" });
+      element.querySelectorAll("img").forEach((image) => {
+        const replaceBrokenImage = () => {
+          if (!image.isConnected) return;
+          const source = safeHttpUrl(image.src);
+          const fallback = document.createElement(source ? "a" : "span");
+          fallback.className = "readme-image-fallback";
+          fallback.textContent = [image.alt, textFor("project.imageUnavailable", "Image unavailable")].filter(Boolean).join(" · ");
+          if (source) {
+            fallback.href = source;
+            fallback.target = "_blank";
+            fallback.rel = "noopener noreferrer";
+          }
+          if (image.parentElement && image.parentElement.tagName === "A") image.replaceWith(document.createTextNode(fallback.textContent));
+          else image.replaceWith(fallback);
+        };
+        image.addEventListener("error", replaceBrokenImage, { once: true });
+        if (image.complete && !image.naturalWidth) replaceBrokenImage();
+      });
       observeReveals(element);
     } catch {
       const githubUrl = safeHttpUrl(repo.html_url);
@@ -976,6 +1216,8 @@
         ? ` <a href="${escapeHtml(readmeUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(textFor("project.readmeOnGithub", "Open it on GitHub"))} ↗</a>`
         : "";
       element.innerHTML = `<p class="project-detail__readme-fallback">${message}${link}</p>`;
+    } finally {
+      element.removeAttribute("aria-busy");
     }
   }
 
@@ -995,7 +1237,7 @@
     }
   }
 
-  /* Discord presence via Lanyard's public REST endpoint and WebSocket. */
+
   const presenceElement = document.getElementById("lanyardStatus");
   const presenceLabel = presenceElement && presenceElement.querySelector("[data-presence-label]");
   const presenceActivity = presenceElement && presenceElement.querySelector("[data-presence-activity]");
@@ -1010,14 +1252,17 @@
   function setPresenceConnection(state) {
     if (!presenceElement) return;
     presenceElement.dataset.connection = state;
-    if (lastPresence) return;
-    const key = state === "reconnecting" ? "discord.reconnecting" : state === "offline" ? "discord.unavailable" : "discord.connecting";
+    if (lastPresence && Date.now() - lastPresenceAt < 60000) return;
+    lastPresence = null;
+    presenceElement.removeAttribute("aria-label");
+    const unavailable = state === "offline" || state === "reconnecting";
+    const key = unavailable ? "discord.unavailable" : "discord.connecting";
     if (presenceLabel) presenceLabel.textContent = textFor(key, "Connecting to Discord…");
     if (presenceActivity) {
       presenceActivity.hidden = true;
       presenceActivity.textContent = "";
     }
-    presenceElement.dataset.status = state === "offline" ? "offline" : "loading";
+    presenceElement.dataset.status = unavailable ? "unavailable" : "loading";
   }
 
   function normalizePresence(data) {
@@ -1067,7 +1312,7 @@
       const presence = normalizePresence(result && result.data);
       if (presence) renderPresence(presence);
     } catch {
-      if (!lastPresence) setPresenceConnection("reconnecting");
+      setPresenceConnection("offline");
     }
   }
 
@@ -1148,6 +1393,12 @@
   if (presenceElement) {
     setPresenceConnection("connecting");
     fetchPresenceSnapshot();
+    window.setInterval(() => {
+      if (document.visibilityState === "visible" && Date.now() - lastPresenceAt > 60000) {
+        setPresenceConnection("offline");
+        fetchPresenceSnapshot();
+      }
+    }, 30000);
     connectPresenceSocket();
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") stopPresenceSocket();
@@ -1164,10 +1415,12 @@
     const open = burger && burger.getAttribute("aria-expanded") === "true";
     if (burger) updateBurgerLabel(open);
     renderSocials();
+    localizeContact();
     startRoleRotation();
     if (lastPresence) renderPresence(lastPresence, { localized: true });
     if (lastGithubSnapshot && projectsGrid) {
       updateStats(lastGithubSnapshot);
+      renderPublicProfile(lastGithubSnapshot);
       renderProjectsGrid(lastRepos, { error: lastProjectError });
       setGithubSyncState(githubSyncState, lastSyncAt);
     } else if (projectsGrid && lastProjectError) renderProjectsGrid([], { error: true });
@@ -1175,9 +1428,10 @@
       const label = githubRefreshButton.querySelector("[data-i18n='github.refresh']");
       if (label) label.textContent = textFor(githubRefreshButton.disabled ? "github.refreshing" : "github.refresh", "Refresh");
     }
-    if (contributionCalendar) {
-      const cached = readCacheRecord(CONTRIBUTION_CACHE_KEY, isContributionData);
-      if (cached && Date.now() - cached.timestamp <= CONTRIBUTION_MAX_STALE) renderContributionCalendar(cached.data);
+    if (contributionCalendar && lastContributionData) renderContributionCalendar(lastContributionData, contributionSnapshotAt);
+    if (currentProjectRepo) {
+      const description = document.querySelector(".project-detail__desc");
+      if (description) description.textContent = repoDescription(currentProjectRepo) || "";
     }
     updateRelativeTimes();
   });

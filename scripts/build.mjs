@@ -1,29 +1,12 @@
 #!/usr/bin/env node
-/**
- * Static build script for the portfolio.
- *
- * Generates every page from the shared layout in scripts/layout.mjs so the
- * header/nav/footer stay perfectly in sync:
- *   - /index.html          from content/home.fragment.html
- *   - /projects/index.html from content/projects.fragment.html
- *   - /404.html            from content/404.fragment.html (also doubles as
- *                          the client-rendered "project detail" page via
- *                          GitHub Pages' 404 fallback, see assets/js/main.js)
- *   - /blog/index.html     generated from content/blog/*.md front matter
- *   - /blog/<slug>/index.html one per markdown post
- *
- * Project pages are intentionally NOT pre-rendered here: the projects list
- * and each project's detail page are fetched live from the GitHub REST API
- * in the browser (assets/js/main.js), so new repos show up automatically
- * with no rebuild required. Only the blog (hand-authored content) needs a
- * build step, which runs in CI on every push (see .github/workflows/build.yml).
- */
-import { readFile, writeFile, mkdir, readdir, rm } from "node:fs/promises";
+
+import { readFile, writeFile, mkdir, readdir, rm, copyFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import { marked } from "marked";
 import { renderLayout } from "./layout.mjs";
+import { iconSprite, renderIcon } from "./icons.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -62,10 +45,10 @@ async function writePage(relPath, html) {
 }
 
 async function buildHome() {
-  const bodyHtml = await readFragment("home.fragment.html");
+  const bodyHtml = (await readFragment("home.fragment.html")).replace("{{CONTACT}}", await readFragment("contact.fragment.html"));
   const html = renderLayout({
     title: "Inicio",
-    description: "Jaime Gaming: juegos, proyectos web y repositorios de GitHub de Jaime Gaming y PineappleVA.",
+    description: "Jaime Gaming, youtuber y programador. Juegos para navegador, vídeos y proyectos web. Aprendiendo JavaScript, TypeScript y Python.",
     bodyHtml,
     activePath: "/",
   });
@@ -76,11 +59,17 @@ async function buildProjectsIndex() {
   const bodyHtml = await readFragment("projects.fragment.html");
   const html = renderLayout({
     title: "Proyectos",
-    description: "Repositorios públicos de Jaime Gaming y PineappleVA, sincronizados desde GitHub.",
+    description: "Juegos, pruebas y repositorios públicos de Jaime Gaming, sincronizados desde GitHub.",
     bodyHtml,
     activePath: "/projects/",
   });
   await writePage("projects/index.html", html);
+}
+
+async function buildContact() {
+  const fragment = await readFragment("contact.fragment.html");
+  const bodyHtml = `<div class="contact-page">${fragment.replace('<h2 class="section__title"', '<h1 class="section__title"').replace('</h2>', '</h1>')}</div>`;
+  await writePage("contact/index.html", renderLayout({ title: "Contacto", description: "Habla con Jaime Gaming por correo, Discord, YouTube, X o GitHub. Enlaces oficiales y contacto directo.", bodyHtml, activePath: "/contact/" }));
 }
 
 async function build404() {
@@ -119,8 +108,19 @@ async function loadPosts() {
       html: marked.parse(content),
     });
   }
-  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-  return posts;
+  const grouped = new Map();
+  for (const post of posts) {
+    if (!["es", "en"].includes(post.lang)) throw new Error(`Unsupported blog language: ${post.lang}`);
+    const variants = grouped.get(post.slug) || {};
+    if (variants[post.lang]) throw new Error(`Duplicate ${post.lang} translation: ${post.slug}`);
+    variants[post.lang] = post;
+    grouped.set(post.slug, variants);
+  }
+  return Array.from(grouped, ([slug, translations]) => {
+    if (!translations.es || !translations.en) throw new Error(`Both es and en translations are required for ${slug}`);
+    if (translations.es.date !== translations.en.date) throw new Error(`Translation dates differ: ${slug}`);
+    return { ...translations.es, translations };
+  }).sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
 async function cleanOrphanedPostPages(posts) {
@@ -148,9 +148,9 @@ async function buildBlog() {
     ? posts
         .map(
           (p) => `      <a class="blog-item reveal" href="/blog/${p.slug}/">
-        <p class="blog-item__date">${formatDate(p.date, p.lang)}</p>
-        <h3 class="blog-item__title">${p.title}</h3>
-        <p class="blog-item__excerpt">${p.excerpt}</p>
+        <time class="blog-item__date" datetime="${p.date}" data-i18n-date>${formatDate(p.date, p.lang)}</time>
+        <h3 class="blog-item__title">${renderIcon(p.slug === "lanzamiento-wave" ? "music" : "file")} <span data-content-key="${p.slug}.title">${p.title}</span></h3>
+        <p class="blog-item__excerpt" data-content-key="${p.slug}.excerpt">${p.excerpt}</p>
       </a>`
         )
         .join("\n")
@@ -158,7 +158,7 @@ async function buildBlog() {
 
   const indexBody = `  <section class="section">
     <div class="section__head reveal">
-      <h2 class="section__title" data-i18n="blog.title">Blog</h2>
+      <h1 class="section__title" data-i18n="blog.title">Blog</h1>
       <p class="section__sub" data-i18n="blog.sub">Notas y novedades sobre lo que estoy construyendo.</p>
     </div>
     <div class="blog__list">
@@ -174,6 +174,9 @@ ${listItems}
       description: "Notas y novedades de Jaime Gaming.",
       bodyHtml: indexBody,
       activePath: "/blog/",
+      translations: Object.fromEntries(["es", "en"].map((lang) => [lang, {
+        fields: Object.fromEntries(posts.flatMap((post) => [[`${post.slug}.title`, post.translations[lang].title], [`${post.slug}.excerpt`, post.translations[lang].excerpt]])),
+      }])),
     })
   );
 
@@ -181,12 +184,12 @@ ${listItems}
     const postBody = `  <section class="section">
     <a href="/blog/" class="back-link reveal">← <span data-i18n="blog.back">Volver al blog</span></a>
     <div class="post-detail__head reveal">
-      <p class="post-detail__date">${formatDate(post.date, post.lang)}</p>
-      <h1 class="post-detail__title">${post.title}</h1>
+      <time class="post-detail__date" datetime="${post.date}" data-i18n-date>${formatDate(post.date, post.lang)}</time>
+      <h1 class="post-detail__title" data-content-key="post.title">${post.title}</h1>
     </div>
-    <div class="post-detail__body reveal">
+    <article class="post-detail__body reveal" lang="${post.lang}" data-content-key="post.body" data-content-language>
 ${post.html}
-    </div>
+    </article>
   </section>
 `;
     await writePage(
@@ -196,16 +199,40 @@ ${post.html}
         description: post.excerpt || post.title,
         bodyHtml: postBody,
         activePath: `/blog/${post.slug}/`,
+        translations: Object.fromEntries(["es", "en"].map((lang) => [lang, {
+          title: `${post.translations[lang].title} — Jaime Gaming`,
+          description: post.translations[lang].excerpt,
+          fields: { "post.title": post.translations[lang].title, "post.body": post.translations[lang].html },
+        }])),
       })
     );
   }
 }
 
 async function main() {
+  await writePage("assets/img/icons.svg", iconSprite);
+  await mkdir(path.join(ROOT, "assets/vendor"), { recursive: true });
+  await copyFile(path.join(ROOT, "node_modules/marked/marked.min.js"), path.join(ROOT, "assets/vendor/marked.min.js"));
+  await copyFile(path.join(ROOT, "node_modules/dompurify/dist/purify.min.js"), path.join(ROOT, "assets/vendor/purify.min.js"));
+  await copyFile(path.join(ROOT, "node_modules/marked/LICENSE.md"), path.join(ROOT, "assets/vendor/marked.LICENSE.txt"));
+  await copyFile(path.join(ROOT, "node_modules/dompurify/LICENSE"), path.join(ROOT, "assets/vendor/dompurify.LICENSE.txt"));
+  for (const name of ["marked.min.js", "purify.min.js"]) {
+    const file = path.join(ROOT, "assets/vendor", name);
+    const source = await readFile(file, "utf8");
+    await writeFile(file, source.replace(/^\/\*[\s\S]*?\*\/\s*/, "").replace(/\n\/\/# sourceMappingURL=.*$/m, ""));
+  }
+  await copyFile(path.join(ROOT, "node_modules/simple-icons/LICENSE.md"), path.join(ROOT, "assets/vendor/simple-icons.LICENSE.txt"));
+  await copyFile(path.join(ROOT, "node_modules/simple-icons/DISCLAIMER.md"), path.join(ROOT, "assets/vendor/simple-icons.DISCLAIMER.txt"));
+  await copyFile(path.join(ROOT, "node_modules/lucide-static/LICENSE"), path.join(ROOT, "assets/vendor/lucide.LICENSE.txt"));
   await buildHome();
   await buildProjectsIndex();
   await build404();
+  await buildContact();
   await buildBlog();
+  const posts = await loadPosts();
+  const urls = ["/", "/projects/", "/blog/", "/contact/", ...posts.map((post) => `/blog/${post.slug}/`)];
+  await writePage("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>https://jaime-gaming.github.io${url}</loc></url>`).join("")}</urlset>\n`);
+  await writePage("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: https://jaime-gaming.github.io/sitemap.xml\n");
 }
 
 main().catch((err) => {
