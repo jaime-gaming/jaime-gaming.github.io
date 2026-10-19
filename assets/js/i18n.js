@@ -4,6 +4,7 @@
       "nav.home": "Inicio",
       "nav.projects": "Proyectos",
       "nav.blog": "Blog",
+      "nav.docs": "Docs",
       "nav.contact": "Contacto",
       "nav.openMenu": "Abrir menú",
       "nav.closeMenu": "Cerrar menú",
@@ -39,25 +40,13 @@
       "about.cardTitle": "@jaime-gaming",
       "about.cardText": "Repositorios públicos, código fuente y documentación de los proyectos.",
       "about.cardStamp": "IR A MI GITHUB ↗",
-      "timeline.html.year": "EL PRINCIPIO",
-      "timeline.html.title": "Una página en HTML",
-      "timeline.html.desc": "Fue lo primero que usé. Y todavía lo uso para mis páginas y juegos.",
-      "timeline.share.year": "CON LOS DE CLASE",
-      "timeline.share.title": "«Prueba esto un momento»",
-      "timeline.share.desc": "Hice juegos para pasárselos a mis compañeros. Así empezó la cosa.",
-      "timeline.python.year": "AHORA",
-      "timeline.python.title": "Más allá de HTML",
-      "timeline.python.desc": "Ando con JavaScript, TypeScript y Python. Con JavaScript ya me voy defendiendo.",
 
       "skills.title": "Lo que uso",
       "skills.sub": "Las tecnologías que utilizo y las que estoy incorporando a mis proyectos.",
       "skills.html": "Mi punto de partida. Lo utilizo para estructurar páginas, interfaces y juegos para navegador.",
-      "skills.htmlLevel": "DESDE EL PRINCIPIO",
       "skills.python": "Lo estoy aprendiendo mediante proyectos y pruebas. En GitHub comparto también mis repositorios escritos en Python.",
-      "skills.pythonLevel": "EN ELLO",
       "skills.gamesTitle": "Desarrollo de juegos",
       "skills.games": "Diseñar una mecánica, probarla y mejorarla con los comentarios que recibo.",
-      "skills.gamesLevel": "SIEMPRE EXPLORANDO",
 
       "projectsTeaser.title": "Proyectos",
       "projectsTeaser.sub": "Lo último que he subido a GitHub.",
@@ -196,6 +185,47 @@
       "readme.completed": "Completado",
       "readme.incomplete": "Sin completar",
       "readme.table": "Tabla del README",
+      "footer.tagline": "Juegos para navegador, aplicaciones web y vídeos.",
+      "footer.site": "Sitio",
+      "footer.siteAria": "Enlaces del sitio",
+      "footer.resources": "Recursos",
+      "footer.resourcesAria": "Recursos y enlaces externos",
+      "footer.status": "Estado del servicio",
+      "footer.email": "Correo",
+      "footer.rights": "Todos los derechos reservados.",
+      "footer.source": "Código fuente ↗",
+      "footer.terms": "Términos del servicio",
+      "footer.privacy": "Privacidad",
+      "footer.legalAria": "Términos y privacidad",
+      "status.title": "Estado del servicio",
+      "status.sub": "Estado en directo de la web, la documentación y los proyectos, desde el panel oficial de incident.io.",
+      "status.note": "Datos del panel oficial de estado",
+      "status.open": "Abrir panel completo ↗",
+      "status.loading": "Consultando el estado…",
+      "status.error": "No se pudo consultar el estado en directo. Puedes abrir el panel completo.",
+      "status.updated": "Actualizado el {date}",
+      "status.componentsAria": "Componentes del servicio",
+      "status.allOperational": "Todos los sistemas operativos",
+      "status.minorIssues": "Incidencias menores",
+      "status.majorIssues": "Incidencia grave",
+      "status.criticalIssues": "Incidencia crítica",
+      "status.maintenanceOverall": "Mantenimiento en curso",
+      "status.unknown": "Estado no disponible",
+      "status.operational": "Operativo",
+      "status.degraded": "Rendimiento degradado",
+      "status.partial": "Interrupción parcial",
+      "status.major": "Interrupción grave",
+      "status.underMaintenance": "En mantenimiento",
+      "status.maintenanceTitle": "Mantenimiento programado",
+      "status.maintenanceBody": "Texto publicado en el panel de estado.",
+      "status.frameTitle": "Panel de estado de Jaime Gaming",
+      "status.frameNotice": "El panel completo pertenece a incident.io y solo se carga si lo pides. Al cargarlo puede usar sus propias cookies.",
+      "status.loadFrame": "Cargar panel incrustado",
+      "status.hint": "El resumen se actualiza al abrir esta página. Si el panel incrustado no aparece, ábrelo con el botón superior.",
+      "legal.terms.title": "Términos del servicio",
+      "legal.terms.sub": "Reglas de uso del sitio y de todos los proyectos.",
+      "legal.privacy.title": "Privacidad",
+      "legal.privacy.sub": "Qué datos se tratan al visitar el sitio y qué opciones tienes.",
       "meta.home.title": "Jaime Gaming — juegos, programación y YouTube",
       "meta.home.description": "Jaime Gaming, youtuber y programador. Juegos para navegador, vídeos y proyectos web. Aprendiendo JavaScript, TypeScript y Python.",
       "meta.projects.title": "Proyectos — Jaime Gaming",
@@ -204,6 +234,12 @@
       "meta.contact.description": "Habla con Jaime Gaming por correo, Discord, YouTube, X o GitHub. Enlaces oficiales y contacto directo.",
       "meta.blog.title": "Blog — Jaime Gaming",
       "meta.blog.description": "Lanzamientos, novedades y notas sobre el desarrollo de los proyectos de Jaime Gaming.",
+      "meta.status.title": "Estado del servicio — Jaime Gaming",
+      "meta.status.description": "Estado en directo de la web, la documentación y los proyectos de Jaime Gaming.",
+      "meta.terms.title": "Términos del servicio — Jaime Gaming",
+      "meta.terms.description": "Condiciones de uso del sitio personal de Jaime Gaming.",
+      "meta.privacy.title": "Privacidad — Jaime Gaming",
+      "meta.privacy.description": "Qué datos se tratan al visitar el sitio de Jaime Gaming y qué opciones tienes.",
       "meta.project.title": "Proyecto — Jaime Gaming",
       "meta.project.description": "Detalle de proyecto de Jaime Gaming.",
     },
@@ -211,6 +247,7 @@
       "nav.home": "Home",
       "nav.projects": "Projects",
       "nav.blog": "Blog",
+      "nav.docs": "Docs",
       "nav.contact": "Contact",
       "nav.openMenu": "Open menu",
       "nav.closeMenu": "Close menu",
@@ -246,25 +283,13 @@
       "about.cardTitle": "@jaime-gaming",
       "about.cardText": "Public repositories, source code and project documentation.",
       "about.cardStamp": "MY GITHUB ↗",
-      "timeline.html.year": "AT THE START",
-      "timeline.html.title": "A page in HTML",
-      "timeline.html.desc": "The first thing I used. I still use it for my pages and games.",
-      "timeline.share.year": "WITH MY CLASSMATES",
-      "timeline.share.title": "“Try this for a second”",
-      "timeline.share.desc": "I made games to share with my classmates. That’s how it started.",
-      "timeline.python.year": "NOW",
-      "timeline.python.title": "Beyond HTML",
-      "timeline.python.desc": "I’m getting into JavaScript, TypeScript and Python. I’m finding my feet with JavaScript.",
 
       "skills.title": "What I use",
       "skills.sub": "Technologies I use and others I’m introducing into my projects.",
       "skills.html": "Where I started. I use it to structure pages, interfaces and browser games.",
-      "skills.htmlLevel": "SINCE THE START",
       "skills.python": "I’m learning through projects and experiments. I also share my Python repositories on GitHub.",
-      "skills.pythonLevel": "WORKING ON IT",
       "skills.gamesTitle": "Game development",
       "skills.games": "Shape a mechanic, try it out, and improve it with feedback.",
-      "skills.gamesLevel": "ALWAYS EXPLORING",
 
       "projectsTeaser.title": "Projects",
       "projectsTeaser.sub": "My latest public repos on GitHub.",
@@ -403,6 +428,47 @@
       "readme.completed": "Completed",
       "readme.incomplete": "Not completed",
       "readme.table": "README table",
+      "footer.tagline": "Browser games, web applications and videos.",
+      "footer.site": "Site",
+      "footer.siteAria": "Site links",
+      "footer.resources": "Resources",
+      "footer.resourcesAria": "Resources and external links",
+      "footer.status": "Service status",
+      "footer.email": "Email",
+      "footer.rights": "All rights reserved.",
+      "footer.source": "Source code ↗",
+      "footer.terms": "Terms of Service",
+      "footer.privacy": "Privacy",
+      "footer.legalAria": "Terms and privacy",
+      "status.title": "Service status",
+      "status.sub": "Live status of the website, documentation and projects, from the official incident.io panel.",
+      "status.note": "Data from the official status panel",
+      "status.open": "Open full status page ↗",
+      "status.loading": "Checking status…",
+      "status.error": "Couldn't fetch the live status. You can open the full status page.",
+      "status.updated": "Updated {date}",
+      "status.componentsAria": "Service components",
+      "status.allOperational": "All systems operational",
+      "status.minorIssues": "Minor issues",
+      "status.majorIssues": "Major incident",
+      "status.criticalIssues": "Critical incident",
+      "status.maintenanceOverall": "Maintenance in progress",
+      "status.unknown": "Status unavailable",
+      "status.operational": "Operational",
+      "status.degraded": "Degraded performance",
+      "status.partial": "Partial outage",
+      "status.major": "Major outage",
+      "status.underMaintenance": "Under maintenance",
+      "status.maintenanceTitle": "Scheduled maintenance",
+      "status.maintenanceBody": "Text published on the status page.",
+      "status.frameTitle": "Jaime Gaming status page",
+      "status.frameNotice": "The full panel belongs to incident.io and is only loaded if you ask for it. Once loaded, it may use its own cookies.",
+      "status.loadFrame": "Load embedded panel",
+      "status.hint": "The summary refreshes when you open this page. If the embedded panel doesn’t appear, open it with the button above.",
+      "legal.terms.title": "Terms of Service",
+      "legal.terms.sub": "Rules of use for the site and all of its projects.",
+      "legal.privacy.title": "Privacy Policy",
+      "legal.privacy.sub": "What data is processed when you visit this site and what choices you have.",
       "meta.home.title": "Jaime Gaming — games, programming and YouTube",
       "meta.home.description": "Jaime Gaming, YouTuber and programmer. Browser games, videos and web projects. Learning JavaScript, TypeScript and Python.",
       "meta.projects.title": "Projects — Jaime Gaming",
@@ -411,6 +477,12 @@
       "meta.contact.description": "Contact Jaime Gaming by email, Discord, YouTube, X or GitHub. Official profiles and direct contact.",
       "meta.blog.title": "Blog — Jaime Gaming",
       "meta.blog.description": "Releases, updates and notes on the development of Jaime Gaming’s projects.",
+      "meta.status.title": "Service status — Jaime Gaming",
+      "meta.status.description": "Live status of Jaime Gaming's website, documentation and projects.",
+      "meta.terms.title": "Terms of Service — Jaime Gaming",
+      "meta.terms.description": "Terms of use for Jaime Gaming's personal site.",
+      "meta.privacy.title": "Privacy Policy — Jaime Gaming",
+      "meta.privacy.description": "What data is processed when you visit Jaime Gaming's site and what choices you have.",
       "meta.project.title": "Project — Jaime Gaming",
       "meta.project.description": "Project details from Jaime Gaming.",
     },
@@ -431,7 +503,98 @@
     return dict[browserLang] ? browserLang : "en";
   }
 
-  function applyLang(lang, { persist = true } = {}) {
+  let langAppliedOnce = false;
+  let typingToken = 0;
+  let typingFrame = 0;
+  let typingBlocks = [];
+
+  function motionAllowed() {
+    return typeof window.matchMedia !== "function" || !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function stopRetyping() {
+    typingToken += 1;
+    if (typingFrame && typeof window.cancelAnimationFrame === "function") window.cancelAnimationFrame(typingFrame);
+    typingFrame = 0;
+    typingBlocks.forEach((block) => {
+      block.element.removeAttribute("aria-busy");
+      block.element.style.minHeight = "";
+    });
+    typingBlocks = [];
+  }
+
+  function collectTypingBlocks() {
+    const blocks = [];
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+      if (element.closest("#typedRole, [data-content-language], [aria-live], .jg-loader, pre, code, textarea")) return;
+      const nodes = [];
+      let total = 0;
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+      let node = walker.nextNode();
+      while (node) {
+        const text = node.nodeValue || "";
+        if (text.trim()) {
+          nodes.push({ node, text });
+          total += text.length;
+        }
+        node = walker.nextNode();
+      }
+      if (!nodes.length || total < 2 || total > 320) return;
+      blocks.push({ element, nodes, total });
+    });
+    return blocks;
+  }
+
+  function retypePage() {
+    stopRetyping();
+    if (typeof window.requestAnimationFrame !== "function" || typeof document.createTreeWalker !== "function") return;
+    if (!motionAllowed() || document.visibilityState === "hidden") return;
+    const blocks = collectTypingBlocks();
+    if (!blocks.length) return;
+    const token = typingToken;
+    const originals = blocks.map((block) => block.nodes.map((entry) => entry.text));
+    blocks.forEach((block) => {
+      block.height = block.element.getBoundingClientRect().height;
+      block.nodes.forEach((entry) => { entry.node.nodeValue = ""; });
+      block.element.setAttribute("aria-busy", "true");
+      if (block.height > 0) block.element.style.minHeight = `${block.height}px`;
+    });
+    typingBlocks = blocks;
+    let startTime = 0;
+    function frame(now) {
+      if (token !== typingToken) return;
+      if (!startTime) startTime = now;
+      const elapsed = now - startTime;
+      let finished = true;
+      blocks.forEach((block, index) => {
+        const budget = elapsed - Math.min(index * 15, 380);
+        if (budget < 0) { finished = false; return; }
+        const speed = Math.max(3, Math.min(13, 900 / block.total));
+        const visible = Math.min(block.total, Math.floor(budget / speed));
+        let remaining = visible;
+        block.nodes.forEach((entry, nodeIndex) => {
+          const full = originals[index][nodeIndex];
+          const shown = remaining > 0 ? full.slice(0, remaining) : "";
+          if (entry.node.nodeValue !== shown) entry.node.nodeValue = shown;
+          remaining -= full.length;
+        });
+        if (visible < block.total) finished = false;
+      });
+      if (!finished) {
+        typingFrame = window.requestAnimationFrame(frame);
+        return;
+      }
+      typingFrame = 0;
+      blocks.forEach((block) => {
+        block.element.removeAttribute("aria-busy");
+        block.element.style.minHeight = "";
+      });
+      typingBlocks = [];
+    }
+    typingFrame = window.requestAnimationFrame(frame);
+  }
+
+  function applyLang(lang, { persist = true, animate = true } = {}) {
     if (!dict[lang]) lang = "es";
     document.documentElement.setAttribute("lang", lang);
     document.querySelectorAll("[data-i18n]").forEach((element) => {
@@ -441,6 +604,10 @@
     document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
       const value = dict[lang][element.getAttribute("data-i18n-aria")];
       if (typeof value === "string") element.setAttribute("aria-label", value);
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach((element) => {
+      const value = dict[lang][element.getAttribute("data-i18n-title")];
+      if (typeof value === "string") element.setAttribute("title", value);
     });
     const pageData = JSON.parse(document.getElementById("pageTranslations")?.textContent || "{}")[lang] || {};
     document.querySelectorAll("[data-content-key]").forEach((element) => {
@@ -482,13 +649,23 @@
     if (persist) storageSet("lang", lang);
     window.currentLang = lang;
     document.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));
+    if (animate && langAppliedOnce) retypePage();
+    langAppliedOnce = true;
   }
 
-  window.i18n = { dict, applyLang, detectDefaultLang };
+  window.i18n = { dict, applyLang, detectDefaultLang, retypePage };
   document.addEventListener("DOMContentLoaded", () => {
     applyLang(detectDefaultLang());
     const switchButton = document.getElementById("langSwitch");
-    if (switchButton) switchButton.addEventListener("click", () => applyLang(window.currentLang === "es" ? "en" : "es"));
+    if (switchButton) {
+      switchButton.addEventListener("click", () => {
+        applyLang(window.currentLang === "es" ? "en" : "es");
+        switchButton.classList.remove("is-switching");
+        void switchButton.offsetWidth;
+        switchButton.classList.add("is-switching");
+        window.setTimeout(() => switchButton.classList.remove("is-switching"), 760);
+      });
+    }
   });
   window.addEventListener("storage", (event) => {
     if (event.key === "lang" && dict[event.newValue] && event.newValue !== window.currentLang) applyLang(event.newValue, { persist: false });

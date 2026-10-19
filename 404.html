@@ -23,10 +23,7 @@
 
 <link rel="canonical" href="https://jaime-gaming.github.io/projects/" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/assets/css/style.css?v=b3b582499cbb" />
+<link rel="stylesheet" href="/assets/css/style.css?v=731a5bcac4c7" />
 </head>
 <body data-icons="/assets/img/icons.svg?v=8aeedb76bbea" data-page="project">
 
@@ -36,22 +33,33 @@
 <header class="nav">
   <a href="/" class="nav__logo" aria-label="Jaime Gaming — inicio" data-i18n-aria="aria.homeLogo">JG<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Navegación principal" data-i18n-aria="aria.mainNav">
-    <a href="/" data-i18n="nav.home" class="">Inicio</a>
+    <a href="/" data-i18n="nav.home">Inicio</a>
     <a href="/projects/" data-i18n="nav.projects" class="active">Proyectos</a>
-    <a href="/blog/" data-i18n="nav.blog" class="">Blog</a>
-    <a href="/contact/" data-i18n="nav.contact" class="">Contacto</a>
+    <a href="/blog/" data-i18n="nav.blog">Blog</a>
+    <a href="https://jaime-gaming.github.io/Docs" data-i18n="nav.docs">Docs</a>
+    <a href="/contact/" data-i18n="nav.contact">Contacto</a>
   </nav>
   <div class="nav__actions">
     <button class="lang-switch" id="langSwitch" data-active="es" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
       <svg class="language-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <defs>
-          <pattern id="languageFlag" width="24" height="24" patternUnits="userSpaceOnUse">
-            <g class="flag-es"><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
-            <g class="flag-en"><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          <pattern id="languageFlagEs" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
           </pattern>
+          <pattern id="languageFlagEn" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          </pattern>
+          <radialGradient id="languageGloss" cx="34%" cy="28%" r="72%">
+            <stop offset="0%" stop-color="#fff" stop-opacity=".42"/>
+            <stop offset="55%" stop-color="#fff" stop-opacity=".08"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
         </defs>
-        <circle cx="12" cy="12" r="9.5" fill="url(#languageFlag)"/>
-        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width=".9" stroke-linecap="round"/>
+        <circle class="flag flag-es" cx="12" cy="12" r="9.5" fill="url(#languageFlagEs)"/>
+        <circle class="flag flag-en" cx="12" cy="12" r="9.5" fill="url(#languageFlagEn)"/>
+        <circle class="language-globe__gloss" cx="12" cy="12" r="9.5" fill="url(#languageGloss)" aria-hidden="true"/>
+        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#0d100d" stroke-opacity=".55" stroke-width="1.9" stroke-linecap="round"/>
+        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width=".9" stroke-linecap="round"/>
       </svg>
       <span class="sr-only" id="languageName">Español</span>
     </button>
@@ -65,6 +73,7 @@
   <a href="/" data-i18n="nav.home">Inicio</a>
   <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
   <a href="/blog/" data-i18n="nav.blog">Blog</a>
+  <a href="https://jaime-gaming.github.io/Docs" data-i18n="nav.docs">Docs</a>
   <a href="/contact/" data-i18n="nav.contact">Contacto</a>
 </nav>
 
@@ -85,15 +94,51 @@
 </main>
 
 <footer class="footer">
-  <p>© <span id="year"></span> Jaime Gaming.</p>
-  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-arrow"></use></svg></button>
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label="Jaime Gaming — inicio" data-i18n-aria="aria.homeLogo">JG<span class="dot">.</span></a>
+      <p class="footer__tagline" data-i18n="footer.tagline">Juegos para navegador, aplicaciones web y vídeos.</p>
+      <div class="footer__socials" role="group" aria-label="Redes sociales" data-i18n-aria="aria.socials">
+        <a class="social-icon" href="https://github.com/jaime-gaming" aria-label="GitHub" data-i18n-aria="social.github" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-github"></use></svg></a>
+        <a class="social-icon" href="https://www.youtube.com/@jaimegaming5731" aria-label="YouTube" data-i18n-aria="social.youtube" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-youtube"></use></svg></a>
+        <a class="social-icon" href="https://x.com/JaimeGamingPro" aria-label="X / Twitter" data-i18n-aria="social.x" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-x"></use></svg></a>
+        <a class="social-icon" href="https://discord.com/users/984083829767675965" aria-label="Discord" data-i18n-aria="social.discord" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-discord"></use></svg></a>
+        <a class="social-icon" href="mailto:jaimegamingpro@gmail.com" aria-label="Correo electrónico" data-i18n-aria="social.email"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-mail"></use></svg></a>
+      </div>
+    </div>
+    <nav class="footer__col" aria-label="Sitio" data-i18n-aria="footer.siteAria">
+      <h2 class="footer__title" data-i18n="footer.site">Sitio</h2>
+      <a href="/"><span data-i18n="nav.home">Inicio</span></a>
+      <a href="/projects/"><span data-i18n="nav.projects">Proyectos</span></a>
+      <a href="/blog/"><span data-i18n="nav.blog">Blog</span></a>
+      <a href="/contact/"><span data-i18n="nav.contact">Contacto</span></a>
+    </nav>
+    <nav class="footer__col" aria-label="Recursos" data-i18n-aria="footer.resourcesAria">
+      <h2 class="footer__title" data-i18n="footer.resources">Recursos</h2>
+      <a href="https://jaime-gaming.github.io/Docs"><span data-i18n="nav.docs">Docs</span></a>
+      <a class="footer__status" href="/status/"><span class="footer__status-dot" aria-hidden="true"></span><span data-i18n="footer.status">Estado del servicio</span></a>
+      <a href="https://github.com/jaime-gaming" target="_blank" rel="noopener noreferrer">GitHub<span class="footer__arrow" aria-hidden="true">↗</span></a>
+      <a href="mailto:jaimegamingpro@gmail.com"><span data-i18n="footer.email">Correo</span></a>
+    </nav>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copy">© <span id="year">2026</span> Jaime Gaming. <span data-i18n="footer.rights">Todos los derechos reservados.</span></p>
+    <div class="footer__bottom-actions">
+      <nav class="footer__legal" aria-label="Aviso legal" data-i18n-aria="footer.legalAria">
+      <a href="/terms/" data-i18n="footer.terms">Términos del servicio</a>
+      <a href="/privacy/" data-i18n="footer.privacy">Privacidad</a>
+      </nav>
+      <a href="https://github.com/jaime-gaming/jaime-gaming.github.io" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Código fuente ↗</a>
+      <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-arrow"></use></svg></button>
+    </div>
+  </div>
 </footer>
 
 <script type="application/json" id="pageTranslations">{}</script>
-<script src="/assets/js/i18n.js?v=814336b0b4c2"></script>
+<script src="/assets/js/i18n.js?v=31330179285c"></script>
 <script src="/assets/vendor/marked.min.js?v=5af04afe994d"></script>
 <script src="/assets/vendor/purify.min.js?v=af9523d4df30"></script>
 <script src="/assets/js/readme.js?v=935c2e4df0a5"></script>
-<script src="/assets/js/main.js?v=18ec30a3c5c1"></script>
+<script src="/assets/js/main.js?v=215e93b93458"></script>
 </body>
 </html>
