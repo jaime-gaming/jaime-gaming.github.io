@@ -23,10 +23,7 @@
 
 <link rel="canonical" href="https://jaime-gaming.github.io/blog/lanzamiento-wave/" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/assets/css/style.css?v=b3b582499cbb" />
+<link rel="stylesheet" href="/assets/css/style.css?v=731a5bcac4c7" />
 </head>
 <body data-icons="/assets/img/icons.svg?v=8aeedb76bbea" data-page="blog">
 
@@ -36,22 +33,33 @@
 <header class="nav">
   <a href="/" class="nav__logo" aria-label="Jaime Gaming — inicio" data-i18n-aria="aria.homeLogo">JG<span class="dot">.</span></a>
   <nav class="nav__links" aria-label="Navegación principal" data-i18n-aria="aria.mainNav">
-    <a href="/" data-i18n="nav.home" class="">Inicio</a>
-    <a href="/projects/" data-i18n="nav.projects" class="">Proyectos</a>
+    <a href="/" data-i18n="nav.home">Inicio</a>
+    <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
     <a href="/blog/" data-i18n="nav.blog" class="active">Blog</a>
-    <a href="/contact/" data-i18n="nav.contact" class="">Contacto</a>
+    <a href="https://jaime-gaming.github.io/Docs" data-i18n="nav.docs">Docs</a>
+    <a href="/contact/" data-i18n="nav.contact">Contacto</a>
   </nav>
   <div class="nav__actions">
     <button class="lang-switch" id="langSwitch" data-active="es" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
       <svg class="language-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <defs>
-          <pattern id="languageFlag" width="24" height="24" patternUnits="userSpaceOnUse">
-            <g class="flag-es"><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
-            <g class="flag-en"><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          <pattern id="languageFlagEs" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
           </pattern>
+          <pattern id="languageFlagEn" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          </pattern>
+          <radialGradient id="languageGloss" cx="34%" cy="28%" r="72%">
+            <stop offset="0%" stop-color="#fff" stop-opacity=".42"/>
+            <stop offset="55%" stop-color="#fff" stop-opacity=".08"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
         </defs>
-        <circle cx="12" cy="12" r="9.5" fill="url(#languageFlag)"/>
-        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width=".9" stroke-linecap="round"/>
+        <circle class="flag flag-es" cx="12" cy="12" r="9.5" fill="url(#languageFlagEs)"/>
+        <circle class="flag flag-en" cx="12" cy="12" r="9.5" fill="url(#languageFlagEn)"/>
+        <circle class="language-globe__gloss" cx="12" cy="12" r="9.5" fill="url(#languageGloss)" aria-hidden="true"/>
+        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#0d100d" stroke-opacity=".55" stroke-width="1.9" stroke-linecap="round"/>
+        <use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-globe" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width=".9" stroke-linecap="round"/>
       </svg>
       <span class="sr-only" id="languageName">Español</span>
     </button>
@@ -65,6 +73,7 @@
   <a href="/" data-i18n="nav.home">Inicio</a>
   <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
   <a href="/blog/" data-i18n="nav.blog">Blog</a>
+  <a href="https://jaime-gaming.github.io/Docs" data-i18n="nav.docs">Docs</a>
   <a href="/contact/" data-i18n="nav.contact">Contacto</a>
 </nav>
 
@@ -72,7 +81,9 @@
   <section class="section">
     <a href="/blog/" class="back-link reveal">← <span data-i18n="blog.back">Volver al blog</span></a>
     <div class="post-detail__head reveal">
-      <time class="post-detail__date" datetime="2026-10-18" data-i18n-date>18 de octubre de 2026</time>
+      <div class="post-detail__meta">
+        <time class="post-detail__date" datetime="2026-10-18" data-i18n-date>18 de octubre de 2026</time>
+      </div>
       <h1 class="post-detail__title" data-content-key="post.title">Wave 0.1.0: un reproductor para tu propia música</h1>
     </div>
     <article class="post-detail__body reveal" lang="es" data-content-key="post.body" data-content-language>
@@ -113,15 +124,51 @@ npm run dev
 </main>
 
 <footer class="footer">
-  <p>© <span id="year"></span> Jaime Gaming.</p>
-  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-arrow"></use></svg></button>
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label="Jaime Gaming — inicio" data-i18n-aria="aria.homeLogo">JG<span class="dot">.</span></a>
+      <p class="footer__tagline" data-i18n="footer.tagline">Juegos para navegador, aplicaciones web y vídeos.</p>
+      <div class="footer__socials" role="group" aria-label="Redes sociales" data-i18n-aria="aria.socials">
+        <a class="social-icon" href="https://github.com/jaime-gaming" aria-label="GitHub" data-i18n-aria="social.github" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-github"></use></svg></a>
+        <a class="social-icon" href="https://www.youtube.com/@jaimegaming5731" aria-label="YouTube" data-i18n-aria="social.youtube" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-youtube"></use></svg></a>
+        <a class="social-icon" href="https://x.com/JaimeGamingPro" aria-label="X / Twitter" data-i18n-aria="social.x" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-x"></use></svg></a>
+        <a class="social-icon" href="https://discord.com/users/984083829767675965" aria-label="Discord" data-i18n-aria="social.discord" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-discord"></use></svg></a>
+        <a class="social-icon" href="mailto:jaimegamingpro@gmail.com" aria-label="Correo electrónico" data-i18n-aria="social.email"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-mail"></use></svg></a>
+      </div>
+    </div>
+    <nav class="footer__col" aria-label="Sitio" data-i18n-aria="footer.siteAria">
+      <h2 class="footer__title" data-i18n="footer.site">Sitio</h2>
+      <a href="/"><span data-i18n="nav.home">Inicio</span></a>
+      <a href="/projects/"><span data-i18n="nav.projects">Proyectos</span></a>
+      <a href="/blog/"><span data-i18n="nav.blog">Blog</span></a>
+      <a href="/contact/"><span data-i18n="nav.contact">Contacto</span></a>
+    </nav>
+    <nav class="footer__col" aria-label="Recursos" data-i18n-aria="footer.resourcesAria">
+      <h2 class="footer__title" data-i18n="footer.resources">Recursos</h2>
+      <a href="https://jaime-gaming.github.io/Docs"><span data-i18n="nav.docs">Docs</span></a>
+      <a class="footer__status" href="/status/"><span class="footer__status-dot" aria-hidden="true"></span><span data-i18n="footer.status">Estado del servicio</span></a>
+      <a href="https://github.com/jaime-gaming" target="_blank" rel="noopener noreferrer">GitHub<span class="footer__arrow" aria-hidden="true">↗</span></a>
+      <a href="mailto:jaimegamingpro@gmail.com"><span data-i18n="footer.email">Correo</span></a>
+    </nav>
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copy">© <span id="year">2026</span> Jaime Gaming. <span data-i18n="footer.rights">Todos los derechos reservados.</span></p>
+    <div class="footer__bottom-actions">
+      <nav class="footer__legal" aria-label="Aviso legal" data-i18n-aria="footer.legalAria">
+      <a href="/terms/" data-i18n="footer.terms">Términos del servicio</a>
+      <a href="/privacy/" data-i18n="footer.privacy">Privacidad</a>
+      </nav>
+      <a href="https://github.com/jaime-gaming/jaime-gaming.github.io" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Código fuente ↗</a>
+      <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/img/icons.svg?v=8aeedb76bbea#icon-arrow"></use></svg></button>
+    </div>
+  </div>
 </footer>
 
 <script type="application/json" id="pageTranslations">{"es":{"title":"Wave 0.1.0: un reproductor para tu propia música — Jaime Gaming","description":"He publicado la primera versión de Wave. Un reproductor de música local con biblioteca, playlists, mezclas diarias y letras, sin cuenta ni suscripción.","fields":{"post.title":"Wave 0.1.0: un reproductor para tu propia música","post.body":"\u003cp>He publicado \u003cstrong>Wave 0.1.0\u003c/strong>, la primera versión de mi reproductor de música local. El lanzamiento está fechado el \u003cstrong>17 de octubre de 2026\u003c/strong> y ya se puede descargar el cliente web desde \u003ca href=\"https://github.com/jaime-gaming/Wave/releases/tag/v0.1.0\">la publicación de GitHub\u003c/a>.\u003c/p>\n\u003cp>Wave parte de una idea sencilla: añadir tus propios archivos de audio, organizar la colección y escucharla desde una misma interfaz. No hace falta crear una cuenta, pagar una suscripción ni subir la música a un servidor. No es un catálogo de streaming: la biblioteca comienza vacía y la construyes con los archivos que importas.\u003c/p>\n\u003cp>\u003cimg src=\"/assets/img/wave-home.png\" alt=\"Biblioteca de Wave en escritorio, con álbumes y mezclas diarias\">\u003c/p>\n\u003cp>\u003cem>Captura del cliente web de la versión 0.1.0. Las carátulas y la biblioteca que aparecen son contenido de demostración del proyecto.\u003c/em>\u003c/p>\n\u003ch2>Qué incluye esta primera versión\u003c/h2>\n\u003cp>La biblioteca permite navegar por \u003cstrong>canciones, álbumes, artistas y favoritos\u003c/strong>, además de buscar dentro de la colección. Puedes crear playlists, ordenar sus canciones y elegir una portada. Durante la reproducción hay una cola editable, un reproductor compacto y una vista ampliada de la canción con su carátula y sus letras.\u003c/p>\n\u003cp>Las \u003cstrong>mezclas diarias\u003c/strong> se construyen con las etiquetas de género y artista de tus archivos, no con un servicio remoto de recomendaciones. Puedes abrir una mezcla y revisar todas las canciones antes de reproducirla, escucharla en orden o de forma aleatoria y guardarla como una playlist independiente. Esa copia no cambia cuando se renueva la mezcla del día siguiente. El número de mezclas depende de lo que permita tu biblioteca; una colección pequeña puede mostrar menos opciones.\u003c/p>\n\u003cp>También hay temas claro y oscuro, colores a partir de las carátulas, opciones de texto ampliado y movimiento reducido. El cliente web adapta su navegación y sus controles al uso desde un teléfono.\u003c/p>\n\u003ch2>Letras: importadas o buscadas de forma explícita\u003c/h2>\n\u003cp>Puedes añadir texto o archivos \u003cstrong>LRC\u003c/strong> con letras sincronizadas. También se pueden buscar coincidencias, revisarlas y decidir si se guardan, sin necesidad de iniciar la reproducción de la canción. Las letras guardadas quedan disponibles para escuchas posteriores sin conexión.\u003c/p>\n\u003cp>Conviene distinguir la biblioteca local de la búsqueda de letras. Las consultas opcionales utilizan \u003cstrong>LRCLIB\u003c/strong> y envían metadatos de la canción al proveedor, que también recibe información de conexión. La búsqueda automática está desactivada inicialmente y se activa desde Ajustes. Ni la disponibilidad del servicio ni la cobertura de todas las canciones están garantizadas.\u003c/p>\n\u003ch2>Dónde se guardan los archivos\u003c/h2>\n\u003cp>El cliente web conserva la biblioteca en el almacenamiento del navegador, asociado a su perfil y a la dirección desde la que se abre Wave. No modifica ni elimina tus originales. Borrar una canción de Wave elimina su copia almacenada y sus referencias en las playlists, no el archivo original del dispositivo.\u003c/p>\n\u003cp>\u003cstrong>Wave no es una copia de seguridad.\u003c/strong> Borrar los datos del sitio, usar navegación privada o alcanzar los límites de almacenamiento puede hacer que se pierda la biblioteca guardada. Conserva siempre tus archivos originales. Abrir la aplicación desde otra dirección también puede dar acceso a una biblioteca distinta.\u003c/p>\n\u003cp>Una vez cargada la aplicación, la reproducción local y las letras ya guardadas no necesitan red. Eso no significa que esta versión tenga un inicio sin conexión garantizado: una PWA instalable y el arranque offline completo siguen pendientes.\u003c/p>\n\u003ch2>Cómo probar Wave\u003c/h2>\n\u003cp>En \u003ca href=\"https://github.com/jaime-gaming/Wave/releases/tag/v0.1.0\">Wave 0.1.0\u003c/a> encontrarás el archivo \u003cstrong>Wave-0.1.0-web.zip\u003c/strong>, el vídeo de presentación y un archivo de sumas SHA-256. El ZIP web debe descomprimirse y servirse mediante HTTP o HTTPS; no está pensado para abrir directamente su \u003ccode>index.html\u003c/code> como archivo local.\u003c/p>\n\u003cp>Si prefieres ejecutar el código, necesitas \u003cstrong>Node.js 22.12 o posterior, o Node 24\u003c/strong>:\u003c/p>\n\u003cpre>\u003ccode class=\"language-sh\">git clone https://github.com/jaime-gaming/Wave.git\ncd Wave\nnpm ci\nnpm run dev\n\u003c/code>\u003c/pre>\n\u003cp>Abre la dirección que indique la terminal y selecciona \u003cstrong>Add music\u003c/strong> para importar tus archivos. Wave admite, entre otros, MP3, FLAC, WAV, OGG, M4A y AAC, con un máximo de 200 MB por archivo. La reproducción de cada formato depende de los códecs del navegador o del sistema operativo.\u003c/p>\n\u003ch2>Estado de Windows y Android\u003c/h2>\n\u003cp>El cliente \u003cstrong>web es el más completo\u003c/strong> de este lanzamiento. El proyecto incluye también aplicaciones nativas independientes: Windows utiliza C# y WPF; Android utiliza Compose. No son simples contenedores de la web.\u003c/p>\n\u003cp>Es importante no confundirlas con los archivos publicados de esta versión: los paquetes nativos de CI siguen siendo \u003cstrong>compilaciones de prueba, sin firma o de depuración\u003c/strong>, con diferencias de funciones respecto a la web. Android tiene un alcance más reducido y la integración de audio y dispositivos en Windows continúa en revisión. No se presentan como instaladores oficiales firmados.\u003c/p>\n\u003ch2>Código y próximos cambios\u003c/h2>\n\u003cp>Wave está publicado con licencia \u003cstrong>MIT\u003c/strong>. El código, la documentación y las incidencias están en \u003ca href=\"https://github.com/jaime-gaming/Wave\">el repositorio\u003c/a>. Para consultar los límites y diferencias entre plataformas, están disponibles \u003ca href=\"https://github.com/jaime-gaming/Wave/blob/v0.1.0/docs/RELEASE_NOTES_0.1.0.md\">las notas de 0.1.0\u003c/a> y \u003ca href=\"https://github.com/jaime-gaming/Wave/blob/v0.1.0/docs/PLATFORMS.md\">la guía de plataformas\u003c/a>.\u003c/p>\n\u003cp>Si pruebas esta versión y encuentras un problema, puedes abrir una incidencia indicando la plataforma, el navegador y los pasos para reproducirlo. También puedes escribirme desde \u003ca href=\"/contact/\">Contacto\u003c/a>. Las correcciones y nuevas versiones se podrán seguir en GitHub.\u003c/p>\n"}},"en":{"title":"Wave 0.1.0: a player for your own music — Jaime Gaming","description":"I’ve released the first version of Wave: a local music player with a library, playlists, daily mixes and lyrics, without an account or subscription.","fields":{"post.title":"Wave 0.1.0: a player for your own music","post.body":"\u003cp>I’ve released \u003cstrong>Wave 0.1.0\u003c/strong>, the first version of my local music player. The release is dated \u003cstrong>17 October 2026\u003c/strong>, and the web client is available to download from \u003ca href=\"https://github.com/jaime-gaming/Wave/releases/tag/v0.1.0\">the GitHub release\u003c/a>.\u003c/p>\n\u003cp>Wave starts with a simple idea: add your own audio files, organize your collection and listen from a single interface. You don’t need to create an account, pay a subscription or upload your music to a server. It isn’t a streaming catalogue: the library starts empty, and you build it with the files you import.\u003c/p>\n\u003cp>\u003cimg src=\"/assets/img/wave-home.png\" alt=\"Wave’s desktop library, with albums and daily mixes\">\u003c/p>\n\u003cp>\u003cem>Screenshot of the 0.1.0 web client. The artwork and library shown are demonstration content from the project.\u003c/em>\u003c/p>\n\u003ch2>What this first version includes\u003c/h2>\n\u003cp>The library lets you browse \u003cstrong>songs, albums, artists and favourites\u003c/strong>, as well as search your collection. You can create playlists, arrange their songs and choose a cover. During playback, there is an editable queue, a compact player and an expanded view with the current song’s artwork and lyrics.\u003c/p>\n\u003cp>\u003cstrong>Daily mixes\u003c/strong> are built from the genre and artist tags in your files, not a remote recommendation service. You can open a mix and review every song before playing it, listen in order or shuffle, and save it as an independent playlist. That copy won’t change when the following day’s mix is refreshed. The number of mixes depends on what your library can support; a small collection may show fewer options.\u003c/p>\n\u003cp>There are also light and dark themes, artwork-based colours, larger text options and reduced motion. The web client adapts its navigation and controls for use on a phone.\u003c/p>\n\u003ch2>Lyrics: imported or explicitly searched\u003c/h2>\n\u003cp>You can add text or \u003cstrong>LRC\u003c/strong> files with synchronized lyrics. You can also search for matches, preview them and decide whether to save them, without starting playback. Saved lyrics remain available for later listening without a connection.\u003c/p>\n\u003cp>It’s worth distinguishing the local library from lyric searches. Optional lookups use \u003cstrong>LRCLIB\u003c/strong> and send song metadata to the provider, which also receives connection information. Automatic lookup is initially disabled and can be enabled in Settings. Neither service availability nor coverage for every song is guaranteed.\u003c/p>\n\u003ch2>Where the files are stored\u003c/h2>\n\u003cp>The web client keeps the library in browser storage, associated with its profile and the address where Wave is opened. It doesn’t change or delete your original files. Removing a song from Wave deletes its stored copy and its playlist references, not the original file on your device.\u003c/p>\n\u003cp>\u003cstrong>Wave is not a backup.\u003c/strong> Clearing site data, using private browsing or reaching storage limits can remove the saved library. Always keep your original files. Opening the app at a different address may also give you access to a different library.\u003c/p>\n\u003cp>Once the app has loaded, local playback and saved lyrics don’t require a network connection. That doesn’t mean this version guarantees an offline start: an installable PWA and full offline startup are still pending.\u003c/p>\n\u003ch2>How to try Wave\u003c/h2>\n\u003cp>The \u003ca href=\"https://github.com/jaime-gaming/Wave/releases/tag/v0.1.0\">Wave 0.1.0 release\u003c/a> includes \u003cstrong>Wave-0.1.0-web.zip\u003c/strong>, the presentation video and a SHA-256 checksum file. Extract the web ZIP and serve its contents over HTTP or HTTPS; it isn’t intended to run by opening its \u003ccode>index.html\u003c/code> directly as a local file.\u003c/p>\n\u003cp>If you prefer to run the source, you’ll need \u003cstrong>Node.js 22.12 or later, or Node 24\u003c/strong>:\u003c/p>\n\u003cpre>\u003ccode class=\"language-sh\">git clone https://github.com/jaime-gaming/Wave.git\ncd Wave\nnpm ci\nnpm run dev\n\u003c/code>\u003c/pre>\n\u003cp>Open the address printed in the terminal and select \u003cstrong>Add music\u003c/strong> to import your files. Wave supports MP3, FLAC, WAV, OGG, M4A and AAC, among other formats, with a maximum of 200 MB per file. Playback for each format depends on the browser’s or operating system’s codecs.\u003c/p>\n\u003ch2>Windows and Android status\u003c/h2>\n\u003cp>The \u003cstrong>web client is the most complete\u003c/strong> version in this release. The project also includes independent native applications: Windows uses C# and WPF, while Android uses Compose. They aren’t simply wrappers around the website.\u003c/p>\n\u003cp>It’s important not to confuse those applications with the published assets for this release: native CI packages remain \u003cstrong>unsigned test or debug builds\u003c/strong>, with feature differences compared with the web client. Android has a smaller scope, and Windows audio and device integration is still under review. They are not presented as official signed installers.\u003c/p>\n\u003ch2>Code and future changes\u003c/h2>\n\u003cp>Wave is published under the \u003cstrong>MIT licence\u003c/strong>. The code, documentation and issue tracker are in \u003ca href=\"https://github.com/jaime-gaming/Wave\">the repository\u003c/a>. For limitations and platform differences, see \u003ca href=\"https://github.com/jaime-gaming/Wave/blob/v0.1.0/docs/RELEASE_NOTES_0.1.0.md\">the 0.1.0 release notes\u003c/a> and \u003ca href=\"https://github.com/jaime-gaming/Wave/blob/v0.1.0/docs/PLATFORMS.md\">the platform guide\u003c/a>.\u003c/p>\n\u003cp>If you try this version and find a problem, you can open an issue with your platform, browser and the steps to reproduce it. You can also write to me through \u003ca href=\"/contact/\">Contact\u003c/a>. Fixes and future versions can be followed on GitHub.\u003c/p>\n"}}}</script>
-<script src="/assets/js/i18n.js?v=814336b0b4c2"></script>
+<script src="/assets/js/i18n.js?v=31330179285c"></script>
 <script src="/assets/vendor/marked.min.js?v=5af04afe994d"></script>
 <script src="/assets/vendor/purify.min.js?v=af9523d4df30"></script>
 <script src="/assets/js/readme.js?v=935c2e4df0a5"></script>
-<script src="/assets/js/main.js?v=18ec30a3c5c1"></script>
+<script src="/assets/js/main.js?v=215e93b93458"></script>
 </body>
 </html>

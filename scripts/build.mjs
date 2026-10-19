@@ -72,6 +72,95 @@ async function buildContact() {
   await writePage("contact/index.html", renderLayout({ title: "Contacto", description: "Habla con Jaime Gaming por correo, Discord, YouTube, X o GitHub. Enlaces oficiales y contacto directo.", bodyHtml, activePath: "/contact/" }));
 }
 
+async function buildDocsRedirect() {
+  const target = "https://jaime-gaming.github.io/Docs";
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docs — Jaime Gaming</title>
+<meta name="robots" content="noindex, follow" />
+<link rel="canonical" href="${target}" />
+<meta http-equiv="refresh" content="0; url=${target}" />
+<script>window.location.replace("${target}" + window.location.hash);</script>
+<style>
+  :root { color-scheme: dark; }
+  body { display: grid; min-height: 100vh; margin: 0; place-items: center; padding: 24px; background: radial-gradient(900px 520px at 70% -10%, rgba(202, 242, 138, .08), transparent 60%), #090b08; color: #f1f4ec; font: 16px/1.65 system-ui, sans-serif; text-align: center; }
+  main { max-width: 460px; }
+  h1 { margin: 0 0 12px; font-size: 1.5rem; letter-spacing: -.03em; }
+  p { margin: 0 0 18px; color: #b4bdaa; }
+  a { display: inline-block; padding: 11px 20px; border: 1px solid transparent; border-radius: 999px; background: #caf28a; color: #0a0d07; font-weight: 500; text-decoration: none; }
+  a:hover { background: #e3ffad; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Docs</h1>
+  <p>La documentación se ha movido. Si no se abre automáticamente, usa este enlace.</p>
+  <a href="${target}">Ir a la documentación ↗</a>
+</main>
+</body>
+</html>
+`;
+  await writePage("docs/index.html", html);
+}
+
+async function buildStatus() {
+  const bodyHtml = await readFragment("status.fragment.html");
+  const html = renderLayout({
+    title: "Estado del servicio",
+    description: "Estado en directo de la web, la documentación y los proyectos de Jaime Gaming.",
+    bodyHtml,
+    activePath: "/status/",
+  });
+  await writePage("status/index.html", html);
+}
+
+async function buildLegalPage({ slug, title, description, enTitle, enDescription }) {
+  const es = await readFile(path.join(CONTENT, `${slug}.es.html`), "utf8");
+  const en = await readFile(path.join(CONTENT, `${slug}.en.html`), "utf8");
+  const bodyHtml = `  <section class="section legal">
+    <div class="section__head reveal">
+      <h1 class="section__title" data-i18n="legal.${slug}.title">${title}</h1>
+      <p class="section__sub" data-i18n="legal.${slug}.sub">${description}</p>
+    </div>
+    <div class="legal__body" data-content-key="legal.body" data-content-language>
+${es}    </div>
+  </section>
+`;
+  await writePage(
+    `${slug}/index.html`,
+    renderLayout({
+      title,
+      description,
+      bodyHtml,
+      activePath: `/${slug}/`,
+      translations: {
+        es: { title: `${title} — Jaime Gaming`, description, fields: { "legal.body": es } },
+        en: { title: `${enTitle} — Jaime Gaming`, description: enDescription, fields: { "legal.body": en } },
+      },
+    })
+  );
+}
+
+async function buildLegalPages() {
+  await buildLegalPage({
+    slug: "terms",
+    title: "Términos del servicio",
+    description: "Reglas de uso del sitio y de todos los proyectos.",
+    enTitle: "Terms of Service",
+    enDescription: "Rules of use for the site and all of its projects.",
+  });
+  await buildLegalPage({
+    slug: "privacy",
+    title: "Privacidad",
+    description: "Qué datos se tratan al visitar el sitio y qué opciones tienes.",
+    enTitle: "Privacy Policy",
+    enDescription: "What data is processed when you visit Jaime Gaming's site and what choices you have.",
+  });
+}
+
 async function build404() {
   const bodyHtml = await readFragment("404.fragment.html");
   const html = renderLayout({
@@ -159,7 +248,7 @@ async function buildBlog() {
   const indexBody = `  <section class="section">
     <div class="section__head reveal">
       <h1 class="section__title" data-i18n="blog.title">Blog</h1>
-      <p class="section__sub" data-i18n="blog.sub">Notas y novedades sobre lo que estoy construyendo.</p>
+      <p class="section__sub" data-i18n="blog.sub">Lanzamientos, novedades y notas sobre el desarrollo de mis proyectos.</p>
     </div>
     <div class="blog__list">
 ${listItems}
@@ -175,7 +264,10 @@ ${listItems}
       bodyHtml: indexBody,
       activePath: "/blog/",
       translations: Object.fromEntries(["es", "en"].map((lang) => [lang, {
-        fields: Object.fromEntries(posts.flatMap((post) => [[`${post.slug}.title`, post.translations[lang].title], [`${post.slug}.excerpt`, post.translations[lang].excerpt]])),
+        fields: Object.fromEntries(posts.flatMap((post) => [
+          [`${post.slug}.title`, post.translations[lang].title],
+          [`${post.slug}.excerpt`, post.translations[lang].excerpt],
+        ])),
       }])),
     })
   );
@@ -184,7 +276,9 @@ ${listItems}
     const postBody = `  <section class="section">
     <a href="/blog/" class="back-link reveal">← <span data-i18n="blog.back">Volver al blog</span></a>
     <div class="post-detail__head reveal">
-      <time class="post-detail__date" datetime="${post.date}" data-i18n-date>${formatDate(post.date, post.lang)}</time>
+      <div class="post-detail__meta">
+        <time class="post-detail__date" datetime="${post.date}" data-i18n-date>${formatDate(post.date, post.lang)}</time>
+      </div>
       <h1 class="post-detail__title" data-content-key="post.title">${post.title}</h1>
     </div>
     <article class="post-detail__body reveal" lang="${post.lang}" data-content-key="post.body" data-content-language>
@@ -202,7 +296,10 @@ ${post.html}
         translations: Object.fromEntries(["es", "en"].map((lang) => [lang, {
           title: `${post.translations[lang].title} — Jaime Gaming`,
           description: post.translations[lang].excerpt,
-          fields: { "post.title": post.translations[lang].title, "post.body": post.translations[lang].html },
+          fields: {
+            "post.title": post.translations[lang].title,
+            "post.body": post.translations[lang].html,
+          },
         }])),
       })
     );
@@ -224,13 +321,36 @@ async function main() {
   await copyFile(path.join(ROOT, "node_modules/simple-icons/LICENSE.md"), path.join(ROOT, "assets/vendor/simple-icons.LICENSE.txt"));
   await copyFile(path.join(ROOT, "node_modules/simple-icons/DISCLAIMER.md"), path.join(ROOT, "assets/vendor/simple-icons.DISCLAIMER.txt"));
   await copyFile(path.join(ROOT, "node_modules/lucide-static/LICENSE"), path.join(ROOT, "assets/vendor/lucide.LICENSE.txt"));
+  const fontFiles = {
+    "dm-sans-latin-400-normal.woff2": "node_modules/@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2",
+    "dm-sans-latin-400-italic.woff2": "node_modules/@fontsource/dm-sans/files/dm-sans-latin-400-italic.woff2",
+    "dm-sans-latin-500-normal.woff2": "node_modules/@fontsource/dm-sans/files/dm-sans-latin-500-normal.woff2",
+    "dm-sans-latin-600-normal.woff2": "node_modules/@fontsource/dm-sans/files/dm-sans-latin-600-normal.woff2",
+    "dm-sans-latin-700-normal.woff2": "node_modules/@fontsource/dm-sans/files/dm-sans-latin-700-normal.woff2",
+    "space-grotesk-latin-400-normal.woff2": "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2",
+    "space-grotesk-latin-500-normal.woff2": "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-500-normal.woff2",
+    "space-grotesk-latin-600-normal.woff2": "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff2",
+    "space-grotesk-latin-700-normal.woff2": "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2",
+    "ibm-plex-mono-latin-400-normal.woff2": "node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2",
+    "ibm-plex-mono-latin-500-normal.woff2": "node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2",
+  };
+  await mkdir(path.join(ROOT, "assets/fonts"), { recursive: true });
+  for (const [name, source] of Object.entries(fontFiles)) {
+    await copyFile(path.join(ROOT, source), path.join(ROOT, "assets/fonts", name));
+  }
+  for (const family of ["dm-sans", "space-grotesk", "ibm-plex-mono"]) {
+    await copyFile(path.join(ROOT, `node_modules/@fontsource/${family}/LICENSE`), path.join(ROOT, `assets/vendor/${family}.LICENSE.txt`));
+  }
   await buildHome();
   await buildProjectsIndex();
   await build404();
   await buildContact();
+  await buildDocsRedirect();
+  await buildStatus();
+  await buildLegalPages();
   await buildBlog();
   const posts = await loadPosts();
-  const urls = ["/", "/projects/", "/blog/", "/contact/", ...posts.map((post) => `/blog/${post.slug}/`)];
+  const urls = ["/", "/projects/", "/blog/", "/status/", "/terms/", "/privacy/", "/contact/", ...posts.map((post) => `/blog/${post.slug}/`)];
   await writePage("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>https://jaime-gaming.github.io${url}</loc></url>`).join("")}</urlset>\n`);
   await writePage("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: https://jaime-gaming.github.io/sitemap.xml\n");
 }

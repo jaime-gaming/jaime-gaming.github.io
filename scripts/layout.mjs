@@ -10,13 +10,66 @@ function assetUrl(path) {
 
 const SITE_NAME = "Jaime Gaming";
 const SITE_URL = "https://jaime-gaming.github.io";
+const DOCS_URL = "https://jaime-gaming.github.io/Docs";
+const STATUS_PAGE_URL = "https://statuspage.incident.io/jaime-gaming";
 
 const NAV_ITEMS = [
   { href: "/", key: "nav.home", label: "Inicio" },
   { href: "/projects/", key: "nav.projects", label: "Proyectos" },
   { href: "/blog/", key: "nav.blog", label: "Blog" },
+  { href: DOCS_URL, key: "nav.docs", label: "Docs" },
   { href: "/contact/", key: "nav.contact", label: "Contacto" },
 ];
+
+const FOOTER_LINKS = {
+  site: [
+    { href: "/", key: "nav.home", label: "Inicio" },
+    { href: "/projects/", key: "nav.projects", label: "Proyectos" },
+    { href: "/blog/", key: "nav.blog", label: "Blog" },
+    { href: "/contact/", key: "nav.contact", label: "Contacto" },
+  ],
+  resources: [
+    { href: DOCS_URL, key: "nav.docs", label: "Docs" },
+    { href: "/status/", key: "footer.status", label: "Estado del servicio", status: true },
+    { href: "https://github.com/jaime-gaming", label: "GitHub", external: true, arrow: true },
+    { href: "mailto:jaimegamingpro@gmail.com", key: "footer.email", label: "Correo" },
+  ],
+};
+
+const LEGAL_LINKS = [
+  { href: "/terms/", key: "footer.terms", label: "Términos del servicio" },
+  { href: "/privacy/", key: "footer.privacy", label: "Privacidad" },
+];
+
+const SOCIAL_LINKS = [
+  { href: "https://github.com/jaime-gaming", icon: "github", key: "social.github", label: "GitHub" },
+  { href: "https://www.youtube.com/@jaimegaming5731", icon: "youtube", key: "social.youtube", label: "YouTube" },
+  { href: "https://x.com/JaimeGamingPro", icon: "x", key: "social.x", label: "X / Twitter" },
+  { href: "https://discord.com/users/984083829767675965", icon: "discord", key: "social.discord", label: "Discord" },
+  { href: "mailto:jaimegamingpro@gmail.com", icon: "mail", key: "social.email", label: "Correo electrónico" },
+];
+
+function navLink(item, { active = false } = {}) {
+  const classes = [];
+  if (active) classes.push("active");
+  const classAttr = classes.length ? ` class="${classes.join(" ")}"` : "";
+  return `<a href="${item.href}" data-i18n="${item.key}"${classAttr}>${item.label}</a>`;
+}
+
+function footerLink(item) {
+  const attrs = item.external ? ' target="_blank" rel="noopener noreferrer"' : "";
+  const status = item.status ? '<span class="footer__status-dot" aria-hidden="true"></span>' : "";
+  const external = item.arrow ? '<span class="footer__arrow" aria-hidden="true">↗</span>' : "";
+  const label = item.key ? `<span data-i18n="${item.key}">${item.label}</span>` : item.label;
+  return `<a${item.status ? ' class="footer__status"' : ""} href="${item.href}"${attrs}>${status}${label}${external}</a>`;
+}
+
+function footerColumn(titleKey, title, links, ariaKey) {
+  return `<nav class="footer__col" aria-label="${title}" data-i18n-aria="${ariaKey}">
+      <h2 class="footer__title" data-i18n="${titleKey}">${title}</h2>
+      ${links.map(footerLink).join("\n      ")}
+    </nav>`;
+}
 
 function escapeHtml(str) {
   return String(str)
@@ -28,6 +81,7 @@ function escapeHtml(str) {
 }
 
 function isActiveNavItem(item, activePath) {
+  if (!item.href.startsWith("/")) return false;
   if (item.href === "/") return activePath === "/";
   if (item.href === "/#contact") return false;
   return activePath === item.href || activePath.startsWith(item.href);
@@ -43,13 +97,13 @@ export function renderLayout({
 }) {
   const fullTitle = activePath === "/" ? "Jaime Gaming — juegos, programación y YouTube" : title ? `${escapeHtml(title)} — ${SITE_NAME}` : SITE_NAME;
   const safeDescription = escapeHtml(description || "");
-  const nav = NAV_ITEMS.map((item) => {
-    const active = isActiveNavItem(item, activePath) ? " active" : "";
-    return `<a href="${item.href}" data-i18n="${item.key}" class="${active.trim()}">${item.label}</a>`;
-  }).join("\n    ");
-  const mobileNav = NAV_ITEMS.map(
-    (item) => `<a href="${item.href}" data-i18n="${item.key}">${item.label}</a>`
-  ).join("\n  ");
+  const nav = NAV_ITEMS.map((item) => navLink(item, { active: isActiveNavItem(item, activePath) })).join("\n    ");
+  const mobileNav = NAV_ITEMS.map((item) => navLink(item)).join("\n  ");
+  const legalLinks = LEGAL_LINKS.map((item) => `<a href="${item.href}" data-i18n="${item.key}">${item.label}</a>`).join("\n      ");
+  const footerSocials = SOCIAL_LINKS.map((link) => {
+    const attrs = link.href.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : "";
+    return `<a class="social-icon" href="${link.href}" aria-label="${link.label}" data-i18n-aria="${link.key}"${attrs}>${renderIcon(link.icon)}</a>`;
+  }).join("\n        ");
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -76,9 +130,6 @@ ${activePath === "/" ? `<script type="application/ld+json" id="personStructuredD
 
 <link rel="canonical" href="${SITE_URL}${activePath}" />
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="${assetUrl("/assets/css/style.css")}" />
 ${extraHead}</head>
 <body data-icons="${assetUrl("/assets/img/icons.svg")}" data-page="${title === "Proyecto" ? "project" : activePath === "/" ? "home" : activePath.split("/")[1]}">
@@ -95,13 +146,23 @@ ${extraHead}</head>
     <button class="lang-switch" id="langSwitch" data-active="es" type="button" aria-label="Cambiar idioma" data-i18n-aria="aria.langSwitch">
       <svg class="language-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <defs>
-          <pattern id="languageFlag" width="24" height="24" patternUnits="userSpaceOnUse">
-            <g class="flag-es"><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
-            <g class="flag-en"><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          <pattern id="languageFlagEs" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g><path fill="#aa151b" d="M0 0h24v24H0z"/><path fill="#f1bf00" d="M0 6h24v12H0z"/></g>
           </pattern>
+          <pattern id="languageFlagEn" width="24" height="24" patternUnits="userSpaceOnUse">
+            <g><path fill="#012169" d="M0 0h24v24H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 24 24M24 0 0 24"/><path stroke="#c8102e" stroke-width="2" d="m0 0 24 24M24 0 0 24"/><path stroke="#fff" stroke-width="8" d="M12 0v24M0 12h24"/><path stroke="#c8102e" stroke-width="4" d="M12 0v24M0 12h24"/></g>
+          </pattern>
+          <radialGradient id="languageGloss" cx="34%" cy="28%" r="72%">
+            <stop offset="0%" stop-color="#fff" stop-opacity=".42"/>
+            <stop offset="55%" stop-color="#fff" stop-opacity=".08"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
         </defs>
-        <circle cx="12" cy="12" r="9.5" fill="url(#languageFlag)"/>
-        <use href="${assetUrl("/assets/img/icons.svg")}#icon-globe" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width=".9" stroke-linecap="round"/>
+        <circle class="flag flag-es" cx="12" cy="12" r="9.5" fill="url(#languageFlagEs)"/>
+        <circle class="flag flag-en" cx="12" cy="12" r="9.5" fill="url(#languageFlagEn)"/>
+        <circle class="language-globe__gloss" cx="12" cy="12" r="9.5" fill="url(#languageGloss)" aria-hidden="true"/>
+        <use href="${assetUrl("/assets/img/icons.svg")}#icon-globe" fill="none" stroke="#0d100d" stroke-opacity=".55" stroke-width="1.9" stroke-linecap="round"/>
+        <use href="${assetUrl("/assets/img/icons.svg")}#icon-globe" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width=".9" stroke-linecap="round"/>
       </svg>
       <span class="sr-only" id="languageName">Español</span>
     </button>
@@ -120,8 +181,27 @@ ${expandIcons(bodyHtml)}
 </main>
 
 <footer class="footer">
-  <p>© <span id="year"></span> Jaime Gaming.</p>
-  <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">${renderIcon("arrow")}</button>
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label="Jaime Gaming — inicio" data-i18n-aria="aria.homeLogo">JG<span class="dot">.</span></a>
+      <p class="footer__tagline" data-i18n="footer.tagline">Juegos para navegador, aplicaciones web y vídeos.</p>
+      <div class="footer__socials" role="group" aria-label="Redes sociales" data-i18n-aria="aria.socials">
+        ${footerSocials}
+      </div>
+    </div>
+    ${footerColumn("footer.site", "Sitio", FOOTER_LINKS.site, "footer.siteAria")}
+    ${footerColumn("footer.resources", "Recursos", FOOTER_LINKS.resources, "footer.resourcesAria")}
+  </div>
+  <div class="footer__bottom">
+    <p class="footer__copy">© <span id="year">${new Date().getFullYear()}</span> Jaime Gaming. <span data-i18n="footer.rights">Todos los derechos reservados.</span></p>
+    <div class="footer__bottom-actions">
+      <nav class="footer__legal" aria-label="Aviso legal" data-i18n-aria="footer.legalAria">
+      ${legalLinks}
+      </nav>
+      <a href="https://github.com/jaime-gaming/jaime-gaming.github.io" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Código fuente ↗</a>
+      <button class="to-top" id="toTop" type="button" aria-label="Volver arriba" data-i18n-aria="aria.backToTop">${renderIcon("arrow")}</button>
+    </div>
+  </div>
 </footer>
 
 <script type="application/json" id="pageTranslations">${JSON.stringify(translations).replace(/</g, "\\u003c")}</script>

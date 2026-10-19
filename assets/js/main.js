@@ -8,6 +8,7 @@
   const EXCLUDED_REPOS = new Set([
     "jaime-gaming/jaime-gaming",
     "jaime-gaming/jaime-gaming.github.io",
+    "jaime-gaming/docs",
     "pineappleva/.github",
   ]);
   const GH_CACHE_KEY = `gh-cache-v3-${GH_USER}`;
@@ -178,39 +179,6 @@
 
   let revealObserver = null;
 
-  function setStaggerDelays(root = document) {
-    const selectors = ".skills__grid, .timeline, .projects__grid, .contact-links";
-    const containers = [];
-    if (root.matches && root.matches(selectors)) containers.push(root);
-    containers.push(...root.querySelectorAll(selectors));
-    containers.forEach((container) => {
-      Array.from(container.children).forEach((child, index) => {
-        if (child.classList.contains("reveal")) child.style.setProperty("--delay", `${Math.min(index, 6) * 75}ms`);
-      });
-    });
-  }
-
-  function bindSpotlights(root = document) {
-    if (!finePointer || reducedMotion) return;
-    const cards = [];
-    if (root.matches && root.matches(".spotlight")) cards.push(root);
-    cards.push(...root.querySelectorAll(".spotlight"));
-    cards.forEach((card) => {
-      if (card.dataset.spotlightBound === "true") return;
-      card.dataset.spotlightBound = "true";
-      card.addEventListener("pointermove", (event) => {
-        if (reducedMotion) return;
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty("--pointer-x", `${event.clientX - rect.left}px`);
-        card.style.setProperty("--pointer-y", `${event.clientY - rect.top}px`);
-      }, { passive: true });
-      card.addEventListener("pointerleave", () => {
-        card.style.setProperty("--pointer-x", "50%");
-        card.style.setProperty("--pointer-y", "50%");
-      }, { passive: true });
-    });
-  }
-
   function observeReveals(root = document) {
     const items = [];
     if (root.matches && root.matches(".reveal:not(.in-view)")) items.push(root);
@@ -231,9 +199,7 @@
     items.forEach((item) => revealObserver.observe(item));
   }
 
-  setStaggerDelays();
   observeReveals();
-  bindSpotlights();
   renderSocials();
 
   const copyEmail = document.getElementById("copyEmail");
@@ -474,7 +440,7 @@
     const path = `/projects/${encodeURIComponent(owner.toLowerCase())}/${encodeURIComponent(String(repo.name).toLowerCase())}/`;
     const label = `${repo.name || "Project"} (${owner}) — ${textFor("projects.open", "View project details")}`;
 
-    return `<a class="project-card reveal spotlight" href="${path}" aria-label="${escapeHtml(label)}">
+    return `<a class="project-card reveal" href="${path}" aria-label="${escapeHtml(label)}">
       <span class="project-card__top">
         <span class="project-card__source">${escapeHtml(owner)}${fork}</span>
         ${language}
@@ -486,7 +452,7 @@
         <span>${iconHtml("fork")} <strong>${numberFmt(Number(repo.forks_count) || 0)}</strong> ${escapeHtml(textFor("github.forksShort", "forks"))}</span>
         ${relativeDate}
       </span>
-      <span class="project-card__arrow" aria-hidden="true">↗</span>
+      <span class="project-card__arrow" aria-hidden="true">${iconHtml("external")}</span>
     </a>`;
   }
 
@@ -503,9 +469,7 @@
     }
     projectsGrid.innerHTML = list.map(projectCardHtml).join("");
     projectsGrid.setAttribute("aria-busy", "false");
-    setStaggerDelays(projectsGrid);
     observeReveals(projectsGrid);
-    bindSpotlights(projectsGrid);
     updateRelativeTimes(projectsGrid);
   }
 
@@ -1119,6 +1083,7 @@
       const ownerKey = owner.toLowerCase();
       if (ownerKey !== GH_USER) throw Object.assign(new Error("Repository unavailable"), { code: "not-found" });
       const nameKey = name.toLowerCase();
+      if (EXCLUDED_REPOS.has(`${ownerKey}/${nameKey}`)) throw Object.assign(new Error("Repository unavailable"), { code: "not-found" });
       const cacheKey = `gh-repo-v2-${ownerKey}-${nameKey}`;
       const cached = readCacheRecord(cacheKey, (data) => data && typeof data.name === "string");
       let repo = null;
@@ -1237,6 +1202,134 @@
     }
   }
 
+
+  const statusSummary = document.getElementById("statusSummary");
+  if (statusSummary) {
+    const statusOverall = document.getElementById("statusOverall");
+    const statusUpdated = document.getElementById("statusUpdated");
+    const statusComponents = document.getElementById("statusComponents");
+    const statusError = document.getElementById("statusError");
+    const statusMaintenance = document.getElementById("statusMaintenance");
+    const statusMaintenanceBody = document.getElementById("statusMaintenanceBody");
+    const STATUS_INDICATORS = {
+      none: "status.allOperational",
+      minor: "status.minorIssues",
+      major: "status.majorIssues",
+      critical: "status.criticalIssues",
+      maintenance: "status.maintenanceOverall",
+    };
+    const STATUS_COMPONENTS = {
+      operational: "status.operational",
+      degraded_performance: "status.degraded",
+      partial_outage: "status.partial",
+      major_outage: "status.major",
+      under_maintenance: "status.underMaintenance",
+    };
+    let lastStatusSummary = null;
+    let statusFailed = false;
+
+    const statusDotState = (indicator) => {
+      if (indicator === "none") return "operational";
+      if (indicator === "critical" || indicator === "major") return "outage";
+      if (indicator === "minor" || indicator === "maintenance") return "degraded";
+      return "unknown";
+    };
+
+    const formatStatusDate = (value) => {
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return "";
+      return date.toLocaleString(locale(), { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    };
+
+    function renderStatusMaintenance(items) {
+      if (!statusMaintenance || !statusMaintenanceBody) return;
+      const list = Array.isArray(items) ? items.filter(Boolean) : [];
+      if (!list.length) {
+        statusMaintenanceBody.replaceChildren();
+        statusMaintenance.hidden = true;
+        return;
+      }
+      statusMaintenance.hidden = false;
+      statusMaintenanceBody.innerHTML = list.map((item) => {
+        const update = Array.isArray(item.incident_updates) ? item.incident_updates[0] : null;
+        const body = update && update.body ? `<p>${escapeHtml(update.body)}</p>` : "";
+        const starts = item.scheduled_for ? formatStatusDate(item.scheduled_for) : "";
+        const ends = item.scheduled_until ? formatStatusDate(item.scheduled_until) : "";
+        const windowText = starts && ends ? `<p class="status-maintenance__meta">${escapeHtml(starts)} – ${escapeHtml(ends)}</p>` : "";
+        return `<div class="status-maintenance__item"><p><strong>${escapeHtml(item.name || "")}</strong></p>${body}${windowText}<p class="status-maintenance__meta">${escapeHtml(textFor("status.maintenanceBody", "Text published on the status page."))}</p></div>`;
+      }).join("");
+    }
+
+    function renderStatus(data) {
+      statusFailed = false;
+      const indicator = data && data.status ? data.status.indicator : "";
+      statusSummary.dataset.state = statusDotState(indicator);
+      statusSummary.setAttribute("aria-busy", "false");
+      if (statusOverall) statusOverall.textContent = textFor(STATUS_INDICATORS[indicator] || "status.unknown", textFor("status.unknown", "Status unavailable"));
+      if (statusUpdated) {
+        const updatedAt = (data && data.page && data.page.updated_at) || "";
+        const formatted = formatStatusDate(updatedAt);
+        statusUpdated.textContent = formatted ? textFor("status.updated", "Updated {date}").replace("{date}", formatted) : "";
+      }
+      if (statusComponents) {
+        const components = Array.isArray(data && data.components) ? data.components.filter((item) => item && item.name) : [];
+        statusComponents.innerHTML = components.map((component) => {
+          const key = STATUS_COMPONENTS[component.status] || "status.unknown";
+          return `<li class="status-component" data-status="${escapeHtml(component.status || "")}"><span class="status-component__dot" aria-hidden="true"></span><span class="status-component__name">${escapeHtml(component.name)}</span><span class="status-component__state">${escapeHtml(textFor(key, component.status || ""))}</span></li>`;
+        }).join("");
+      }
+      if (statusError) statusError.hidden = true;
+      renderStatusMaintenance(data && data.scheduled_maintenances);
+    }
+
+    function renderStatusError() {
+      statusFailed = true;
+      lastStatusSummary = null;
+      statusSummary.dataset.state = "unknown";
+      statusSummary.setAttribute("aria-busy", "false");
+      if (statusOverall) statusOverall.textContent = textFor("status.unknown", "Status unavailable");
+      if (statusUpdated) statusUpdated.textContent = "";
+      if (statusComponents) statusComponents.replaceChildren();
+      if (statusMaintenance) statusMaintenance.hidden = true;
+      if (statusError) statusError.hidden = false;
+    }
+
+    async function loadStatusSummary() {
+      try {
+        const response = await fetch(statusSummary.dataset.api, { cache: "no-store", headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000) });
+        if (!response.ok) throw new Error(`Status API error (${response.status})`);
+        const data = await response.json();
+        if (!data || typeof data !== "object") throw new Error("Invalid status payload");
+        lastStatusSummary = data;
+        renderStatus(data);
+      } catch (error) {
+        console.warn("Status summary unavailable:", error);
+        renderStatusError();
+      }
+    }
+
+    const statusFrameWrap = document.getElementById("statusFrameWrap");
+    const loadStatusFrame = document.getElementById("loadStatusFrame");
+    if (statusFrameWrap && loadStatusFrame) {
+      loadStatusFrame.addEventListener("click", () => {
+        const frame = document.createElement("iframe");
+        frame.src = "https://statuspage.incident.io/jaime-gaming";
+        frame.title = textFor("status.frameTitle", "Jaime Gaming status page");
+        frame.setAttribute("loading", "lazy");
+        frame.setAttribute("referrerpolicy", "no-referrer");
+        const placeholder = document.getElementById("statusFramePlaceholder");
+        if (placeholder) placeholder.replaceWith(frame);
+        else statusFrameWrap.replaceChildren(frame);
+        loadStatusFrame.remove();
+      });
+    }
+
+    loadStatusSummary();
+    document.addEventListener("langchange", () => {
+      if (lastStatusSummary) renderStatus(lastStatusSummary);
+      else if (statusFailed) renderStatusError();
+    });
+  }
 
   const presenceElement = document.getElementById("lanyardStatus");
   const presenceLabel = presenceElement && presenceElement.querySelector("[data-presence-label]");
@@ -1439,7 +1532,6 @@
   reducedMotionQuery.addEventListener?.("change", (event) => {
     reducedMotion = event.matches;
     if (reducedMotion) observeReveals();
-    else bindSpotlights();
     startRoleRotation();
     animateSkillBars();
   });
